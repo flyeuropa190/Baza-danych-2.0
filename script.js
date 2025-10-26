@@ -24,6 +24,8 @@ loginButton.addEventListener("click", async () => {
     } else {
         errorMsg.textContent = "❌ Niepoprawne hasło";
         errorMsg.style.opacity = 1;
+        
+        passwordInput.classList.add("error"); // podświetlenie na czerwono
         passwordInput.value = "";
         
         // Efekt potrząsania
@@ -32,6 +34,7 @@ loginButton.addEventListener("click", async () => {
         loginBox.classList.add("shake");
     }
 });
+
 
 
 function toggleMenu() {
