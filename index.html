@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baza danych 2.0 – Logowanie</title>
+
+  <!-- Czcionki i styl -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- PWA: manifest i kolory -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#8324bc">
+
+  <!-- Ikona aplikacji -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+</head>
+
+<body class="login-page">
+
+  <div class="container">
+    <img src="./logo.png" alt="Logo" class="logo">
+    <div class="login-box">
+      <h1>Baza danych 2.0</h1>
+      <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
+      <button id="loginButton">Zaloguj</button>
+      <p id="errorMsg"></p>
+    </div>
+  </div>
+
+  <!-- Skrypt logowania -->
+  <script src="./script.js"></script>
+
+  <!-- Rejestracja Service Workera dla PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(() => console.log('✅ Service Worker zarejestrowany!'))
+          .catch(err => console.error('❌ Błąd rejestracji SW:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
