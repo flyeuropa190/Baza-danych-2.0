@@ -83,10 +83,10 @@ body, html {
   animation: fadeSlideIn 0.8s ease forwards;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .login-box {
     width: 80%;
-    margin-bottom: 5%;
+    margin-bottom: 0;
   }
 }
 
@@ -97,7 +97,7 @@ body, html {
   text-align: center;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .login-box h1 {
     font-size: 165%;    
   }
