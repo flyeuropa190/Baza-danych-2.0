@@ -7,13 +7,13 @@
 }
 
 body, html {
-  height: 100%;
-  width: 102%;
+  height: auto;
+  width: 100%;
   background: #ffffff;  
   display: flexbox;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 /* PASEK NAWIGACJI */
@@ -53,17 +53,18 @@ body, html {
   }
 }
 
-.logo {
-  width: 80%;
+.logo2 {
+  width: 30%;
   height: auto;
+  align-items: center;  
   z-index: 10;
   margin-bottom: 100px;
-  animation: fadeIn 1s ease forwards;
+  animation: fadeIn 1s ease forwards;  
 }
 
-@media (min-width: 760px) {
-  .logo {
-    width: 30%;
+@media (max-width: 760px) {
+  .logo2 {
+    width: 80%;    
   }
 }
 
@@ -76,7 +77,7 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 320px;
+  min-width: 30px;
   margin-bottom: 10%;
   animation: fadeSlideIn 0.8s ease forwards;
 }
@@ -238,6 +239,12 @@ body, html {
   padding: 120px 50px 50px;
 }
 
+@media (max-width: 760px) {
+  .dashboard {
+    padding: 100px 15px 15px;
+  }
+}
+
 .row {
   display: flex;
   gap: 25px;
@@ -269,6 +276,13 @@ body, html {
   margin-right: 5%;
 }
 
+@media (max-width: 760px) {
+  #card-flota {
+    width: 100%;
+    margin-right: 0%;
+  }
+}
+
 #card-flota th {
   text-align: center;
   padding: 8px 0;
@@ -276,7 +290,7 @@ body, html {
 }
 
 #card-flota td {
-  text-align: left;
+  text-align: center;
   padding: 8px 0;
 }
 
@@ -293,6 +307,13 @@ body, html {
   width: 75%;
   min-width: 400px;
   box-sizing: border-box;
+}
+
+@media (max-width: 760px) {
+  #card-komunikaty {
+    width: 100%;
+    min-width: 300px;
+  }
 }
 
 #card-komunikaty h2 {
