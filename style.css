@@ -260,7 +260,6 @@ body {
   backdrop-filter: blur(18px) saturate(180%);
   -webkit-backdrop-filter: blur(18px) saturate(180%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-  overflow: hidden;
 }
 
 /* Refleks świetlny */
