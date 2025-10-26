@@ -79,6 +79,7 @@ body, html {
   flex-direction: column;
   align-items: center;
   min-width: 30px;
+  max-width: 350px;
   margin-bottom: 10%;
   animation: fadeSlideIn 0.8s ease forwards;
 }
@@ -100,6 +101,20 @@ body, html {
 @media (max-width: 760px) {
   .login-box h1 {
     font-size: 23px;    
+  }
+}
+
+.login-box h2 {
+  color: #ff0000;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 18px;
+}
+
+@media (max-width: 760px) {
+  .login-box h2 {
+    font-size: 15px;    
   }
 }
 
