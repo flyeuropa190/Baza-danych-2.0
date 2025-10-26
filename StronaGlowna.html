@@ -69,13 +69,8 @@
 
   </main>
 
-  <!-- Rejestracja Service Workera -->
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('✅ Service Worker zarejestrowany!'))
-        .catch(err => console.error('❌ Błąd rejestracji SW:', err));
-    }
+    console.log('Wersja 00:26')
   </script>
 
 </body>
