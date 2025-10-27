@@ -1,4 +1,4 @@
-/* Reset i podstawy */
+/* OGÓLNE */
 * {
   margin: 0;
   padding: 0;
@@ -15,24 +15,229 @@ body, html {
   align-items: center;
   overflow: visible;
 }
+/* OGÓLNE - KONIEC */
 
 /* PASEK NAWIGACJI */
 .navbar {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(
+    90deg,
+    rgba(117, 139, 208, 0.4),
+    rgba(131, 36, 188, 0.20)
+    );
+  /* background: rgba(255, 255, 255, 0.15); */
   backdrop-filter: blur(12px);
+  /* border-bottom: 1px solid rgba(117, 139, 208, 0.15); */
   padding: 15px 30px;
   color: white;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  position: sticky;
+  /* box-shadow: 0 4px 20px rgba(0,0,0,0.2); */
+  position: fixed;
   top: 0;
   z-index: 50;
 }
 
-/* EKRAN LOGOWANIA – czytelny glass z podświetleniem błędu */
-body {
+/* logo */
+.logo-sg {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+@media (max-width: 350px) {
+  .logo-sg {
+    width: 120px;
+  }
+}
+
+/* Refleks świetlny */
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 30% 0%,
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.08) 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Lewa część (logo + tytuł) */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Tytuł w pasku */
+.nav-left h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgb(0, 0, 0);
+  margin: 0;
+}
+
+@media (max-width: 430px) {
+  .nav-left h1 {
+    font-size: 1rem;
+  }
+}
+
+@media (min-device-width: 430px) and (max-device-width: 760px) {
+  .nav-left h1 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Linki w menu */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: rgb(80, 80, 80);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+  padding-bottom: 3px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: #9900ff;
+  border-bottom: 2px solid #9900ff;
+}
+
+/* ukrycie paska na telefonie */
+@media (max-width: 760px) {
+  .nav-links {
+    display: none;
+  }
+}
+/* PASEK NAWIGACJI - KONIEC */
+
+
+/* MENU NAWIGACJI */
+#menuToggle {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 38px;
+  left: 20px;
+  z-index: 51;
+  -webkit-user-select: none;
+  user-select: none;
+  visibility: none;
+}
+
+@media (max-width: 760px) {
+  #menuToggle {
+    visibility: visible;
+  }
+}
+
+#menuToggle input{
+  display: flex;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 2;
+}
+
+#menuToggle span{
+  display: flex;
+  width: 29px;
+  height: 2px;
+  margin-bottom: 5px;
+  position: relative;
+  background: #202F46;
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 5px 0px;
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+#menuToggle span:first-child{
+  transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2){
+  transform-origin: 0% 100%;
+}
+
+#menuToggle input:checked ~ span{
+  opacity: 1;
+  transform: rotate(45deg) translate(-3px, -1px);
+  background: #36383F;
+}
+
+#menuToggle input:checked ~ span:nth-last-child(3){
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#menuToggle input:checked ~ span:nth-last-child(2){
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+#menu-nav{
+  font-family: 'Lexend', sans-serif;
+  position: absolute;
+  width: auto;
+  height: auto;
+  box-shadow: 0 0 10px #85888C;
+  margin: 30px 0 0 -50px;
+  padding: 45px 30px 72px 80px;
+  background-color: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+  transform-origin: 0% 0%;
+  transform: translate(-100%, 0);
+}
+
+#menu-nav li{
+  padding: 10px 0;
+  transition-delay: 2s;
+  list-style: none;
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+#menu-nav li a{
+  text-decoration: none;
+  color: #000000;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+}
+
+#menu-nav li a:hover{
+  text-decoration: none;
+  color: #E78300;
+}
+
+#menuToggle input:checked ~ ul{
+  transform: none;
+}
+/* MENU NAWIGACJI - KONIEC */
+
+
+
+/* EKRAN LOGOWANIA */
+.login-page {
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -151,7 +356,6 @@ body {
   }
 }
 
-
 /* Pola tekstowe */
 .login-box input {
   width: 100%;
@@ -184,6 +388,12 @@ body {
   box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
 }
 
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* Przycisk */
 .login-box button {
   width: 100%;
@@ -194,9 +404,12 @@ body {
   font-weight: 600;
   cursor: pointer;
   color: #fff;
-  background: linear-gradient(135deg, #8324bc, #758bd0);
+  background: linear-gradient(135deg, #8324bc, #758bd0, #8324bc);
+  background-size: 300% 300%;
   box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
+    animation: gradientShift 5s ease infinite;
 }
 
 .login-box button:hover {
@@ -213,235 +426,11 @@ body {
   font-weight: 600;
   text-align: center;
 }
+/* EKRAN LOGOWANIA - KONIEC */
 
 
 
 
-/* STRONA GŁÓWNA */
-.logo-sg {
-  width: 150px;
-  height: auto;
-  object-fit: contain;
-  margin-right: 10px;
-}
-
-/* Ukrycie logo na telefonie */
-@media (max-width: 760px) {
-  .logo-sg {
-    display: none;
-  }
-}
-
-/* Tło i podstawowe style */
-.main-bg {
-  background: white;
-  min-height: 100vh;
-  color: black;
-  font-family: 'Lexend', sans-serif;
-}
-
-/* Pasek nawigacji */
-.navbar {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(
-    90deg,
-    rgba(117, 139, 208, 0.55),
-    rgba(131, 36, 188, 0.55)
-  );
-  color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 50;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-/* Refleks świetlny */
-.navbar::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 200%;
-  height: 100%;
-  background: radial-gradient(
-    circle at 30% 0%,
-    rgba(255, 255, 255, 0.35),
-    rgba(255, 255, 255, 0.08) 70%
-  );
-  pointer-events: none;
-  z-index: -1;
-}
-
-
-
-
-/* Lewa część (logo + tytuł) */
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Tytuł w pasku */
-.nav-left h1 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: rgb(0, 0, 0);
-  margin: 0;
-}
-
-@media (max-width: 760px) {
-  .nav-left h1 {
-    font-size: 12px;
-  }
-}
-
-/* Linki w menu */
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
-.nav-links a {
-  color: rgb(80, 80, 80);
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
-  padding-bottom: 3px;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-  color: #9900ff;
-  border-bottom: 2px solid #9900ff;
-}
-
-.dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  padding: 120px 50px 50px;
-}
-
-@media (max-width: 760px) {
-  .dashboard {
-    padding: 100px 15px 15px;
-  }
-}
-
-.row {
-  display: flex;
-  gap: 25px;
-  width: 100%;
-}
-
-/* Karty danych */
-.data-card {
-  background: rgba(25, 0, 255, 0.35);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 25px;
-  color: black;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-   animation: fadeIn 1s
-}
-
-.data-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-/* Tabela we flocie */
-#card-flota {
-  width: 15%;
-  min-width: 220px;
-  box-sizing: border-box;
-  margin-right: 5%;
-}
-
-@media (max-width: 760px) {
-  #card-flota {
-    width: 100%;
-    margin-right: 0%;
-  }
-}
-
-#card-flota th {
-  text-align: center;
-  padding: 8px 0;
-  font-size: 15px;
-}
-
-#card-flota td {
-  text-align: center;
-  padding: 8px 0;
-}
-
-#card-flota th {
-  font-weight: 700;
-  border-bottom: 2px solid rgba(0,0,0,0.3);
-}
-
-#card-flota td {
-  font-weight: 400;
-}
-
-#card-komunikaty {
-  width: 75%;
-  min-width: 400px;
-  box-sizing: border-box;
-}
-
-@media (max-width: 760px) {
-  #card-komunikaty {
-    width: 100%;
-    min-width: 300px;
-  }
-}
-
-#card-komunikaty h2 {
-  text-align: center;
-  padding: 8px 0;
-}
-
-#card-najblizsze-przeglady {
-  width: 50%;
-  min-width: 400px;
-  box-sizing: border-box;
-}
-
-#card-najblizsze-przeglady h2 {
-  text-align: center;
-  padding: 8px 0;
-}
-
-#card-najblizsze-naprawy {
-  width: 50%;
-  min-width: 400px;
-  box-sizing: border-box;
-}
-
-#card-najblizsze-naprawy h2 {
-  text-align: center;
-  padding: 8px 0;
-}
-
-.przeglady-planowane {
- background: rgb(0, 0, 0);
- min-height: 100vh;
- color: black;
- font-family: 'Lexend', sans-serif;
-}
 
 /* ANIMACJE */
 @keyframes fadeIn {

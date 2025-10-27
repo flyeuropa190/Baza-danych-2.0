@@ -25,52 +25,32 @@
   <!-- Pasek nawigacji -->
   <header class="navbar">
     <div class="nav-left">
-      <img src="./logo.png" alt="Logo" class="logo-sg">
+      <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
       <h1>Baza danych 2.0</h1>
     </div>
     <nav class="nav-links">
-      <a href="index.html" class="active">Strona główna</a>
+      <a href="StronaGlowna.html" class="active">Strona główna</a>
       <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
       <a href="NaprawyPlanowane.html">Naprawy planowane</a>
     </nav>
   </header>
 
-  <main class="dashboard">
-
-    <!-- 1 poziom -->
-    <!-- Kontener FLOTA – 25% -->
-    <div class="data-card" id="card-flota">
-      <table id="tabela-flota">
-        <thead>
-          <tr><th colspan="2">FLOTA</th></tr>
-          <tr><th>STATUS</th><th>ILOŚĆ</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <nav role="navigation">
+    <div id="menuToggle">
+      <label for="mobilemenu"><input type="checkbox"/>
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu-nav">
+          <li><a href="StronaGlowna.html">Strona Główna</a></li>
+          <li><a href="PrzegladyPlanowane.html">Przeglady Planowane</a></li>
+          <li><a href="NaprawyPlanowane.html">Naprawy Planowane</a></li>
+        </ul>      
     </div>
+  </nav>
 
-    <!-- Kontener KOMUNIKATY – 75% -->
-    <div class="data-card" id="card-komunikaty">
-      <h2>KOMUNIKATY</h2>
-      <p class="value">–</p>
-      <p>26.10.2025 - 04.12.2025 → Lotnisko Wrocław (WRO) nieczynne.</p>        
-    </div>
-    
-    <!-- 2 poziom -->
-    <div class="data-card" id="najblizsze-przeglady">
-      <h2>NAJBLIŻSZE PRZEGLĄDY</h2>
-      <p>(tu pojawi się zawartość później)</p>
-    </div>
-
-    <div class="data-card" id="najblizsze-naprawy">
-      <h2>NAJBLIŻSZE NAPRAWY</h2>
-      <p>(tu pojawi się zawartość później)</p>      
-    </div>
-
-  </main>
-
-  <script>
-    console.log('Wersja 00:26')
+   <script>
+    console.log('Wersja 2710.2341')
   </script>
 
 </body>
