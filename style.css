@@ -94,7 +94,7 @@ body, html {
 
 @media (min-device-width: 430px) and (max-device-width: 760px) {
   .nav-left h1 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 }
 
