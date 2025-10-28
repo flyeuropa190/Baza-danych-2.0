@@ -13,7 +13,7 @@ body, html {
   display: flexbox;
   justify-content: center;
   align-items: center;
-  overflow: visible;
+  overflow: visible;  
 }
 /* OGÓLNE - KONIEC */
 
@@ -47,6 +47,14 @@ body, html {
   margin-right: 10px;
 }
 
+.mini-logo-sg {
+  width: 75px;
+  height: auto;
+  object-fit: contain;
+  margin-right: 10px;
+  display: none;
+}
+
 /* Refleks świetlny */
 .navbar::before {
   content: "";
@@ -68,7 +76,7 @@ body, html {
 .nav-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 5px;
 }
 
 /* Tytuł w pasku */
@@ -103,17 +111,16 @@ body, html {
 
 
 /* MENU NAWIGACJI */
-#menuToggle {  
-  display: flex;
+#menuToggle {
+  display: none; /* domyślnie ukryty – pokażemy go w media query */
   flex-direction: column;
-  position: absolute;
-  top: 38px;
-  left: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  cursor: pointer;
+  margin-right: 10px;
   z-index: 51;
-  -webkit-user-select: none;
-  user-select: none;
-  visibility: hidden;
 }
+
 
 #menuToggle input{
   display: flex;
@@ -127,9 +134,9 @@ body, html {
 
 #menuToggle span{
   display: flex;
-  width: 29px;
+  width: 19px;
   height: 2px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   position: relative;
   background: #202F46;
   border-radius: 3px;
@@ -165,7 +172,7 @@ body, html {
 
 #menu-nav{
   font-family: 'Lexend', sans-serif;
-  position: absolute;
+  position: left;
   width: auto;
   height: auto;
   box-shadow: 0 0 10px #85888C;
@@ -174,7 +181,7 @@ body, html {
   background-color: #FFFFFF;
   -webkit-font-smoothing: antialiased;
   transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
+  transform: translate(-100%, 0);  
 }
 
 #menu-nav li{
@@ -301,6 +308,7 @@ body, html {
 
 .login-box h3 {
   font-size: 14px;
+  margin-top: 10px;
 }
 
 /* Pola tekstowe */
@@ -379,23 +387,19 @@ body, html {
 
 
 /* DOPASOWANIE DO TELEFONU */
-
-
-
 @media (max-width: 430px) {
   .logo-sg {
     width: 120px;
+    display: none;
+  }
+
+  .mini-logo-sg {
+    display: flex;
   }
 
   .nav-left h1 {
     font-size: 1rem;
   }
-
-
-
-
-
-
 }
 
 
@@ -405,13 +409,14 @@ body, html {
   }
 }
 
+
 @media (max-width: 760px) {
   .nav-links {
     display: none;
   }
 
   #menuToggle {
-    visibility: visible;
+    display: flex;
   }
 
   .logo2 {
@@ -458,6 +463,7 @@ body, html {
 
   .login-box h3 {
     font-size: 10px;
+    margin-top: 0px;
   }
 
   .login-box input {
@@ -475,6 +481,13 @@ body, html {
     margin-bottom: 5px;
   }
   
+    .mini-logo-sg {
+    display: flex;
+  }
+
+  .logo-sg {
+    display: none;
+  }
 }
 
 
