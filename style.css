@@ -299,6 +299,10 @@ body, html {
   font-size: 18px;
 }
 
+.login-box h3 {
+  font-size: 14px;
+}
+
 /* Pola tekstowe */
 .login-box input {
   width: 100%;
@@ -464,6 +468,11 @@ body, html {
    max-height: 35px; 
    padding-bottom: 7px;
    padding-top: 7px;
+  }
+
+  #errorMsg {
+    font-size: 13px;
+    margin-bottom: 5px;
   }
   
 }
