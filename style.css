@@ -47,12 +47,6 @@ body, html {
   margin-right: 10px;
 }
 
-@media (max-width: 350px) {
-  .logo-sg {
-    width: 120px;
-  }
-}
-
 /* Refleks świetlny */
 .navbar::before {
   content: "";
@@ -86,18 +80,6 @@ body, html {
   margin: 0;
 }
 
-@media (max-width: 430px) {
-  .nav-left h1 {
-    font-size: 1rem;
-  }
-}
-
-@media (min-device-width: 430px) and (max-device-width: 760px) {
-  .nav-left h1 {
-    font-size: 1.4rem;
-  }
-}
-
 /* Linki w menu */
 .nav-links {
   display: flex;
@@ -117,13 +99,6 @@ body, html {
   color: #9900ff;
   border-bottom: 2px solid #9900ff;
 }
-
-/* ukrycie paska na telefonie */
-@media (max-width: 760px) {
-  .nav-links {
-    display: none;
-  }
-}
 /* PASEK NAWIGACJI - KONIEC */
 
 
@@ -138,12 +113,6 @@ body, html {
   -webkit-user-select: none;
   user-select: none;
   visibility: hidden;
-}
-
-@media (max-width: 760px) {
-  #menuToggle {
-    visibility: visible;
-  }
 }
 
 #menuToggle input{
@@ -259,8 +228,8 @@ body, html {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
-  position: relative;
+  height: 100%;
+  position: center;
   z-index: 2;
 }
 
@@ -292,13 +261,6 @@ body, html {
   animation: fadeIn 1s ease forwards;
 }
 
-@media (max-width: 760px) {
-  .logo2 {
-    width: 80%;
-    margin-bottom: 50px;
-  }
-}
-
 /* Pudełko logowania – przezroczyste i czytelne */
 .login-box {
   background: rgba(255, 255, 255, 0.25); /* półprzezroczyste białe tło */
@@ -321,13 +283,6 @@ body, html {
   animation: shake 0.5s ease;
 }
 
-@media (max-width: 760px) {
-  .login-box {
-    width: 80%;
-    margin-bottom: 0;
-  }
-}
-
 /* Nagłówki */
 .login-box h1 {
   color: #000; /* lepszy kontrast */
@@ -336,24 +291,12 @@ body, html {
   text-align: center;
 }
 
-@media (max-width: 760px) {
-  .login-box h1 {
-    font-size: 23px;    
-  }
-}
-
 .login-box h2 {
   color: #007f2f; /* ciemniejszy zielony dla kontrastu */
   margin-bottom: 30px;
   font-weight: 600;
   text-align: center;
   font-size: 18px;
-}
-
-@media (max-width: 760px) {
-  .login-box h2 {
-    font-size: 15px;    
-  }
 }
 
 /* Pola tekstowe */
@@ -428,6 +371,102 @@ body, html {
 }
 /* EKRAN LOGOWANIA - KONIEC */
 
+
+
+
+/* DOPASOWANIE DO TELEFONU */
+
+
+
+@media (max-width: 430px) {
+  .logo-sg {
+    width: 120px;
+  }
+
+  .nav-left h1 {
+    font-size: 1rem;
+  }
+
+
+
+
+
+
+}
+
+
+@media (min-device-width: 430px) and (max-device-width: 760px) {
+  .nav-left h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .nav-links {
+    display: none;
+  }
+
+  #menuToggle {
+    visibility: visible;
+  }
+
+  .logo2 {
+    width: 80%;
+    margin-bottom: 50px;
+  }
+
+  .login-box {
+    width: 80%;
+    margin-bottom: 0;
+  }
+
+  .login-box h1 {
+    font-size: 23px;    
+  }
+
+  .login-box h2 {
+    font-size: 15px;    
+  }
+}
+
+@media (max-device-width: 1000px) and (orientation: landscape) {
+  .logo2 {
+    margin-bottom: 20px;
+  }
+
+  .login-box {    
+    max-width: 80%;
+    margin-bottom: 0px;
+    max-height: 60%;
+    padding-top: 10px;
+    padding-bottom: 10px;        
+  }
+
+  .login-box h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .login-box h2 {
+    font-size: 12px;    
+    margin-bottom: 10px;
+  }
+
+  .login-box h3 {
+    font-size: 10px;
+  }
+
+  .login-box input {
+   max-height: 35px; 
+  }
+
+  .login-box button {
+   max-height: 35px; 
+   padding-bottom: 7px;
+   padding-top: 7px;
+  }
+  
+}
 
 
 

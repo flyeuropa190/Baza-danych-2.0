@@ -19,8 +19,7 @@
 
 <body class="login-page">
 
-  <div class="container">
-    <!-- <img src="./logo.png" alt="Logo" class="logo"> -->
+  <div class="container">    
     <img src="./logo2.png" alt="Logo2" class="logo2">
     <div class="login-box">
       <h1>Baza danych 2.0</h1>
@@ -28,7 +27,7 @@
       <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
       <button id="loginButton">Zaloguj</button>
       <p id="errorMsg"></p>
-      <h3>Wersja 2810.0047</h3>
+      <h3>Wersja 2810.2202</h3>
     </div>
   </div>
 
@@ -37,7 +36,7 @@
 
   <!-- Rejestracja Service Workera dla PWA -->
   <script>
-    console.log('Wersja 2810.0047')
+    console.log('Wersja 2810.2202')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')

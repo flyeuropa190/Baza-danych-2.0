@@ -1,56 +1,53 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strona Główna – Baza danych 2.0</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strona Główna – Baza danych 2.0</title>
 
-    <!-- Czcionki i styl -->
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
+  <!-- Czcionki i styl -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
 
-    <!-- Plik manifestu (PWA) -->
-    <link rel="manifest" href="./manifest.json">
+  <!-- Plik manifestu (PWA) -->
+  <link rel="manifest" href="./manifest.json">
 
-    <!-- Kolor paska adresu i ikona -->
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <!-- Kolor paska adresu i ikona -->
+  <meta name="theme-color" content="#004aad">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 
-    <!-- Skrypt danych -->
-    <script defer src="./data.js"></script>
+  <!-- Skrypt danych -->
+  <script defer src="./data.js"></script>
 </head>
 
 <body class="main-bg">
 
-    <!-- Pasek nawigacji -->
-    <header class="navbar">
-        <div class="nav-left">
-            <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
-            <h1>Baza danych 2.0</h1>
-        </div>
-        <nav class="nav-links">
-            <a href="StronaGlowna.html" class="active">Strona główna</a>
-            <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
-            <a href="NaprawyPlanowane.html">Naprawy planowane</a>
-        </nav>
-    </header>
-
-    <nav role="navigation">
-        <div id="menuToggle">
-            <label for="mobilemenu"><input type="checkbox" />
-            <span></span>
-            <span></span>
-            <span></span>
-            <ul id="menu-nav">
-                <li><a href="StronaGlowna.html">Strona Główna</a></li>
-                <li><a href="PrzegladyPlanowane.html">Przeglady Planowane</a></li>
-                <li><a href="NaprawyPlanowane.html">Naprawy Planowane</a></li>
-            </ul>
-        </div>
+  <!-- Pasek nawigacji -->
+  <header class="navbar">
+    <div class="nav-left">
+      <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
+      <h1>Baza danych 2.0</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="StronaGlowna.html" class="active">Strona główna</a>
+      <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
+      <a href="NaprawyPlanowane.html">Naprawy planowane</a>
     </nav>
+  </header>
 
-    <script>
-        console.log('Wersja 2710.2341')
-    </script>
-
+  <nav role="navigation">
+    <div id="menuToggle">
+      <label for="mobilemenu"><input type="checkbox"/>
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu-nav">
+          <li><a href="StronaGlowna.html">Strona Główna</a></li>
+          <li><a href="PrzegladyPlanowane.html">Przeglady Planowane</a></li>
+          <li><a href="NaprawyPlanowane.html">Naprawy Planowane</a></li>
+        </ul>      
+    </div>
+  </nav>
+  
 </body>
 </html>
