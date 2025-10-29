@@ -21,34 +21,33 @@
 
 <body class="main-bg">
 
-<!-- Pasek nawigacji -->
-<header class="navbar">
-  <div class="nav-left">
-    <div id="menuToggle">
-      <input type="checkbox"/>
-      <span></span>
-      <span></span>
-      <span></span>
-      <ul id="menu-nav">
-        <li><a href="StronaGlowna.html">Strona Główna</a></li>
-        <li><a href="">Spis</a></li>
-        <li><a href="PrzegladyPlanowane.html">Przeglądy Planowane</a></li>
-        <li><a href="NaprawyPlanowane.html">Naprawy Planowane</a></li>
-      </ul>
-    </div>
-
+  <!-- Pasek nawigacji -->
+  <header class="navbar">
+    <div class="nav-left">
     <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
     <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sg"></a>
     <h1>Baza danych 2.0</h1>
-  </div>
+    </div>
+    <div class="nav-right">
+      <p id="active-page"></p>
+    </div>
+    <nav class="nav-links">
+      <a href="StronaGlowna.html" class="active">Strona główna</a>
+      <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
+      <a href="NaprawyPlanowane.html">Naprawy planowane</a>
+    </nav>
+    
+  </header>
 
-  <nav class="nav-links">
-    <a href="StronaGlowna.html" class="active">Strona główna</a>
-    <a href="#">Spis</a>
-    <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
-    <a href="NaprawyPlanowane.html">Naprawy planowane</a>
-  </nav>
-</header>
+  <!-- AKTUALNA STRONA -->
+  <script>
+  const activeLink = document.querySelector('.nav-links .active');
+  const output = document.getElementById('active-page');
+
+  if (activeLink) {
+    output.textContent = `${activeLink.textContent}`;
+  }
+</script>
 
 </body>
 </html>
