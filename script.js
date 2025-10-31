@@ -5,7 +5,7 @@ const container = document.querySelector(".container");
 const mainContent = document.getElementById("mainContent");
 const loginBox = document.querySelector(".login-box");
 
-const TARGET_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3";
+const TARGET_HASH = "57d9b16ef323e6c5cbfc6404abf5ed2bce0d84418c68447a73f476df7dff66353";
 async function hashSHA256(message) {    
     const msgBuffer = new TextEncoder().encode(message);         
     const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);        
