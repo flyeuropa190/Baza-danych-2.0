@@ -17,27 +17,55 @@
 
   <!-- Skrypt danych -->
   <script defer src="./data.js"></script>
+
+  <!-- Skrypt menu -->
+  <script defer src="./menu.js"></script>
 </head>
 
 <body class="main-bg">
 
   <!-- Pasek nawigacji -->
   <header class="navbar">
+    <button class="hamburger" aria-label="Otwórz menu" aria-controls="sidebar" aria-expanded="false" id="menuToggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
     <div class="nav-left">
-    <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
-    <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sg"></a>
-    <h1>Baza danych 2.0</h1>
+      <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
+      <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sg"></a>
+      <h1>Baza danych 2.0</h1>
     </div>
+
     <div class="nav-right">
       <p id="active-page"></p>
     </div>
     <nav class="nav-links">
       <a href="StronaGlowna.html" class="active">Strona główna</a>
+      <a href="Spis.html">Spis - Test</a>
       <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
-      <a href="NaprawyPlanowane.html">Naprawy planowane</a>
+      <a href="NaprawyPlanowane.html">Naprawy planowane</a>      
     </nav>
-    
   </header>
+
+  <!-- Wysuwane menu -->
+  <nav id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sidebar-inner">
+      <div class="sidebar-top">
+        <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sidebar"></a>
+        <button class="close" aria-label="Zamknij menu" id="menuClose">✕</button>
+      </div>
+      <ul class="nav-list">
+        <li><a href="StronaGlowna.html" class="active">Strona główna</a></li>
+        <li><a href="Spis.html">Spis - Test</a></li>
+        <li><a href="PrzegladyPlanowane.html">Przeglądy planowane</a></li>
+        <li><a href="NaprawyPlanowane.html">Naprawy planowane</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="overlay" id="overlay" hidden></div>
 
   <!-- AKTUALNA STRONA -->
   <script>

@@ -10,19 +10,59 @@
 
     <!-- ikona strony -->
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+
+  <!-- Skrypt menu -->
+  <script defer src="./menu.js"></script>
 </head>
 
 <body class="przeglady-planowane">
 
   <!-- Pasek nawigacji -->
   <header class="navbar">
+    <button class="hamburger" aria-label="Otwórz menu" aria-controls="sidebar" aria-expanded="false" id="menuToggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
     <div class="nav-left">
       <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
+      <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sg"></a>
       <h1>Baza danych 2.0</h1>
+    </div>
+
+    <div class="nav-right">
+      <p id="active-page"></p>
     </div>
     <nav class="nav-links">
       <a href="StronaGlowna.html">Strona główna</a>
+      <a href="Spis.html">Spis - Test</a>
       <a href="PrzegladyPlanowane.html" class="active">Przeglądy planowane</a>
-      <a href="NaprawyPlanowane.html">Naprawy planowane</a>
+      <a href="NaprawyPlanowane.html">Naprawy planowane</a>      
     </nav>
   </header>
+
+  <!-- Wysuwane menu -->
+  <nav id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sidebar-inner">
+      <button class="close" aria-label="Zamknij menu" id="menuClose">✕</button>
+      <ul class="nav-list">
+        <li><a href="StronaGlowna.html">Strona główna</a></li>
+        <li><a href="Spis.html">Spis - Test</a></li>
+        <li><a href="PrzegladyPlanowane.html" class="active">Przeglądy planowane</a></li>
+        <li><a href="NaprawyPlanowane.html">Naprawy planowane</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- AKTUALNA STRONA -->
+  <script>
+  const activeLink = document.querySelector('.nav-links .active');
+  const output = document.getElementById('active-page');
+
+  if (activeLink) {
+    output.textContent = `${activeLink.textContent}`;
+  }
+</script>
