@@ -5,7 +5,7 @@ const container = document.querySelector(".container");
 const mainContent = document.getElementById("mainContent");
 const loginBox = document.querySelector(".login-box");
 
-const TARGET_HASH = "57d9b16ef323e6c5cbfc6404abf5ed2bce0d84418c68447a73f476df7dff6635";
+const TARGET_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
 async function hashSHA256(message) {    
     const msgBuffer = new TextEncoder().encode(message);         
     const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);        
@@ -39,4 +39,5 @@ loginButton.addEventListener("click", async () => {
 
 function toggleMenu() {
   document.getElementById('mobile-nav').classList.toggle('open');
+
 }
