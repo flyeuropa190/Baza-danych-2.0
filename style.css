@@ -418,8 +418,15 @@ body, html {
   overflow: hidden;
 }
 
+.naglowek-sg {
+  width: 80%;
+  height: auto;
+  padding: 5px;
+  margin-top: 20px;
+  color: blue;
+}
 
-.main-sg h1 {
+.naglowek-sg h1 {
   font-size: 10px;
 }
 
