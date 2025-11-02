@@ -26,11 +26,8 @@
       <h2>Aplikacja w fazie alpha – trwają prace rozwojowe</h2>
       <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
       <button id="loginButton">Zaloguj</button>
-      <form action="./StronaGlowna.html">
-        <input type="submit" value="Dostęp awaryjny" />
-    </form>
       <p id="errorMsg"></p>
-      <h3>Wersja 0111.0902</h3>
+      <h3>Wersja 0211.2339</h3>
     </div>
   </div>
 
@@ -39,7 +36,7 @@
 
   <!-- Rejestracja Service Workera dla PWA -->
   <script>
-    console.log('Wersja 0111.1000')
+    console.log('Wersja 0211.2339')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
@@ -51,5 +48,3 @@
 
 </body>
 </html>
-
-

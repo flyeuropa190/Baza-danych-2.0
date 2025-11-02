@@ -418,19 +418,6 @@ body, html {
   overflow: hidden;
 }
 
-.naglowek-sg {
-  width: 80%;
-  height: auto;
-  padding: 5px;
-  margin-top: 80px;
-  color: blue;
-}
-
-.naglowek-sg p {
-  font-size: 10px;
-}
-
-
 
 /* DOPASOWANIE DO TELEFONU */
 @media (max-width: 430px) {
@@ -614,3 +601,12 @@ body, html {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+
+
+
+
+
+
+
+
