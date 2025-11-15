@@ -1,0 +1,161 @@
+/* Plik: glass-menu.css (Ostateczna, skompresowana wersja) */
+
+/* ----------------------------------- */
+/* 1. ZMIENNE KOLORÓW I MOTYW */
+/* ----------------------------------- */
+
+html {
+  /* Zmienne dla motywu JASNEGO (domyślny) */
+  --nav-bg: rgba(255, 255, 255, 0.4); 
+  --nav-border: rgba(255, 255, 255, 0.6);
+  --nav-shadow: rgba(0, 0, 0, 0.05);
+  --nav-text: #333333; 
+  --nav-text-hover: #000000;
+  --nav-link-hover-bg: rgba(0, 0, 0, 0.05);
+  --nav-link-active-bg: rgba(0, 0, 0, 0.1);
+  --body-bg-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070'); 
+  /* DODAJ ZMIENNE DLA PRZYCISKU HAMBURGERA */
+  --hamburger-bg-bar: var(--nav-text); 
+}
+
+html.dark-mode {
+  /* Zmienne dla motywu CIEMNEGO */
+  --nav-bg: rgba(255, 255, 255, 0.1);
+  --nav-border: rgba(255, 255, 255, 0.18);
+  --nav-shadow: rgba(0, 0, 0, 0.1);
+  --nav-text: #f0f0f0; 
+  --nav-text-hover: #ffffff;
+  --nav-link-hover-bg: rgba(255, 255, 255, 0.2);
+  --nav-link-active-bg: rgba(255, 255, 255, 0.25);
+  --body-bg-image: url('https://images.unsplash.com/photo-1553095066-501457fae005?q=80&w=2070');
+  --hamburger-bg-bar: var(--nav-text); 
+}
+
+/* ----------------------------------- */
+/* 2. STYLIZACJA GŁÓWNEGO PASKA NAWIGACJI */
+/* ----------------------------------- */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 5%;
+  
+  /* GLASS EFFECT */
+  background: var(--nav-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--nav-border);
+  box-shadow: 0 4px 15px var(--nav-shadow);
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Lewa strona */
+.navbar .nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar h1 {
+  font-size: 1.25rem;
+  color: var(--nav-text); 
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: color 0.3s ease;
+}
+
+/* Loga i ich widoczność */
+.navbar .logo-sg { display: none; }
+.navbar .mini-logo-sg { display: block; height: 40px; width: auto; }
+
+/* Kontener prawej strony (linki + przełącznik) */
+.navbar .nav-right-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Linki */
+.navbar .nav-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.navbar .nav-links a {
+  padding: 0.5rem 1rem;
+  color: var(--nav-text); 
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.navbar .nav-links a:hover {
+  background: var(--nav-link-hover-bg); 
+  color: var(--nav-text-hover);
+}
+
+.navbar .nav-links a.active {
+  background: var(--nav-link-active-bg); 
+  color: var(--nav-text-hover);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- Przełącznik motywu --- (ZOSTAWIAM BEZ ZMIAN WYNIKAJĄCYCH Z KOMPRESJI) */
+.theme-toggle {
+  position: relative;
+  width: 65px; 
+  height: 35px; 
+  border-radius: 17.5px; 
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px; 
+  background: #cccccc; 
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html.dark-mode .theme-toggle {
+  background: #607d8b; 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle .toggle-icon {
+  font-size: 1.1rem; 
+  transition: color 0.3s ease, transform 0.3s ease;
+  z-index: 10; 
+}
+
+.theme-toggle .sun-icon { color: #ffaa00; }
+.theme-toggle .moon-icon { color: #f0f0f0; }
+html.dark-mode .theme-toggle .sun-icon { color: #eeeeee; }
+html.dark-mode .theme-toggle .moon-icon { color: #ffd700; }
+
+.theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 29px; 
+  height: 29px;
+  border-radius: 50%;
+  background: #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 5; 
+}
+
+html.dark-mode .theme-toggle .toggle-knob {
+  transform: translateX(30px);
+}

@@ -1,0 +1,247 @@
+/* =======================================================
+   mobile-menu-staggered.css
+   Style menu: Wysuwanie z lewej, max 90%, rozmyte tło
+   ======================================================= */
+
+/* -------------------------------------------------------
+   1. Konfiguracja nagłówka (dla centrowania na mobile)
+   ------------------------------------------------------- */
+:root {
+  /* Domyślny tryb (Jasny) - Menu może być półprzezroczyste i jasne */
+  --mobile-menu-bg: rgba(255, 255, 255, 0.85); 
+  --mobile-menu-text: #222222;
+  --mobile-menu-accent: #5227FF; /* Akcent dla przycisku zamykania */
+  --mobile-menu-border: rgba(0, 0, 0, 0.1);
+}
+html.dark-mode {
+  /* Tryb Ciemny - Menu powinno być ciemne i rozmyte */
+  --mobile-menu-bg: rgba(30, 30, 34, 0.9);
+  --mobile-menu-text: #f0f0f0;
+  --mobile-menu-accent: #5227FF;
+  --mobile-menu-border: rgba(255, 255, 255, 0.1);
+}
+
+
+@media (max-width: 1024px) {
+    /* Zapewnij równe odstępy dla przycisku i motywu/linków */
+    .navbar {
+        justify-content: space-between;
+    }
+    
+    /* Na mobilnym ułóż elementy nav-left (Hamburger, Logo, H1) inaczej */
+    .navbar .nav-left {
+        width: auto;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    /* Ukrywamy standardowe linki nawigacyjne */
+    .navbar .nav-links {
+        display: none;
+    }
+}
+
+/* -------------------------------------------------------
+   2. Stylystyka przycisku Hamburgera
+   ------------------------------------------------------- */
+
+.hamburger-toggle {
+    display: none; /* Domyślnie ukryty na desktopie */
+    position: relative;
+    width: 44px; /* Szerokość dla lepszego kliknięcia */
+    height: 38px; /* Wysokość dla 3 linii */
+    padding: 8px; 
+    flex-direction: column;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1010;
+    color: var(--nav-text); /* Używa koloru tekstu z glass-menu.css */
+    transition: color 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .hamburger-toggle {
+        display: flex; /* Zmienione z block na flex, bo używa 3 osobnych linii */
+    }
+}
+
+/* Pojedyncza linia (bar) */
+.hamburger-toggle .bar {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: currentColor; /* Działa ze zmienną --nav-text */
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animacja w X */
+.hamburger-toggle[aria-expanded="true"] .bar1 {
+    transform: translateY(8px) rotate(45deg); /* Przesunięcie i obrót górnej */
+}
+
+.hamburger-toggle[aria-expanded="true"] .bar2 {
+    opacity: 0; /* Ukrycie środkowej */
+}
+
+.hamburger-toggle[aria-expanded="true"] .bar3 {
+    transform: translateY(-8px) rotate(-45deg); /* Przesunięcie i obrót dolnej */
+}
+
+/* -------------------------------------------------------
+   3. Styl panelu menu (Wysuwanie z LEWEJ, MAX 90%)
+   ------------------------------------------------------- */
+
+.staggered-menu-panel {
+    position: fixed;
+    top: 0;
+    left: 0; /* Zmienione na LEWO */
+    right: auto;
+    
+    /* Maksymalna szerokość: 90% widoku */
+    width: min(90vw, 350px); 
+    height: 100vh;
+    padding: 20px 30px 30px 30px; 
+    
+    /* Użycie zmiennych dla tła: */
+    background: var(--mobile-menu-bg); /* Zmienna dla tła (półprzezroczyste) */
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    
+    color: var(--mobile-menu-text); /* Zmienna dla koloru tekstu */
+    z-index: 1005;
+    
+    /* Początkowe ukrycie menu poza lewą krawędzią */
+    transform: translateX(-105%);
+    visibility: hidden;
+    
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), visibility 0.5s;
+    overflow-y: auto;
+}
+
+/* Stan otwarty */
+.staggered-menu-panel[aria-hidden="false"] {
+    transform: translateX(0);
+    visibility: visible;
+}
+
+/* -------------------------------------------------------
+   4. Nagłówek panelu i przycisk zamykania
+   ------------------------------------------------------- */
+
+.sm-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--mobile-menu-border);
+}
+
+.mini-logo-sidebar {
+    height: 40px; 
+    width: auto;
+}
+
+.close-menu-btn {
+    background: none;
+    border: none;
+    color: var(--mobile-menu-text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.close-menu-btn:hover {
+    color: var(--mobile-menu-accent);
+}
+
+
+/* -------------------------------------------------------
+   5. Stylistyka treści menu (Mniejsze napisy)
+   ------------------------------------------------------- */
+.sm-panel-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1.5rem;
+}
+
+.sm-panel-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Mniejszy odstęp */
+}
+
+.sm-panel-itemWrap {
+    overflow: hidden; 
+}
+
+.sm-panel-item {
+    color: var(--mobile-menu-text);
+    font-weight: 600;
+    font-size: 1.8rem; /* MNIEJSZY rozmiar czcionki */
+    text-decoration: none;
+    line-height: 1.2;
+    display: inline-block;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+    
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.5s ease 0.2s, opacity 0.5s ease 0.2s;
+}
+
+.sm-panel-item:hover {
+    color: var(--mobile-menu-accent);
+}
+
+/* Efekt kaskadowy w CSS */
+.staggered-menu-panel[aria-hidden="false"] .sm-panel-item {
+    transform: translateY(0);
+    opacity: 1;
+}
+.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(1) .sm-panel-item { transition-delay: 0.2s; }
+.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(2) .sm-panel-item { transition-delay: 0.25s; }
+.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(3) .sm-panel-item { transition-delay: 0.3s; }
+/* ... dodaj więcej, jeśli potrzeba ... */
+
+
+/* Stopka menu (Socials) - minimalne zmiany, aby pasowały do motywu */
+.sm-socials {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--mobile-menu-border);
+}
+
+.sm-socials-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--mobile-menu-accent);
+    margin-bottom: 0.5rem;
+}
+
+.sm-socials-list {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sm-socials-link {
+    color: #999999;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.sm-socials-link:hover {
+    color: #f0f0f0;
+}
