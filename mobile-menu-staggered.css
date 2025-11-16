@@ -10,7 +10,8 @@
   /* Domyślny tryb (Jasny) - Menu może być półprzezroczyste i jasne */
   --mobile-menu-bg: rgba(255, 255, 255, 0.85); 
   --mobile-menu-text: #222222;
-  --mobile-menu-accent: #5227FF; /* Akcent dla przycisku zamykania */
+  --mobile-menu-accent: #5227FF; 
+  --mobile-menu-accent2: #8324bc; 
   --mobile-menu-border: rgba(0, 0, 0, 0.1);
 }
 html.dark-mode {
@@ -159,6 +160,29 @@ html.dark-mode {
     color: var(--mobile-menu-accent);
 }
 
+/* Domyślny stan (Tryb Jasny) */
+.staggered-menu-panel .logo-light-mode {
+    display: block; /* Pokaż logo jasne */
+}
+.staggered-menu-panel .logo-dark-mode-hidden {
+    display: none; /* Ukryj logo ciemne */
+}
+
+/* Stan w Trybie Ciemnym */
+html.dark-mode .staggered-menu-panel .logo-light-mode {
+    display: none; /* Ukryj logo jasne w trybie ciemnym */
+}
+html.dark-mode .staggered-menu-panel .logo-dark-mode-hidden {
+    display: block; /* Pokaż logo ciemne w trybie ciemnym */
+}
+
+/* Właściwości ogólne (pozostają w sekcji 4) */
+.mini-logo-sidebar {
+    height: 40px; 
+    width: auto;
+    /* Dodać, aby oba loga zajmowały to samo miejsce i wysokość */
+}
+
 
 /* -------------------------------------------------------
    5. Stylistyka treści menu (Mniejsze napisy)
@@ -196,6 +220,10 @@ html.dark-mode {
     transform: translateY(100%);
     opacity: 0;
     transition: transform 0.5s ease 0.2s, opacity 0.5s ease 0.2s;
+}
+
+.sm-panel-item.active {
+    color: var(--mobile-menu-accent2); /* Użyj koloru akcentu */      
 }
 
 .sm-panel-item:hover {

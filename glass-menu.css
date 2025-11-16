@@ -1,5 +1,3 @@
-/* Plik: glass-menu.css (Ostateczna, skompresowana wersja) */
-
 /* ----------------------------------- */
 /* 1. ZMIENNE KOLORÓW I MOTYW */
 /* ----------------------------------- */
@@ -12,22 +10,18 @@ html {
   --nav-text: #333333; 
   --nav-text-hover: #000000;
   --nav-link-hover-bg: rgba(0, 0, 0, 0.05);
-  --nav-link-active-bg: rgba(0, 0, 0, 0.1);
-  --body-bg-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070'); 
-  /* DODAJ ZMIENNE DLA PRZYCISKU HAMBURGERA */
+  --nav-link-active-bg: rgba(0, 0, 0, 0.1);    
   --hamburger-bg-bar: var(--nav-text); 
 }
 
-html.dark-mode {
-  /* Zmienne dla motywu CIEMNEGO */
+html.dark-mode {  
   --nav-bg: rgba(255, 255, 255, 0.1);
   --nav-border: rgba(255, 255, 255, 0.18);
   --nav-shadow: rgba(0, 0, 0, 0.1);
   --nav-text: #f0f0f0; 
   --nav-text-hover: #ffffff;
   --nav-link-hover-bg: rgba(255, 255, 255, 0.2);
-  --nav-link-active-bg: rgba(255, 255, 255, 0.25);
-  --body-bg-image: url('https://images.unsplash.com/photo-1553095066-501457fae005?q=80&w=2070');
+  --nav-link-active-bg: rgba(255, 255, 255, 0.25);  
   --hamburger-bg-bar: var(--nav-text); 
 }
 
@@ -42,7 +36,6 @@ html.dark-mode {
   width: 100%;
   padding: 1rem 5%;
   
-  /* GLASS EFFECT */
   background: var(--nav-bg);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -108,6 +101,8 @@ html.dark-mode {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+
+
 /* --- Przełącznik motywu --- (ZOSTAWIAM BEZ ZMIAN WYNIKAJĄCYCH Z KOMPRESJI) */
 .theme-toggle {
   position: relative;
@@ -158,4 +153,70 @@ html.dark-mode .theme-toggle .moon-icon { color: #ffd700; }
 
 html.dark-mode .theme-toggle .toggle-knob {
   transform: translateX(30px);
+}
+
+/* -------------------------------------------------------
+   3. Obsługa Logo w Nagłówku (Desktop / Mobile Mini)
+   ------------------------------------------------------- */
+
+/* Domyślna widoczność loga. 
+   Używamy logo.png i mini-logo.png jako domyślnych (tryb jasny).
+*/
+.logo-light-mode,
+.mini-logo-light-mode {
+    display: block !important;
+}
+.logo-dark-mode-hidden,
+.mini-logo-dark-mode-hidden {
+    display: none !important;
+}
+
+/* Nadpisanie w trybie Ciemnym. 
+   Wyświetlamy logo2.png i mini-logo2.png.
+*/
+html.dark-mode .logo-light-mode,
+html.dark-mode .mini-logo-light-mode {
+    display: none !important;
+}
+html.dark-mode .logo-dark-mode-hidden,
+html.dark-mode .mini-logo-dark-mode-hidden {
+    display: block !important;
+}
+
+/* KOREKTA: Musimy upewnić się, że klasy display dla kontenerów są poprawne */
+.navbar .logo-sg { 
+    height: 40px; /* Utrzymaj stałą wysokość */
+    width: auto;
+}
+.navbar .mini-logo-sg { 
+    height: 40px; /* Utrzymaj stałą wysokość */
+    width: auto;
+}
+
+/* Zapewnienie poprawnego wyświetlania głównego logo na desktopie */
+@media (min-width: 1025px) {
+    /* Na desktopie pokaż duże logo */
+    .navbar .logo-container {
+        display: block;
+    }
+    .navbar .mini-logo-container {
+        display: none;
+    }
+    .navbar .logo-sg {
+      /* Zastąp to stałymi stylami, jeśli były wcześniej w klasie .logo-sg */
+      height: 40px; 
+    }
+}
+
+/* Zapewnienie poprawnego wyświetlania mini-logo na mobile (poniżej 1025px) */
+@media (max-width: 1024px) {
+    .navbar .logo-container {
+        display: none;
+    }
+    .navbar .mini-logo-container {
+        display: block;
+    }
+    .navbar .mini-logo-sg {
+      height: 40px; 
+    }
 }

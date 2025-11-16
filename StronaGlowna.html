@@ -12,8 +12,7 @@
   <link rel="stylesheet" href="./mobile-menu-staggered.css"> <script defer src="./mobile-menu.js"></script> 
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-  <script defer src="./data.js"></script>
-  <script defer src="./menu.js"></script>
+  <script defer src="./data.js"></script>  
   <script defer src="./theme-switcher.js"></script>
 </head>
 
@@ -27,9 +26,16 @@
     <span class="bar bar2"></span>
     <span class="bar bar3"></span>
 </button>
-
-      <a href="index.html"><img src="./logo.png" alt="Logo" class="logo-sg"></a>
-      <a href="index.html"><img src="./mini-logo.png" alt="Logo" class="mini-logo-sg"></a>
+      
+      <a href="index.html" class="logo-container">
+          <img src="./logo1.png" alt="Logo w trybie jasnym" class="logo-sg logo-light-mode">
+          <img src="./logo1a.png" alt="Logo w trybie ciemnym" class="logo-sg logo-dark-mode-hidden">
+      </a>
+      
+      <a href="index.html" class="mini-logo-container">
+          <img src="./mini-logo.png" alt="Mini logo w trybie jasnym" class="mini-logo-sg mini-logo-light-mode">
+          <img src="./mini-logo2.png" alt="Mini logo w trybie ciemnym" class="mini-logo-sg mini-logo-dark-mode-hidden">
+      </a>
       <h1>Baza danych 2.0</h1>
     </div>
 
@@ -54,7 +60,8 @@
   <aside id="mobile-menu-panel" class="staggered-menu-panel" aria-hidden="true">
     
     <div class="sm-panel-header">
-        <img src="./mini-logo.png" alt="Logo" class="mini-logo-sidebar">
+        <img src="./mini-logo.png" alt="Logo" class="mini-logo-sidebar logo-light-mode">
+        <img src="./mini-logo2.png" alt="Logo w trybie ciemnym" class="mini-logo-sidebar logo-dark-mode-hidden">
         <button class="close-menu-btn" id="menuClose" aria-label="Zamknij menu">
             <i class="fas fa-times"></i>
         </button>

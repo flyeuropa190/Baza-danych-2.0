@@ -17,7 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Zablokuj scrollowanie body
         document.body.style.overflow = newExpandedState ? 'hidden' : '';
+
+        if (!newExpandedState) {
+            // Jeśli menu jest ZAMYKANE, przenieś focus z powrotem na przycisk otwierający.
+            // Zapobiega to ukryciu aktywnego focusa.
+            menuToggle.focus();
+        }
     };
+
+    
 
     if (menuToggle && menuPanel) {
         // Obsługa otwierania przyciskiem hamburgera
@@ -38,4 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    const currentPath = window.location.pathname.split('/').pop();
+        const navLinks = menuPanel.querySelectorAll('a.sm-panel-item');
+
+        navLinks.forEach(link => {
+            const linkPath = link.getAttribute('href');
+            
+            // Porównaj ostatnią część ścieżki (np. "StronaGlowna.html")
+            if (linkPath === currentPath) {
+                link.classList.add('active');
+            } else if (currentPath === '' && linkPath === 'StronaGlowna.html') {
+                // Specjalna obsługa, jeśli strona główna jest ładowana jako '/'
+                link.classList.add('active');
+            }
+        });
 });
+
+
