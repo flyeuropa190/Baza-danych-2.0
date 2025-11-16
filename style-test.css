@@ -1,0 +1,157 @@
+/* Zmienne CSS dla kolorów motywu */
+:root {
+    /* Jasny Motyw (Domyślny) */
+    --background-color: #f0f2f5;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --secondary-text-color: #666666;
+    --primary-color: #8324bc; /* Fiolet */
+    --primary-hover-color: #6d1e9e;
+    --input-border-color: #cccccc;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --toggle-color: #333333;
+}
+
+/* Ciemny Motyw */
+body.dark-theme {
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --text-color: #e0e0e0;
+    --secondary-text-color: #aaaaaa;
+    --primary-color: #a448e8; /* Jaśniejszy Fiolet w Ciemnym Motywie */
+    --primary-hover-color: #8b36c4;
+    --input-border-color: #555555;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --toggle-color: #e0e0e0;
+}
+
+/* Globalne style body i tła */
+body {
+    font-family: 'Lexend', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Dla pozycjonowania przycisku motywu */
+}
+
+/* Styl dla przełącznika motywu */
+#theme-toggle {
+    position: absolute;
+    top: -40px; /* Umieszczony nad kontenerem */
+    right: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--toggle-color);
+    padding: 5px;
+    transition: color 0.3s ease, transform 0.2s ease;
+    outline: none;
+}
+
+#theme-toggle:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.logo2 {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.login-box {
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    width: 100%;
+    max-width: 380px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    font-size: 2em;
+}
+
+h2 {
+    color: var(--secondary-text-color);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-weight: 400;
+    font-size: 1em;
+}
+
+h3 {
+    color: var(--secondary-text-color);
+    margin-top: 20px;
+    font-size: 0.8em;
+    font-weight: 400;
+}
+
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+button#loginButton {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button#loginButton:hover {
+    background-color: var(--primary-hover-color);
+}
+
+p#errorMsg {
+    color: #e74c3c; /* Czerwony kolor dla błędu */
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* Responsywność */
+@media (max-width: 600px) {
+    .login-box {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+
+    #theme-toggle {
+        top: 10px;
+        right: 10px;
+    }
+}
