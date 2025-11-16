@@ -1,80 +1,99 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strona Główna – Baza danych 2.0</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./glass-menu.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="./mobile-menu-staggered.css"> <script defer src="./mobile-menu.js"></script> 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-  <script defer src="./data.js"></script>  
-  <script defer src="./theme-switcher.js"></script>
+<head>
+    <script>
+  (function checkLogin() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
+    const oneHoursInMs = 60 * 60 * 1000;
+    const isExpired = (Date.now() - loginTimestamp) > oneHoursInMs;
+
+    if (isLoggedIn !== 'true') { // || isExpired
+        window.location.href = "index.html"; // Przekierowanie do strony logowania
+        return;
+    }
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna – Baza danych 2.0</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght=400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./glass-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="./mobile-menu-staggered.css">
+    <script defer src="./mobile-menu.js"></script>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+
+    <script type="module" src="./data-loader.js" defer></script> 
+    <script defer src="./theme-switcher.js"></script>
+
 </head>
 
 <body class="main-bg">
 
-  <header class="navbar">
-    
-    <div class="nav-left">
-<button class="hamburger-toggle" id="menuToggle" aria-label="Otwórz menu mobilne" aria-expanded="false" aria-controls="mobile-menu-panel">
-    <span class="bar bar1"></span>
-    <span class="bar bar2"></span>
-    <span class="bar bar3"></span>
-</button>
-      
-      <a href="index.html" class="logo-container">
-          <img src="./logo1.png" alt="Logo w trybie jasnym" class="logo-sg logo-light-mode">
-          <img src="./logo1a.png" alt="Logo w trybie ciemnym" class="logo-sg logo-dark-mode-hidden">
-      </a>
-      
-      <a href="index.html" class="mini-logo-container">
-          <img src="./mini-logo.png" alt="Mini logo w trybie jasnym" class="mini-logo-sg mini-logo-light-mode">
-          <img src="./mini-logo2.png" alt="Mini logo w trybie ciemnym" class="mini-logo-sg mini-logo-dark-mode-hidden">
-      </a>
-      <h1>Baza danych 2.0</h1>
-    </div>
+    <header class="navbar">
+        <div class="nav-left">
+            <button class="hamburger-toggle" id="menuToggle" aria-label="Otwórz menu mobilne" aria-expanded="false" aria-controls="mobile-menu-panel">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+            </button>
+            <a href="index.html" class="logo-container">
+                <img src="./logo1.png" alt="Logo w trybie jasnym" class="logo-sg logo-light-mode">
+                <img src="./logo1a.png" alt="Logo w trybie ciemnym" class="logo-sg logo-dark-mode-hidden">
+            </a>
+            <a href="index.html" class="mini-logo-container">
+                <img src="./mini-logo.png" alt="Mini logo w trybie jasnym" class="mini-logo-sg mini-logo-light-mode">
+                <img src="./mini-logo2.png" alt="Mini logo w trybie ciemnym" class="mini-logo-sg mini-logo-dark-mode-hidden">
+            </a>
+            <h1>Baza danych 2.0</h1>
+        </div>
 
-    <div class="nav-right-container">
-    
-      <nav class="nav-links">
-        <a href="StronaGlowna.html" class="active">Strona główna</a>
-        <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
-        <a href="NaprawyPlanowane.html">Naprawy planowane</a>
-      </nav>
+        <div class="nav-right-container">
+            <nav class="nav-links">
+                <a href="StronaGlowna.html" class="active">Strona główna</a>
+                <a href="PrzegladyPlanowane.html">Przeglądy planowane</a>
+                <a href="NaprawyPlanowane.html">Naprawy planowane</a>
+            </nav>
 
-      <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
-        <i class="fas fa-sun toggle-icon sun-icon"></i>
-        <i class="fas fa-moon toggle-icon moon-icon"></i>
-        <span class="toggle-knob"></span> 
-      </button>
+            <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
+                <i class="fas fa-sun toggle-icon sun-icon"></i>
+                <i class="fas fa-moon toggle-icon moon-icon"></i>
+                <span class="toggle-knob"></span>
+            </button>
+        </div>
+    </header>
 
+    <aside id="mobile-menu-panel" class="staggered-menu-panel" aria-hidden="true">
+        <div class="sm-panel-header">
+            <img src="./mini-logo.png" alt="Logo" class="mini-logo-sidebar logo-light-mode">
+            <img src="./mini-logo2.png" alt="Logo w trybie ciemnym" class="mini-logo-sidebar logo-dark-mode-hidden">
+            <button class="close-menu-btn" id="menuClose" aria-label="Zamknij menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sm-panel-inner">
+            <ul class="sm-panel-list" role="list">
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="StronaGlowna.html" data-index="1"><span class="sm-panel-itemLabel">Strona Główna</span></a></li>
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="PrzegladyPlanowane.html" data-index="2"><span class="sm-panel-itemLabel">Przeglądy Planowane</span></a></li>
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="NaprawyPlanowane.html" data-index="3"><span class="sm-panel-itemLabel">Naprawy Planowane</span></a></li>
+            </ul>
+        </div>
+    </aside>
 
-    </div>
-  </header>
-  
-  <aside id="mobile-menu-panel" class="staggered-menu-panel" aria-hidden="true">
-    
-    <div class="sm-panel-header">
-        <img src="./mini-logo.png" alt="Logo" class="mini-logo-sidebar logo-light-mode">
-        <img src="./mini-logo2.png" alt="Logo w trybie ciemnym" class="mini-logo-sidebar logo-dark-mode-hidden">
-        <button class="close-menu-btn" id="menuClose" aria-label="Zamknij menu">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
+    <main class="main-content-wrapper">
+        <section class="section-communications">
+            <h2>📢 Komunikaty Systemowe</h2>
+            <div id="communications-status" class="status-box">Ładowanie komunikatów...</div>
+            <div id="communications-list" class="communications-grid">
+                </div>
+        </section>
+    </main>
 
-    <div class="sm-panel-inner">
-      <ul class="sm-panel-list" role="list">
-          <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="StronaGlowna.html" data-index="1"><span class="sm-panel-itemLabel">Strona Główna</span></a></li> 
-          <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="PrzegladyPlanowane.html" data-index="2"><span class="sm-panel-itemLabel">Przeglądy Planowane</span></a></li>
-          <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="NaprawyPlanowane.html" data-index="3"><span class="sm-panel-itemLabel">Naprawy Planowane</span></a></li>
-      </ul>
-      </div>
-</aside>
-
-  </body>
+</body>
 </html>

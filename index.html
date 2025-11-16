@@ -15,9 +15,18 @@
 
   <!-- Ikona aplikacji -->
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body class="login-page">
+
+  <div class="theme-toggle-container">
+        <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw jasny/ciemny">
+            <i class="fas fa-sun toggle-icon sun-icon"></i>
+            <span class="toggle-knob"></span>
+            <i class="fas fa-moon toggle-icon moon-icon"></i>
+        </button>
+  </div>
 
   <div class="container"> 
     <img src="./logo2.png" alt="Logo2" class="logo2">
@@ -27,7 +36,7 @@
       <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
       <button id="loginButton">Zaloguj</button>
       <p id="errorMsg"></p>
-      <h3>Wersja 1611.0141</h3>
+      <h3>Wersja 1611.1119</h3>
     </div>
   </div>
 
@@ -36,7 +45,7 @@
 
   <!-- Rejestracja Service Workera dla PWA -->
   <script>
-    console.log('Wersja 1611.0141')
+    console.log('Wersja 1611.1119')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
@@ -45,6 +54,8 @@
       });
     }
   </script>
+
+
 
 </body>
 </html>

@@ -12,7 +12,7 @@
 
 :root {
   /* Domyślny motyw: Jasny */
-  --bg-color: #ffffff;
+  --bg-color: #d6d4d4;
   --text-color: #000000;
   --accent-color: #9900ff;
   
@@ -94,18 +94,72 @@ body.main-bg {
   position: center;
   z-index: 2;
 }
-/* ... (cała reszta stylów logowania, animacji, toastów bez zmian) ... */
 
 /* Animacje */
 @keyframes fadeSlideIn { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
 @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-/* Login Box */
-.logo2 { width: 30%; height: auto; z-index: 10; margin-bottom: 100px; animation: fadeIn 1s ease forwards; }
+/* EKRAN LOGOWANIA */
+.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(117, 139, 208, 0.25),
+    rgba(131, 36, 188, 0.25)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+/* Kontener centralny */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: center;
+  z-index: 2;
+}
+
+/* Animacja wejścia login-box */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efekt potrząsania przy błędzie */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* Logo */
+.logo2 {
+  width: 30%;
+  height: auto;
+  z-index: 10;
+  margin-bottom: 100px;
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Pudełko logowania – przezroczyste i czytelne */
 .login-box {
-  background: var(--login-glass-bg);
-  border: 1px solid var(--login-glass-border);
+  background: rgba(255, 255, 255, 0.25); /* półprzezroczyste białe tło */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   padding: 40px;
@@ -117,47 +171,446 @@ body.main-bg {
   max-width: 350px;
   margin-bottom: 10%;
   animation: fadeSlideIn 0.8s ease forwards;
-  transition: box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
-.login-box.shake { animation: shake 0.5s ease; }
-.login-box h1 { color: var(--text-color); margin-bottom: 30px; font-weight: 600; text-align: center; transition: color 0.3s ease; }
-.login-box h2 { color: #007f2f; margin-bottom: 30px; font-weight: 600; text-align: center; font-size: 18px; }
-.login-box h3 { font-size: 14px; margin-top: 10px; }
+
+.login-box.shake {
+  animation: shake 0.5s ease;
+}
+
+/* Nagłówki */
+.login-box h1 {
+  color: #000; /* lepszy kontrast */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #007f2f; /* ciemniejszy zielony dla kontrastu */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 18px;
+}
+
+.login-box h3 {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Pola tekstowe */
 .login-box input {
-  width: 100%; padding: 12px 15px; margin-bottom: 20px;
-  border: 1px solid var(--login-input-border); border-radius: 12px; outline: none; font-size: 16px;
-  background: var(--login-input-bg); color: var(--text-color);
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, border 0.3s ease, color 0.3s ease;
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.85); /* bardziej czytelne tło */
+  color: #000; /* kontrastowy tekst */
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, border 0.3s ease;
 }
-.login-box input::placeholder { color: var(--login-input-placeholder); }
+
+.login-box input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .login-box input:focus {
-  background: var(--login-input-bg-focus); transform: scale(1.02);
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(131, 36, 188, 0.25);
 }
+
+/* Pole hasła z błędem */
 .login-box input.error {
-  border: 2px solid #ff4d4f; background: rgba(255, 77, 79, 0.15);
-  color: var(--text-color); box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
+  border: 2px solid #ff4d4f; /* czerwony obrys */
+  background: rgba(255, 77, 79, 0.15); /* lekko czerwone tło */
+  color: #000; /* tekst pozostaje czytelny */
+  box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
 }
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Przycisk */
 .login-box button {
-  width: 100%; padding: 14px; border: none; border-radius: 14px; font-size: 16px; font-weight: 600;
-  cursor: pointer; color: #fff; background: linear-gradient(135deg, #8324bc, #758bd0, #8324bc);
-  background-size: 300% 300%; box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3); backdrop-filter: blur(8px);
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #8324bc, #758bd0, #8324bc);
+  background-size: 300% 300%;
+  box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3);
+  backdrop-filter: blur(8px);
   transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
-  animation: gradientShift 5s ease infinite;
+    animation: gradientShift 5s ease infinite;
 }
+
 .login-box button:hover {
-  transform: scale(1.05); box-shadow: 0 6px 25px rgba(131, 36, 188, 0.45);
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(131, 36, 188, 0.45);
 }
-#errorMsg { color: #ff4d4f; margin-top: 10px; opacity: 0; transition: opacity 0.3s ease; font-weight: 600; text-align: center; }
 
-/* Inne reguły ogólne */
-.no-scroll, .no-scroll body { overflow: hidden; }
-#active-page { display: none; }
-
-/* DOPASOWANIE DO TELEFONU (Desktopowe reguły z style.css, które kolidowały z glass-menu, zostały usunięte/wyczyszczone) */
-@media (max-width: 430px) {
-  .logo-sg { width: 120px; display: none; }
-  .mini-logo-sg { width: 50px; display: flex; margin: 0; }
-  /* ... (inne reguły związane z login-page) ... */
+/* Komunikat błędu */
+#errorMsg {
+  color: #ff4d4f;
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-weight: 600;
+  text-align: center;
 }
-/* ... (Pozostałe media queries związane z logowaniem) ... */
+/* EKRAN LOGOWANIA - KONIEC */
+
+
+/* Blokada scrolla */
+.no-scroll, .no-scroll body {
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------
+   4. Przełącznik Motywu na Stronie Logowania
+   ------------------------------------------------------- */
+
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* Stylistyka nowoczesnego suwaka (Wymaga Font Awesome dla ikon!) */
+.theme-toggle {
+  /* Podstawowe ustawienia kontenera (kapsuły) */
+  position: relative;
+  width: 65px; /* Szerokość przełącznika */
+  height: 35px; /* Wysokość przełącznika */
+  border-radius: 17.5px; /* Kształt kapsuły */
+  cursor: pointer;
+  padding: 0;
+  
+  /* Układ elementów wewnątrz (ikony) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px; 
+
+  /* Użycie zmiennych dla tła i obramowania (Jasny tryb) */
+  background: var(--login-input-bg); /* Jasne tło z motywu login-glass */
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+  transition: all 0.3s ease;
+}
+
+/* Tryb Ciemny */
+html.dark-mode .theme-toggle {
+  background: var(--login-input-bg); 
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Stylowanie ikon (słońce i księżyc) */
+.theme-toggle .toggle-icon {
+  font-size: 1.1rem; 
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.theme-toggle .sun-icon {
+  color: #ffaa00; 
+}
+.theme-toggle .moon-icon {
+  color: #f0f0f0; 
+}
+
+html.dark-mode .theme-toggle .sun-icon {
+  color: #eeeeee; 
+}
+html.dark-mode .theme-toggle .moon-icon {
+  color: #ffd700; 
+}
+
+/* Stylowanie ruchomego pokrętła (knob) */
+.theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 29px; 
+  height: 29px;
+  border-radius: 50%;
+  
+  background: #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 5; 
+}
+
+/* Przesunięcie pokrętła w trybie Dark Mode */
+html.dark-mode .theme-toggle .toggle-knob {
+  transform: translateX(30px); 
+}
+
+/* --- A. Sekcja Komunikatów (Glassmorphism) --- */
+.section-communications {
+    padding: 20px 0;
+}
+
+.communications-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.communication-item {
+    /* Glassmorphism */
+    background: var(--login-glass-bg); /* Półprzezroczyste tło (zmienna z motywu) */
+    border: 1px solid var(--login-glass-border); /* Półprzezroczysta ramka */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+.communication-item:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.comm-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--login-input-border); /* Cienka linia pod nagłówkiem */
+    padding-bottom: 8px;
+}
+
+.comm-data-komunikatu {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 5px;
+}
+
+.comm-icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.comm-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.comm-meta {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.comm-category {
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    color: white; /* Tekst kategorii zawsze biały dla kontrastu */
+}
+
+.comm-content {
+    line-height: 1.5;
+    white-space: pre-wrap; /* Zachowanie formatowania z arkusza (np. nowych linii) */
+}
+
+/* --- B. Kolorowanie KategoriI --- */
+
+/* Test */
+.comm-test .comm-category {
+    background-color: #9b59b6; /* Fioletowy */
+}
+.comm-test .comm-icon {
+    color: #9b59b6;
+}
+
+/* Aktualizacja */
+.comm-aktualizacja .comm-category {
+    background-color: #34495e; /* Granat/ciemny szary */
+}
+.comm-aktualizacja .comm-icon {
+    color: #34495e;
+}
+
+/* Techniczne */
+.comm-techniczne .comm-category {
+    background-color: #e67e22; /* Pomarańczowy/ceglasty */
+}
+.comm-techniczne .comm-icon {
+    color: #e67e22;
+}
+
+/* Flota */
+.comm-flota .comm-category {
+    background-color: #1abc9c; /* Turkusowy */
+}
+.comm-flota .comm-icon {
+    color: #1abc9c;
+}
+
+/* Ruch Lotniczy */
+.comm-ruch_lotniczy .comm-category {
+    background-color: #3498db; /* Niebieski (podobnie jak info) */
+}
+.comm-ruch_lotniczy .comm-icon {
+    color: #3498db;
+}
+
+/* Pilne (ponowne zdefiniowanie, dla pewności, że jest Czerwony) */
+.comm-pilne .comm-category {
+    background-color: #c0392b; /* Intensywny Czerwony */
+}
+.comm-pilne .comm-icon {
+    color: #c0392b;
+}
+
+/* Domyślny (DEFAULT) */
+.comm-default .comm-category {
+    background-color: #95a5a6; /* Szary */
+}
+.comm-default .comm-icon {
+    color: var(--accent-color); /* Akcentowy kolor motywu */
+}
+
+/* Status ładowania */
+.status-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+}
+.hidden {
+    display: none;
+}
+
+
+
+@media (max-width: 760px) {
+  .logo2 {
+    width: 80%;
+    margin-bottom: 50px;
+  }
+
+  .login-box {
+    width: 80%;
+    margin-bottom: 0;
+  }
+
+  .login-box h1 {
+    font-size: 23px;    
+  }
+
+  .login-box h2 {
+    font-size: 15px;    
+  }
+}
+
+@media (max-device-width: 1000px) and (orientation: landscape) {
+  .logo2 {
+    margin-bottom: 20px;
+  }
+
+  .login-box {    
+    max-width: 80%;
+    margin-bottom: 0px;
+    max-height: 60%;
+    padding-top: 10px;
+    padding-bottom: 10px;        
+  }
+
+  .login-box h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .login-box h2 {
+    font-size: 12px;    
+    margin-bottom: 10px;
+  }
+
+  .login-box h3 {
+    font-size: 10px;
+    margin-top: 0px;
+  }
+
+  .login-box input {
+   max-height: 35px; 
+  }
+
+  .login-box button {
+   max-height: 35px; 
+   padding-bottom: 7px;
+   padding-top: 7px;
+  }
+
+  #errorMsg {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+}
+
+
+/* ANIMACJE */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Animacja potrząsania przy błędzie */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-10px); }
+  80% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
+.login-box.shake {
+  animation: shake 0.5s;
+}
+
+/* Powiadomienie „toast” */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #8324bc;
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(131,36,188,0.3);
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

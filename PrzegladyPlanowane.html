@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="pl">
+  
 <head>
+    <script>
+  (function checkLogin() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
+    const oneHoursInMs = 60 * 60 * 1000;
+    const isExpired = (Date.now() - loginTimestamp) > oneHoursInMs;
+
+    if (isLoggedIn !== 'true') { // || isExpired
+        window.location.href = "index.html"; // Przekierowanie do strony logowania
+        return;
+    }
+})();
+</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Przeglady Planowane – Baza danych 2.0</title>
@@ -16,6 +32,8 @@
 
     <!-- ikona strony -->
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+
+
 </head>
 
 <body class="przeglady-planowane">
