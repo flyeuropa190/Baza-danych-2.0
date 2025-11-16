@@ -1,44 +1,78 @@
 const loginButton = document.getElementById("loginButton");
 const passwordInput = document.getElementById("passwordInput");
 const errorMsg = document.getElementById("errorMsg");
-const container = document.querySelector(".container");
-const mainContent = document.getElementById("mainContent");
 const loginBox = document.querySelector(".login-box");
+const themeToggle = document.getElementById("themeToggle"); // Nowy element
 
-const TARGET_HASH = "1e2e27a7cf48e9fe1c7906f80e5f62949249f6d7e5cde37373c0b7e745ed262b";
-async function hashSHA256(message) {    
-    const msgBuffer = new TextEncoder().encode(message);         
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);        
-    const hashArray = Array.from(new Uint8Array(hashBuffer));         
+const TARGET_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"; // 123456
+
+// --- 1. FUNKCJA HASHUJĄCA ---
+async function hashSHA256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray
         .map(b => b.toString(16).padStart(2, '0'))
-        .join('');        
+        .join('');
     return hashHex;
 }
 
+// --- 2. LOGIKA ZABEZPIECZEŃ (Status Zalogowania) ---
+function saveLoginStatus() {
+    // Ustaw flagę w localStorage na 'true' i dodaj znacznik czasowy
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('loginTimestamp', Date.now()); 
+}
+
+// Funkcja usuwająca status logowania
+function clearLoginStatus() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('loginTimestamp');
+}
+
+// --- 3. PRZEŁĄCZNIK MOTYWU (Dark/Light Mode) ---
+function loadTheme() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    document.documentElement.classList.toggle('dark-mode', isDarkMode);
+}
+
+function toggleTheme() {
+    const isDarkMode = document.documentElement.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDarkMode);
+}
+
+// --- INICJALIZACJA I LISTENERY ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Ładuj zapisany motyw przy starcie
+    loadTheme(); 
+    
+    // Listener dla przycisku zmiany motywu
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+});
+
+
 loginButton.addEventListener("click", async () => {
-    const input = passwordInput.value;        
-    const hashedInput = await hashSHA256(input);        
+    const input = passwordInput.value;
+    const hashedInput = await hashSHA256(input);
+
     if (hashedInput === TARGET_HASH) {
+        // Zabezpieczenie: Zapisz status zalogowania przed przekierowaniem
+        saveLoginStatus(); 
         window.location.href = "StronaGlowna.html";
     } else {
         errorMsg.textContent = "❌ Niepoprawne hasło";
         errorMsg.style.opacity = 1;
         
-        passwordInput.classList.add("error"); // podświetlenie na czerwono
+        passwordInput.classList.add("error");
         passwordInput.value = "";
         
-        // Efekt potrząsania
         loginBox.classList.remove("shake");
         void loginBox.offsetWidth;
         loginBox.classList.add("shake");
+
+        // Jeśli błędne hasło, upewnij się, że nie ma statusu zalogowania
+        clearLoginStatus(); 
     }
 });
-
-
-
-function toggleMenu() {
-  document.getElementById('mobile-nav').classList.toggle('open');
-
-}
-
