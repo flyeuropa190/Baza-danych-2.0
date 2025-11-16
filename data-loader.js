@@ -80,16 +80,9 @@ function getCategoryClass(category) {
         case 'flota':
             return 'comm-flota'; 
         case 'ruch_lotniczy':
-            return 'comm-ruch_lotniczy';
-            
+            return 'comm-ruch_lotniczy';            
         case 'pilne':
-            return 'comm-pilne'; 
-        case 'ostrzeżenie':
-            return 'comm-warning'; 
-        case 'informacja':
-            return 'comm-info'; 
-        case 'sukces':
-            return 'comm-success'; 
+            return 'comm-pilne';  
         default:
             return 'comm-default'; 
     }

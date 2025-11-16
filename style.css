@@ -506,6 +506,203 @@ html.dark-mode .theme-toggle .toggle-knob {
     display: none;
 }
 
+/* --- A. Sekcja Przeglądów (Glassmorphism) --- */
+.section-inspections {
+    padding: 20px 0;
+}
+
+.subsection {
+    margin-top: 25px;
+}
+
+.inspections-grid {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding-top: 10px;
+}
+
+.inspection-item {
+    /* Glassmorphism */
+    background: var(--login-glass-bg); 
+    border: 1px solid var(--login-glass-border); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    border-left-width: 8px; /* Gruba linia po lewej dla statusu */
+    border-left-style: solid;
+}
+
+.inspection-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.registration-info {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.inspection-dates {
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+.type-tag {
+    font-size: 0.8rem;
+    font-weight: 700; /* Pogrubienie */
+    padding: 4px 8px; /* Większy padding */
+    border-radius: 5px;
+    color: white; 
+    text-transform: uppercase; /* Dla lepszej widoczności */
+}
+
+/* KONTENER DLA NAGŁÓWKA I STATUSU */
+.inspection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.inspection-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px dashed var(--login-glass-border); /* Separator */
+}
+
+/* WIDŻET STATUSU */
+.status-tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: var(--text-color); /* Domyślny kolor tekstu */
+    background-color: var(--login-input-bg); /* Lekkie tło */
+}
+
+.no-data {
+    font-style: italic;
+    opacity: 0.7;
+    grid-column: 1 / -1; /* Rozciągnij na całą siatkę */
+}
+
+/* --- KOLOROWANIE STATUSU (Lewa Linia i Tag Statusu) --- */
+
+/* 1. Zaplanowany (Lekki Róż) */
+.status-planned {
+    border-left-color: #f7a0b3; 
+}
+.status-planned .status-tag {
+    background-color: #f7a0b3;
+    color: black;
+}
+
+/* 2. W Trakcie (Niebieski) */
+.status-in-progress {
+    border-left-color: #3498db; 
+}
+.status-in-progress .status-tag {
+    background-color: #3498db;
+    color: white;
+}
+
+/* 3. Wykonany (Zielony) */
+.status-completed {
+    border-left-color: #2ecc71; 
+}
+.status-completed .status-tag {
+    background-color: #2ecc71;
+    color: white;
+}
+
+/* 4. Przygotowany (Fioletowy) */
+.status-prepared {
+    border-left-color: #9b59b6; 
+}
+.status-prepared .status-tag {
+    background-color: #9b59b6;
+    color: white;
+}
+
+/* 5. Anulowany (Szary) */
+.status-cancelled {
+    border-left-color: #95a5a6; 
+}
+.status-cancelled .status-tag {
+    background-color: #95a5a6;
+    color: white;
+}
+
+/* 6. Przełożony (Żółty) */
+.status-postponed {
+    border-left-color: #f1c40f; 
+}
+.status-postponed .status-tag {
+    background-color: #f1c40f;
+    color: black;
+}
+
+/* 7. Niewykonany (Lekko Czerwony) */
+.status-unperformed {
+    border-left-color: #e67e22; 
+}
+.status-unperformed .status-tag {
+    background-color: #e67e22;
+    color: white;
+}
+
+/* 8. Problem (Czerwony z pogrubieniem) */
+.status-problem {
+    border-left-color: #c0392b; 
+}
+.status-problem .status-tag {
+    background-color: #c0392b;
+    color: white;
+    font-weight: 900; /* Pogrubienie tekstu dla problemu */
+    /* Dodatkowy efekt wizualny */
+    box-shadow: 0 0 5px rgba(192, 57, 43, 0.7);
+}
+
+/* Poprawka dla domyślnych/nieznanych statusów */
+.status-default {
+    border-left-color: var(--border-color);
+}
+
+/* --- C. Kolorowanie TYPU Przeglądu --- */
+/* Te kolory powinny być różne, ale pasujące do twoich typów (A-CHECK, C-CHECK, itp.) */
+/* Typ B - Czarny */
+.type-b {
+    background-color: #2c3e50; /* Ciemny, prawie czarny (dark slate) */
+    color: white; 
+}
+/* Typ C - Zielony */
+.type-c {
+    background-color: #27ae60; /* Wibrująca zieleń (Emerald) */
+    color: white;
+}
+/* Typ D - Czerwony */
+.type-d {
+    background-color: #e74c3c; /* Intensywna czerwień (Alizarin) */
+    color: white;
+}
+
+/* --- Status ładowania --- */
+/* Status boxy (już istniejące) muszą mieć klasę .hidden w CSS */
+.status-box.hidden {
+    display: none;
+}
+
 
 
 @media (max-width: 760px) {
