@@ -703,6 +703,155 @@ html.dark-mode .theme-toggle .toggle-knob {
     display: none;
 }
 
+/* --- Style dla Modalu Szczegółów --- */
+
+
+
+.modal {
+    display: none; /* Ukryte domyślnie */
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* Tło z efektem przyciemnienia i rozmycia */
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding-top: 20px;
+}
+
+.modal-content {
+    background: var(--login-glass-bg); /* Używamy tła glassmorphismu */
+    border: 1px solid var(--login-glass-border);
+    backdrop-filter: blur(10px);
+    margin: 5% auto; 
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%; 
+    max-width: 800px; /* Maksymalna szerokość */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    color: var(--text-color);
+    position: relative;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.close-button {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #c0392b;
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+/* Styl dla szczegółów */
+#modal-details-content strong {
+    display: inline-block;
+    width: 250px; /* Zwiększona szerokość etykiet (np. z 180px na 250px) */
+    font-weight: 600; 
+}
+
+#modal-details-content p {
+    border-bottom: 1px dashed rgba(51, 51, 51, 0.1); /* Ciemniejsza linia przerywana */
+}
+
+/* Wprowadzamy styl dla wyróżnienia sekcji zmian/opóźnień */
+.modal-delay-section {
+    padding: 10px;
+    background-color: rgba(231, 76, 60, 0.1); /* Lekko czerwone tło */
+    border: 1px solid rgba(231, 76, 60, 0.5);
+    border-radius: 8px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.delay-indicator {
+    color: #e74c3c;
+    font-weight: 800;
+}
+
+/* Wprowadzamy układ gridowy dla sekcji */
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dwie równe kolumny */
+    gap: 15px 30px; /* Odstępy pionowe i poziome */
+    margin-bottom: 20px;
+}
+
+/* Używamy standardowego p i hr poza gridem dla nagłówków/separatorów */
+#modal-details-content h4 {
+    grid-column: 1 / -1; /* H4 zajmuje całą szerokość */
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+    color: #f1c40f; /* Podświetlenie nagłówków */
+}
+
+/* Styl dla pojedynczych wierszy w gridzie */
+.modal-grid-item {
+    margin: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 650px) {
+    .modal-content {
+        margin: 20px auto; /* Mniejszy margines na górze */
+        padding: 15px; /* Mniejszy padding wewnętrzny */
+    }
+    
+    /* Wymuszamy układ jednokolumnowy dla wszystkich gridów w modalu */
+    .modal-grid {
+        grid-template-columns: 1fr; 
+        gap: 0; /* Zmniejszamy odstępy */
+    }
+
+    /* Zmniejszamy szerokość etykiet, ale nadal je wyświetlamy */
+    #modal-details-content strong {
+        width: 150px; 
+    }
+    
+    /* Wyrównanie pól */
+    .modal-grid-item {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed rgba(51, 51, 51, 0.1);
+    }
+    
+    /* Usuwamy podwójną linię pod nagłówkiem w trybie jednokolumnowym */
+    .modal-delay-section {
+        padding: 5px; /* Zmniejszamy padding, aby zyskać miejsce */
+        margin-left: -5px; /* Lekka korekta marginesów, by dopasować się do krawędzi kontenera */
+        margin-right: -5px; 
+    }
+    
+    /* Poprawiamy styl dla samego tekstu opóźnienia, by się zawijał */
+    .delay-indicator {
+        display: block; /* Upewniamy się, że to jest blok i może się zawinąć */
+        word-wrap: break-word; /* Wymuszamy łamanie długich słów, jeśli zajdzie taka potrzeba */
+        white-space: normal;
+        margin-bottom: 5px;
+    }
+}
 
 
 @media (max-width: 760px) {
