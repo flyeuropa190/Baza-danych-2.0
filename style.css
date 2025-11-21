@@ -942,7 +942,7 @@ html.dark-mode .theme-toggle .toggle-knob {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 305px; /* Opcjonalnie: scroll jeśli dużo danych */
+    max-height: 245px; /* Opcjonalnie: scroll jeśli dużo danych */
     overflow-y: auto;
 }
 
