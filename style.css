@@ -8,6 +8,35 @@
   font-family: 'Lexend', sans-serif;
 }
 
+/* --- GLOBALNY PASEK PRZEWIJANIA (CAŁA STRONA) --- */
+
+/* Styl dla Chrome, Edge, Safari, Opera */
+::-webkit-scrollbar {
+    width: 8px;  /* Zwiększyłem lekko z 6px na 8px, bo na głównej stronie wygodniej się łapie */
+    height: 8px; /* Wysokość paska poziomego */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+}
+
+/* Opcjonalnie: efekt po najechaniu myszką na pasek */
+::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.8); /* Lekkie przyciemnienie */
+}
+
+/* --- WSPARCIE DLA FIREFOXA --- */
+/* Firefox używa innej składni standardowej */
+html {
+    scrollbar-width: thin; /* Cienki pasek */
+    scrollbar-color: var(--accent-color) transparent; /* Kolor suwaka | Kolor tła */
+}
+
 /* --- 1. ZMIENNE MOTYWU DLA TREŚCI --- */
 
 :root {
@@ -507,9 +536,6 @@ html.dark-mode .theme-toggle .toggle-knob {
 }
 
 /* --- A. Sekcja Przeglądów (Glassmorphism) --- */
-.section-inspections {
-    padding: 20px 0;
-}
 
 .subsection {
     margin-top: 25px;
@@ -679,6 +705,69 @@ html.dark-mode .theme-toggle .toggle-knob {
     border-left-color: var(--border-color);
 }
 
+/* --- SPECJALNA OBSŁUGA PRZEGLĄDÓW PRZEŁOŻONYCH (PODZIAŁ KOLORU) --- */
+
+/* Jeśli przegląd jest przełożony, usuwamy standardowy border i tworzymy nowy przez ::before */
+.inspection-item.is-rescheduled {
+    border-left: 0; /* Usuwamy standardowy border */
+    position: relative;
+    padding-left: 23px; /* 15px (standard) + 8px (szerokość paska) */
+    overflow: hidden; /* Ważne, aby pasek nie wychodził poza zaokrąglone rogi */
+}
+
+/* Pasek koloru tworzony przez pseudoelement */
+.inspection-item.is-rescheduled::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px; /* Szerokość paska */
+    /* Domyślny gradient (zostanie nadpisany przez konkretne statusy poniżej) */
+    background: linear-gradient(to bottom, #95a5a6 50%, #f1c40f 50%); 
+}
+
+/* --- DEKLARACJE GRADIENTÓW DLA KONKRETNYCH STATUSÓW --- */
+/* Górna połowa = Kolor Statusu, Dolna połowa = Żółty (#f1c40f) */
+
+.inspection-item.status-planned.is-rescheduled::before {
+    background: linear-gradient(to bottom, #f7a0b3 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-in-progress.is-rescheduled::before {
+    background: linear-gradient(to bottom, #3498db 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-completed.is-rescheduled::before {
+    background: linear-gradient(to bottom, #2ecc71 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-prepared.is-rescheduled::before {
+    background: linear-gradient(to bottom, #9b59b6 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-cancelled.is-rescheduled::before {
+    background: linear-gradient(to bottom, #95a5a6 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-postponed.is-rescheduled::before {
+    background: #f1c40f; /* Cały żółty, bo to status przełożony */
+}
+
+.inspection-item.status-unperformed.is-rescheduled::before {
+    background: linear-gradient(to bottom, #e67e22 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-problem.is-rescheduled::before {
+    background: linear-gradient(to bottom, #c0392b 50%, #f1c40f 50%);
+}
+
+/* Default fallback */
+.inspection-item.status-default.is-rescheduled::before {
+    background: linear-gradient(to bottom, #999 50%, #f1c40f 50%);
+}
+
+
 /* --- C. Kolorowanie TYPU Przeglądu --- */
 /* Te kolory powinny być różne, ale pasujące do twoich typów (A-CHECK, C-CHECK, itp.) */
 /* Typ B - Czarny */
@@ -812,6 +901,263 @@ html.dark-mode .theme-toggle .toggle-knob {
     padding-bottom: 5px;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
+
+
+/* --- SEKCJA DASHBOARD (3 KOLUMNY) --- */
+
+.section-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dash-card {
+    flex: 1;
+    min-width: 300px; /* Responsywność: na małych ekranach przejdzie do nowej linii */
+    
+    /* Glassmorphism */
+    background: var(--login-glass-bg);
+    border: 1px solid var(--login-glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 5px;
+}
+
+.dash-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 305px; /* Opcjonalnie: scroll jeśli dużo danych */
+    overflow-y: auto;
+}
+
+.dash-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.3); /* Lekkie tło dla wiersza */
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+html.dark-mode .dash-item {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+
+/* --- 4. MODYFIKACJA: STANY FLOTY (4 W RZĘDZIE + FILL HEIGHT) --- */
+
+#dashboard-stany-list {
+    /* 1. WYPEŁNIANIE WYSOKOŚCI */
+    flex-grow: 1;
+    min-height: 0;
+    
+    /* 2. SIATKA (GRID) - ZMIANA TUTAJ */
+    display: grid;
+    
+    /* Wymusza dokładnie 4 kolumny o równej szerokości */
+    grid-template-columns: repeat(4, 1fr); 
+    
+    grid-auto-rows: min-content; 
+    gap: 10px; /* Nieco mniejszy odstęp, żeby 4 się ładnie mieściły */
+    
+    /* 3. PRZEWIJANIE */
+    overflow-y: auto;
+    
+    /* Kosmetyka kontenera */
+    padding: 5px;
+    margin-top: 10px;
+}
+
+
+/* WYGLĄD KAFELKA (Bez zmian) */
+#dashboard-stany-list .dash-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    padding: 15px 5px; /* Lekko zmniejszony padding boczny, żeby tekst się mieścił w węższych kafelkach */
+    
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Opcjonalnie: Zapobiega ucięciu długich nazw samolotów */
+    word-break: break-word; 
+}
+
+#dashboard-stany-list .dash-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* ETYKIETA */
+#dashboard-stany-list .dash-item .dash-label {
+    font-size: 0.8rem; /* Minimalnie mniejsza, żeby się mieściła w 4 kolumnach */
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    color: var(--text-color);
+}
+
+/* WARTOŚĆ */
+#dashboard-stany-list .dash-item .dash-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent-color);
+}
+
+/* --- DARK MODE --- */
+html.dark-mode #dashboard-stany-list .dash-item {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+html.dark-mode #dashboard-stany-list .dash-item:hover {
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* --- RESPANSYWNOŚĆ (Dodatek) --- */
+/* Na telefonach 4 kafelki będą za ciasne. Zmieńmy na 2 poniżej 600px szerokości */
+@media (max-width: 600px) {
+    #dashboard-stany-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --- 2. STYLE DLA KONTROLKI (KOLORY + HOVER) --- */
+.check-row {
+    flex-direction: column;
+    align-items: flex-start;
+    border-left: 5px solid transparent;
+    
+    /* NOWE: Płynne animacje */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s;
+    cursor: default; /* lub pointer, jeśli mają być klikalne */
+}
+
+/* NOWE: Efekt uniesienia po najechaniu (taki jak w kafelkach) */
+.check-row:hover {
+    transform: translateY(-3px); /* Uniesienie o 3px */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Miękki cień pod spodem */
+    filter: brightness(0.97); /* Delikatne przyciemnienie tła dla lepszego kontrastu */
+}
+
+/* Dla trybu ciemnego - rozjaśnienie zamiast przyciemnienia */
+html.dark-mode .check-row:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    filter: brightness(1.2); /* Rozświetlenie koloru w ciemnym motywie */
+}
+
+.check-info { font-weight: 600; }
+.check-days { font-size: 0.85rem; margin-top: 2px; }
+.check-date { opacity: 0.7; font-size: 0.8rem; }
+
+/* Kolorowanie Kontrolki */
+.check-green {
+    border-left-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.15);
+}
+.check-yellow {
+    border-left-color: #f1c40f;
+    background: rgba(241, 196, 15, 0.15);
+}
+.check-red {
+    border-left-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.15);
+}
+.check-critical {
+    border-left-color: #c0392b;
+    background: rgba(192, 57, 43, 0.25);
+    border-bottom: 2px solid #c0392b; /* Podkreślenie wizualne */
+}
+.check-critical .check-days {
+    font-weight: 800;
+    color: #c0392b;
+    text-decoration: underline;
+}
+
+/* --- 3. STYLY DLA GRAFIKU --- */
+.grafik-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+.grafik-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: 0.2s;
+}
+.grafik-btn:hover { color: var(--accent-color); }
+
+.shift-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+}
+.shift-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.shift-val {
+    font-size: 1.1rem;
+}
+.shift-desc {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    display: block;
+    margin-top: 2px;
+}
+.night-shift-badge {
+    background-color: #2c3e50;
+    color: #f1c40f;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-left: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 650px) {
     .modal-content {

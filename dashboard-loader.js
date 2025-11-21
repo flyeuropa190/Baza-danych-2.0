@@ -1,0 +1,243 @@
+/**
+ * dashboard-loader.js
+ * Obsługuje sekcje: Stany, Kontrolka Przeglądów, Grafik
+ */
+
+// ZMIEŃ NA SWÓJ NOWY URL Z CODE_DASHBOARD.GS
+const API_URL_DASHBOARD = 'https://script.google.com/macros/s/AKfycbzdpZHph0XE3oX4VZakiL5222CDE1as9akIYjVCo6RJXoBqZDnUb0RuWnpl1iFYj6I/exec';
+
+// DOM Elements
+const containerStany = document.getElementById('dashboard-stany-list');
+const containerKontrolka = document.getElementById('dashboard-kontrolka-list');
+const sectionKontrolka = document.getElementById('section-kontrolka');
+const containerGrafik = document.getElementById('dashboard-grafik-content');
+const btnPrevDay = document.getElementById('grafik-prev');
+const btnNextDay = document.getElementById('grafik-next');
+const displayDate = document.getElementById('grafik-date-display');
+
+let dashboardData = null;
+let currentScheduleDate = new Date(); // Domyślnie dzisiaj
+let lastTimestamp = 0;
+
+// --- 1. POBIERANIE DANYCH ---
+
+async function fetchDashboardData() {
+    console.log("[dashboard] 🌐 Rozpoczynam pobieranie danych z API...");
+    try {
+        const response = await fetch(API_URL_DASHBOARD);
+        const json = await response.json();
+        if (json.error) throw new Error(json.error);
+        return json;
+    } catch (e) {
+        console.error("[dashboard] ❌ Błąd pobierania danych (fetch):", e);
+        return null;
+    }
+}
+
+// --- 2. STANY SAMOLOTÓW (LEWA) ---
+
+function renderStany(stany) {
+    if (!stany || stany.length === 0) {
+        containerStany.innerHTML = '<p class="no-data">Brak danych o stanach.</p>';
+        return;
+    }
+    
+    const html = stany.map(item => `
+        <div class="dash-item status-row">
+            <span class="dash-label">${item.status}</span>
+            <span class="dash-value">${item.ilosc}</span>
+        </div>
+    `).join('');
+    containerStany.innerHTML = html;
+}
+
+// --- 3. KONTROLKA PRZEGLĄDÓW (ŚRODEK) ---
+
+function getCheckColorClass(days) {
+    const d = parseInt(days);
+    if (isNaN(d)) return '';
+    
+    if (d < 0) return 'check-critical';
+    if (d <= 10) return 'check-red';
+    if (d <= 31) return 'check-yellow';
+    if (d <= 62) return 'check-green';
+    return '';
+}
+
+function renderKontrolka(planes) {
+    let alerts = [];
+
+    planes.forEach(plane => {
+        const checks = [
+            { type: 'B', date: plane.b_data, days: plane.b_dni },
+            { type: 'C', date: plane.c_data, days: plane.c_dni },
+            { type: 'D', date: plane.d_data, days: plane.d_dni }
+        ];
+
+        checks.forEach(check => {
+            if (check.days !== "" && parseInt(check.days) <= 62) {
+                alerts.push({
+                    reg: plane.rejestracja,
+                    num: plane.numer,
+                    type: check.type,
+                    date: check.date,
+                    days: parseInt(check.days)
+                });
+            }
+        });
+    });
+
+    alerts.sort((a, b) => a.days - b.days);
+
+    if (alerts.length === 0) {
+        sectionKontrolka.style.display = 'none';
+        return;
+    } 
+    
+    sectionKontrolka.style.display = 'block';
+    
+    const html = alerts.map(item => {
+        const colorClass = getCheckColorClass(item.days);
+        return `
+            <div class="dash-item check-row ${colorClass}">
+                <div class="check-info">
+                    <strong>${item.reg} (${item.num}) [${item.type}]</strong>
+                </div>
+                <div class="check-days">
+                    ${item.days} dni <span class="check-date">(${item.date})</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    containerKontrolka.innerHTML = html;
+}
+
+// --- 4. GRAFIK ZMIAN (PRAWA) ---
+
+const shiftCodes = {
+    '1': '6:00-15:00',
+    '2': '15:00-00:00',
+    '3': '6:00-00:00',
+    'DW': 'Dzień Wolny',
+    'DN': 'Dyżur Nocny (18:00-6:00)',
+    'DD': 'Dyżur Dzienny (6:00-18:00)',
+    'U': 'Urlop',
+    'UŻ': 'Urlop na żądanie',
+    'p': 'Przeglądy',
+    'o': 'Operacje'
+};
+
+function resolveShift(code, isNightShift) {
+    if (!code) return 'Brak danych';
+    
+    let desc = shiftCodes[code];
+    if (!desc) {
+        const base = code.charAt(0);
+        const suffix = code.slice(1);
+        if (shiftCodes[base]) {
+            desc = shiftCodes[base] + (suffix ? ` (${suffix})` : '');
+        } else {
+            desc = code;
+        }
+    }
+
+    if (String(isNightShift).toUpperCase() === 'TRUE' || String(isNightShift).toUpperCase() === 'PRAWDA') {
+        desc += ' <span class="night-shift-badge">🌙 DN</span>';
+    }
+    return desc;
+}
+
+function formatDateToSheet(dateObj) {
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const y = dateObj.getFullYear();
+    return `${d}.${m}.${y}`;
+}
+
+function renderGrafik() {
+    if (!dashboardData || !dashboardData.grafik) {
+        console.warn("⚠️ Brak danych grafiku do wyświetlenia.");
+        return;
+    }
+
+    const dateStr = formatDateToSheet(currentScheduleDate);
+    console.log(`📅 Renderowanie grafiku dla daty: ${dateStr}`);
+    
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    displayDate.textContent = currentScheduleDate.toLocaleDateString('pl-PL', options);
+
+    const entry = dashboardData.grafik.find(row => row.data === dateStr);
+
+    if (!entry) {
+        console.log(`[dashboard] ℹ️ Brak wpisu w grafiku dla daty ${dateStr}`);
+        containerGrafik.innerHTML = `<p class="no-data">Brak grafiku na dzień ${dateStr}</p>`;
+        return;
+    }
+
+    const html = `
+        <div class="dash-item shift-row">
+            <div class="shift-name">Szymon Kalus</div>
+            <div class="shift-val">${entry.kalus} <br><span class="shift-desc">${resolveShift(entry.kalus, entry.dn_kalus)}</span></div>
+        </div>
+        <div class="dash-item shift-row">
+            <div class="shift-name">Szymon Kowalczyk</div>
+            <div class="shift-val">${entry.kowalczyk} <br><span class="shift-desc">${resolveShift(entry.kowalczyk, entry.dn_kowalczyk)}</span></div>
+        </div>
+    `;
+    containerGrafik.innerHTML = html;
+}
+
+btnPrevDay.addEventListener('click', () => {
+    currentScheduleDate.setDate(currentScheduleDate.getDate() - 1);
+    renderGrafik();
+});
+
+btnNextDay.addEventListener('click', () => {
+    currentScheduleDate.setDate(currentScheduleDate.getDate() + 1);
+    renderGrafik();
+});
+
+
+// --- GŁÓWNA PĘTLA Z LOGOWANIEM ---
+
+async function initDashboard() {
+    const data = await fetchDashboardData();
+    
+    if (data) {
+        // console.group("📦 Otrzymano dane z Apps Script");
+        // console.log("Surowe dane:", data);
+        
+        // Logika sprawdzania timestampu
+        const isNewData = data.timestamp > lastTimestamp;
+        console.log(`[dashboard] ⏱ Timestamp: Otrzymany(${data.timestamp}) > Lokalny(${lastTimestamp}) ? ${isNewData}`);
+
+        dashboardData = data;
+
+        if (isNewData) {
+            console.log("[dashboard] ✅ Wykryto nowe dane. Aktualizuję interfejs...");
+            
+            lastTimestamp = data.timestamp;
+            
+            // Raport ilości danych
+            // console.log(`📊 Stany: ${data.stany ? data.stany.length : 0} wierszy`);
+            // console.log(`⚠️ Kontrolka (wszystkie): ${data.kontrolka ? data.kontrolka.length : 0} wierszy`);
+            // console.log(`📅 Grafik: ${data.grafik ? data.grafik.length : 0} dni`);
+
+            renderStany(data.stany);
+            renderKontrolka(data.kontrolka);
+            renderGrafik();
+        } else {
+            console.log("[dashboard] 💤 Dane są aktualne. Brak zmian w interfejsie.");
+        }
+        console.groupEnd();
+    } else {
+        console.error("[dashboard] ❌ initDashboard: Brak danych (data is null)");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // console.log("🚀 Uruchamianie dashboard-loader.js");
+    initDashboard();
+    setInterval(initDashboard, 15000);
+});

@@ -31,6 +31,7 @@
 
     <script type="module" src="./data-loader.js" defer></script> 
     <script type="module" src="./inspections-loader.js" defer></script> 
+    <script type="module" src="./dashboard-loader.js" defer></script>
     
     <script defer src="./theme-switcher.js"></script>
 
@@ -78,8 +79,9 @@
         <div class="sm-panel-inner">
             <ul class="sm-panel-list" role="list">
                 <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="StronaGlowna.html" data-index="1"><span class="sm-panel-itemLabel">Strona Główna</span></a></li>
-                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="PrzegladyPlanowane.html" data-index="2"><span class="sm-panel-itemLabel">Przeglądy Planowane</span></a></li>
-                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="NaprawyPlanowane.html" data-index="3"><span class="sm-panel-itemLabel">Naprawy Planowane</span></a></li>
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="Spis.html" data-index="2"><span class="sm-panel-itemLabel">Spis</span></a></li>
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="PrzegladyPlanowane.html" data-index="3"><span class="sm-panel-itemLabel">Przeglądy Planowane</span></a></li>
+                <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="NaprawyPlanowane.html" data-index="4"><span class="sm-panel-itemLabel">Naprawy Planowane</span></a></li>
             </ul>
         </div>
     </aside>
@@ -91,6 +93,43 @@
             <div id="communications-list" class="communications-grid">
                 </div>
         </section>
+
+        <section class="section-communications">
+            </section>
+
+        <section class="section-dashboard">
+            
+            <div class="dash-card">
+                <h3>📊 Stany Floty</h3>
+                <div id="dashboard-stany-list" class="dash-content">
+                    Ładowanie...
+                </div>
+            </div>
+
+            <div class="dash-card" id="section-kontrolka" style="display:none;">
+                <h3>⚠️ Kontrolka Przeglądów (< 62 dni)</h3>
+                <div id="dashboard-kontrolka-list" class="dash-content">
+                    </div>
+            </div>
+
+            <div class="dash-card">
+                <h3>📅 Grafik Zmian</h3>
+                <div class="grafik-controls">
+                    <button id="grafik-prev" class="grafik-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span id="grafik-date-display">Dzisiaj</span>
+                    <button id="grafik-next" class="grafik-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="dashboard-grafik-content" class="dash-content">
+                    Ładowanie...
+                </div>
+            </div>
+
+        </section>
+
+        <section class="section-inspections">
+           </section>
+
+
 
         <section class="section-inspections">
             <h2>🛠️ Przeglądy Planowane</h2>

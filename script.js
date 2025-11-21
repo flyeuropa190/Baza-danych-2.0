@@ -4,7 +4,7 @@ const errorMsg = document.getElementById("errorMsg");
 const loginBox = document.querySelector(".login-box");
 const themeToggle = document.getElementById("themeToggle"); // Nowy element
 
-const TARGET_HASH = "1e2e27a7cf48e9fe1c7906f80e5f62949249f6d7e5cde37373c0b7e745ed262b"; // FlyEuropa2025
+const TARGET_HASH = "1e2e27a7cf48e9fe1c7906f80e5f62949249f6d7e5cde37373c0b7e745ed262b";
 
 // --- 1. FUNKCJA HASHUJĄCA ---
 async function hashSHA256(message) {
