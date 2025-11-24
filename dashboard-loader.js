@@ -1,12 +1,13 @@
 /**
  * dashboard-loader.js
  * Obsługuje sekcje: Stany, Kontrolka Przeglądów, Grafik
+ * ZMODYFIKOWANY: Obsługa cache (sessionStorage) i pre-loading
  */
 
-// ZMIEŃ NA SWÓJ NOWY URL Z CODE_DASHBOARD.GS
 const API_URL_DASHBOARD = 'https://script.google.com/macros/s/AKfycbzdpZHph0XE3oX4VZakiL5222CDE1as9akIYjVCo6RJXoBqZDnUb0RuWnpl1iFYj6I/exec';
+const CACHE_KEY_DASHBOARD = 'dashboard_data_v1';
 
-// DOM Elements
+// DOM Elements - pobieramy dynamicznie lub sprawdzamy istnienie
 const containerStany = document.getElementById('dashboard-stany-list');
 const containerKontrolka = document.getElementById('dashboard-kontrolka-list');
 const sectionKontrolka = document.getElementById('section-kontrolka');
@@ -16,10 +17,27 @@ const btnNextDay = document.getElementById('grafik-next');
 const displayDate = document.getElementById('grafik-date-display');
 
 let dashboardData = null;
-let currentScheduleDate = new Date(); // Domyślnie dzisiaj
+let currentScheduleDate = new Date(); 
 let lastTimestamp = 0;
 
-// --- 1. POBIERANIE DANYCH ---
+// --- 1. CACHE & DATA FETCHING ---
+
+function saveToCache(data) {
+    try {
+        sessionStorage.setItem(CACHE_KEY_DASHBOARD, JSON.stringify(data));
+    } catch (e) {
+        console.warn("[dashboard] Nie udało się zapisać do cache:", e);
+    }
+}
+
+function loadFromCache() {
+    try {
+        const cached = sessionStorage.getItem(CACHE_KEY_DASHBOARD);
+        return cached ? JSON.parse(cached) : null;
+    } catch (e) {
+        return null;
+    }
+}
 
 async function fetchDashboardData() {
     console.log("[dashboard] 🌐 Rozpoczynam pobieranie danych z API...");
@@ -34,9 +52,11 @@ async function fetchDashboardData() {
     }
 }
 
-// --- 2. STANY SAMOLOTÓW (LEWA) ---
+// --- 2. RENDEROWANIE (Bezpieczne - sprawdza czy elementy istnieją) ---
 
 function renderStany(stany) {
+    if (!containerStany) return; // Zabezpieczenie dla strony logowania
+
     if (!stany || stany.length === 0) {
         containerStany.innerHTML = '<p class="no-data">Brak danych o stanach.</p>';
         return;
@@ -51,12 +71,9 @@ function renderStany(stany) {
     containerStany.innerHTML = html;
 }
 
-// --- 3. KONTROLKA PRZEGLĄDÓW (ŚRODEK) ---
-
 function getCheckColorClass(days) {
     const d = parseInt(days);
     if (isNaN(d)) return '';
-    
     if (d < 0) return 'check-critical';
     if (d <= 10) return 'check-red';
     if (d <= 31) return 'check-yellow';
@@ -65,8 +82,9 @@ function getCheckColorClass(days) {
 }
 
 function renderKontrolka(planes) {
-    let alerts = [];
+    if (!containerKontrolka || !sectionKontrolka) return; // Zabezpieczenie
 
+    let alerts = [];
     planes.forEach(plane => {
         const checks = [
             { type: 'B', date: plane.b_data, days: plane.b_dni },
@@ -113,7 +131,7 @@ function renderKontrolka(planes) {
     containerKontrolka.innerHTML = html;
 }
 
-// --- 4. GRAFIK ZMIAN (PRAWA) ---
+// --- GRAFIK ---
 
 const shiftCodes = {
     '1': '6:00-15:00',
@@ -130,18 +148,13 @@ const shiftCodes = {
 
 function resolveShift(code, isNightShift) {
     if (!code) return 'Brak danych';
-    
     let desc = shiftCodes[code];
     if (!desc) {
         const base = code.charAt(0);
         const suffix = code.slice(1);
-        if (shiftCodes[base]) {
-            desc = shiftCodes[base] + (suffix ? ` (${suffix})` : '');
-        } else {
-            desc = code;
-        }
+        if (shiftCodes[base]) desc = shiftCodes[base] + (suffix ? ` (${suffix})` : '');
+        else desc = code;
     }
-
     if (String(isNightShift).toUpperCase() === 'TRUE' || String(isNightShift).toUpperCase() === 'PRAWDA') {
         desc += ' <span class="night-shift-badge">🌙 DN</span>';
     }
@@ -156,21 +169,20 @@ function formatDateToSheet(dateObj) {
 }
 
 function renderGrafik() {
+    if (!containerGrafik || !displayDate) return; // Zabezpieczenie
+
     if (!dashboardData || !dashboardData.grafik) {
-        console.warn("⚠️ Brak danych grafiku do wyświetlenia.");
+        // console.warn("⚠️ Brak danych grafiku do wyświetlenia.");
         return;
     }
 
     const dateStr = formatDateToSheet(currentScheduleDate);
-    console.log(`📅 Renderowanie grafiku dla daty: ${dateStr}`);
-    
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     displayDate.textContent = currentScheduleDate.toLocaleDateString('pl-PL', options);
 
     const entry = dashboardData.grafik.find(row => row.data === dateStr);
 
     if (!entry) {
-        console.log(`[dashboard] ℹ️ Brak wpisu w grafiku dla daty ${dateStr}`);
         containerGrafik.innerHTML = `<p class="no-data">Brak grafiku na dzień ${dateStr}</p>`;
         return;
     }
@@ -188,56 +200,57 @@ function renderGrafik() {
     containerGrafik.innerHTML = html;
 }
 
-btnPrevDay.addEventListener('click', () => {
+if (btnPrevDay) btnPrevDay.addEventListener('click', () => {
     currentScheduleDate.setDate(currentScheduleDate.getDate() - 1);
     renderGrafik();
 });
 
-btnNextDay.addEventListener('click', () => {
+if (btnNextDay) btnNextDay.addEventListener('click', () => {
     currentScheduleDate.setDate(currentScheduleDate.getDate() + 1);
     renderGrafik();
 });
 
 
-// --- GŁÓWNA PĘTLA Z LOGOWANIEM ---
+// --- GŁÓWNA PĘTLA ---
 
 async function initDashboard() {
+    // 1. Najpierw załaduj z Cache (jeśli istnieje)
+    const cachedData = loadFromCache();
+    if (cachedData) {
+        // console.log("[dashboard] 📂 Załadowano dane z cache.");
+        dashboardData = cachedData;
+        lastTimestamp = cachedData.timestamp || 0;
+        
+        // Renderuj natychmiast
+        renderStany(cachedData.stany);
+        renderKontrolka(cachedData.kontrolka);
+        renderGrafik();
+    }
+
+    // 2. Pobierz świeże dane
     const data = await fetchDashboardData();
     
     if (data) {
-        // console.group("📦 Otrzymano dane z Apps Script");
-        // console.log("Surowe dane:", data);
-        
-        // Logika sprawdzania timestampu
         const isNewData = data.timestamp > lastTimestamp;
-        console.log(`[dashboard] ⏱ Timestamp: Otrzymany(${data.timestamp}) > Lokalny(${lastTimestamp}) ? ${isNewData}`);
+        // console.log(`[dashboard] ⏱ Timestamp: Serwer(${data.timestamp}) > Cache(${lastTimestamp}) ? ${isNewData}`);
 
-        dashboardData = data;
-
-        if (isNewData) {
-            console.log("[dashboard] ✅ Wykryto nowe dane. Aktualizuję interfejs...");
-            
+        if (isNewData || !cachedData) {
+            console.log("[dashboard] ✅ Nowe dane. Aktualizuję UI i Cache.");
+            dashboardData = data;
             lastTimestamp = data.timestamp;
             
-            // Raport ilości danych
-            // console.log(`📊 Stany: ${data.stany ? data.stany.length : 0} wierszy`);
-            // console.log(`⚠️ Kontrolka (wszystkie): ${data.kontrolka ? data.kontrolka.length : 0} wierszy`);
-            // console.log(`📅 Grafik: ${data.grafik ? data.grafik.length : 0} dni`);
+            saveToCache(data); // Zapis do sessionStorage
 
             renderStany(data.stany);
             renderKontrolka(data.kontrolka);
             renderGrafik();
         } else {
-            console.log("[dashboard] 💤 Dane są aktualne. Brak zmian w interfejsie.");
+            console.log("[dashboard] 💤 Dane aktualne.");
         }
-        console.groupEnd();
-    } else {
-        console.error("[dashboard] ❌ initDashboard: Brak danych (data is null)");
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // console.log("🚀 Uruchamianie dashboard-loader.js");
     initDashboard();
     setInterval(initDashboard, 15000);
 });

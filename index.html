@@ -36,16 +36,20 @@
       <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
       <button id="loginButton">Zaloguj</button>
       <p id="errorMsg"></p>
-      <h3>Wersja 2211.0034</h3>
+      <h3>Wersja 2511.0052</h3>
     </div>
   </div>
 
   <!-- Skrypt logowania -->
   <script src="./script.js"></script>
 
+  <script type="module" src="./data-loader.js"></script>
+  <script type="module" src="./dashboard-loader.js"></script>
+  <script type="module" src="./inspection-loader.js"></script>
+
   <!-- Rejestracja Service Workera dla PWA -->
   <script>
-    console.log('Wersja 2211.0034')
+    console.log('Wersja 2511.0052')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
@@ -55,6 +59,9 @@
     }
   </script>
 
+
+</body>
+</html>
 
 
 </body>

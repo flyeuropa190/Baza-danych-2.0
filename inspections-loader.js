@@ -1,8 +1,14 @@
 import { fetchInspectionsData } from './inspections-fetcher.js';
 
+const CACHE_KEY_INSPECTIONS = 'inspections_data_v1';
+
 const statusContainer = document.getElementById('inspections-status');
+// LISTY (Kontenery)
+const overdueList = document.getElementById('inspections-overdue-list');
 const upcomingList = document.getElementById('inspections-upcoming-list');
 const endingList = document.getElementById('inspections-ending-list');
+// KOMUNIKATY
+const overdueNoData = document.getElementById('overdue-no-data');
 const upcomingNoData = document.getElementById('upcoming-no-data');
 const endingNoData = document.getElementById('ending-no-data');
 
@@ -16,12 +22,28 @@ let lastKnownTimestampInspections = 0;
 const REFRESH_INTERVAL_MS = 15000;
 let allInspectionsData = []; 
 
+// --- CACHE UTILS ---
+function saveToCache(data, timestamp) {
+    try {
+        const cacheObj = { data, timestamp };
+        sessionStorage.setItem(CACHE_KEY_INSPECTIONS, JSON.stringify(cacheObj));
+    } catch(e) {}
+}
+
+function loadFromCache() {
+    try {
+        const cached = sessionStorage.getItem(CACHE_KEY_INSPECTIONS);
+        return cached ? JSON.parse(cached) : null;
+    } catch(e) { return null; }
+}
+
 // --- NARZĘDZIA DATY ---
 
 const parseDateToMidnight = (dateString) => {
     if (!dateString) return null;
     const parts = dateString.split(/[\/\.]/);
     if (parts.length === 3) {
+        // Format DD.MM.YYYY
         const date = new Date(parts[2], parts[1] - 1, parts[0]);
         date.setHours(0, 0, 0, 0);
         return date;
@@ -36,7 +58,7 @@ const getDateOffset = (days) => {
     return date;
 };
 
-// --- LOGIKA FILTROWANIA ---
+// --- LOGIKA FILTROWANIA I KLASYFIKACJI ---
 
 const getActiveDates = (item) => {
     const startDateStr = item['Data początkowa (po zmianie)'] || item['Data początkowa'];
@@ -48,24 +70,83 @@ const getActiveDates = (item) => {
     };
 };
 
+// Pomocnicza funkcja do normalizacji statusu
+const getNormStatus = (item) => item.Status ? item.Status.toLowerCase().trim() : '';
+
+// 1. ZALEGŁE (OVERDUE)
+const isOverdue = (item) => {
+    const { start, end } = getActiveDates(item);
+    const today = getDateOffset(0);
+    const status = getNormStatus(item);
+
+    // Warunek 1: Data rozpoczęcia < dzisiaj ORAZ status Zaplanowany/Przygotowany/Przełożony
+    const pendingStatuses = ['zaplanowany', 'przygotowany', 'przełożony'];
+    if (start && start < today && pendingStatuses.includes(status)) {
+        return true;
+    }
+
+    // Warunek 2: Data zakończenia < dzisiaj ORAZ status W trakcie
+    if (end && end < today && status === 'w trakcie') {
+        return true;
+    }
+
+    return false;
+};
+
+// 2. ROZPOCZYNAJĄCE SIĘ (UPCOMING)
 const isUpcoming = (item) => {
-    const { start } = getActiveDates(item);
+    // Jeśli zaległy, nie pokazuj tu
+    if (isOverdue(item)) return false;
+
+    const { start, end } = getActiveDates(item);
     if (!start) return false;
+    
     const today = getDateOffset(0);
     const dayAfterTomorrow = getDateOffset(2);
+    const status = getNormStatus(item);
+
+    // Warunek 3: Jednodniowe (Start == End)
+    if (end && start.getTime() === end.getTime()) {
+        // Wyświetlaj w rozpoczynających się JEŚLI status NIE JEST "W trakcie" ani "Wykonany"
+        const runningStatuses = ['w trakcie', 'wykonany'];
+        if (runningStatuses.includes(status)) return false; // Należy do Ending
+        
+        // Sprawdź datę (Dzisiaj/Jutro)
+        return (start >= today && start < dayAfterTomorrow);
+    }
+
+    // Standardowe wielodniowe
     return (start >= today && start < dayAfterTomorrow);
 };
 
+// 3. KOŃCZĄCE SIĘ (ENDING)
 const isEnding = (item) => {
-    const { end } = getActiveDates(item);
+    // Jeśli zaległy, nie pokazuj tu
+    if (isOverdue(item)) return false;
+
+    const { start, end } = getActiveDates(item);
     if (!end) return false;
+
     const today = getDateOffset(0);
     const dayAfterTomorrow = getDateOffset(2);
+    const status = getNormStatus(item);
+
+    // Warunek 3: Jednodniowe (Start == End)
+    if (start && start.getTime() === end.getTime()) {
+        // Wyświetlaj w kończących się JEŚLI status JEST "W trakcie" lub "Wykonany"
+        const runningStatuses = ['w trakcie', 'wykonany'];
+        if (runningStatuses.includes(status)) {
+             // Sprawdź datę (Dzisiaj/Jutro)
+            return (end >= today && end < dayAfterTomorrow);
+        }
+        return false; // Należy do Upcoming
+    }
+
+    // Standardowe wielodniowe
     return (end >= today && end < dayAfterTomorrow);
 };
 
 // --- RENDEROWANIE I STYLOWANIE ---
-
 const getStatusClass = (status) => {
     switch (status.toLowerCase().trim()) {
         case 'w trakcie': return 'status-in-progress'; 
@@ -79,27 +160,24 @@ const getStatusClass = (status) => {
         default: return 'status-default';
     }
 };
+const getTypeClass = (type) => 'type-' + type.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
 
-const getTypeClass = (type) => {
-    return 'type-' + type.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
-};
-
-const renderInspectionItem = (item, isUpcoming) => {
+const renderInspectionItem = (item, contextType) => {
     const { start, end } = getActiveDates(item);
     const statusClass = getStatusClass(item.Status || '');
     const typeClass = getTypeClass(item.Typ || '');
     const itemIdentifier = item.uniqueId; 
-
-    // Sprawdzenie czy przegląd jest przełożony (czy pola "po zmianie" są wypełnione)
     const startDateChanged = item['Data początkowa (po zmianie)'];
     const endDateChanged = item['Data końcowa (po zmianie)'];
-    // Uznajemy za przełożony, jeśli którakolwiek z dat "po zmianie" istnieje i nie jest pusta
     const isRescheduled = (startDateChanged && startDateChanged.trim() !== '') || (endDateChanged && endDateChanged.trim() !== '');
     const rescheduledClass = isRescheduled ? 'is-rescheduled' : '';
-
     const dateDisplayStart = start ? start.toLocaleDateString('pl-PL') : '?';
     const dateDisplayEnd = end ? end.toLocaleDateString('pl-PL') : '?';
     const dateRange = `${dateDisplayStart} – ${dateDisplayEnd}`;
+    let dateColorClass = '';
+    if (contextType === 'overdue') dateColorClass = 'date-overdue';
+    else if (contextType === 'upcoming') dateColorClass = 'date-upcoming';
+    else if (contextType === 'ending') dateColorClass = 'date-ending';
 
     return `
         <div class="inspection-item ${statusClass} ${rescheduledClass}" data-id="${itemIdentifier}" onclick="showInspectionDetails(this)">
@@ -109,16 +187,14 @@ const renderInspectionItem = (item, isUpcoming) => {
             </div>
             <p class="inspection-meta">
                 <span class="type-tag ${typeClass}">${item.Typ}</span>
-                <span class="inspection-dates ${isUpcoming ? 'upcoming' : 'ending'}">
-                    ${dateRange}
-                </span>
+                <span class="inspection-dates ${dateColorClass}">${dateRange}</span>
             </p>
         </div>
     `;
 };
 
-// --- OBSŁUGA MODALA ---
 
+// --- OBSŁUGA MODALA ---
 const getStatusTextColor = (status) => {
     switch (status.toLowerCase().trim()) {
         case 'w trakcie': return 'color: #3498db; font-weight: bold;';
@@ -138,13 +214,12 @@ const renderModalDetails = (item) => {
     const endDateStr = item['Data końcowa'];
     const startDateChanged = item['Data początkowa (po zmianie)'];
     const endDateChanged = item['Data końcowa (po zmianie)'];
-    const statusStyle = getStatusTextColor(item.Status || '');
-    
+    const statusStyle = getStatusTextColor(item.Status || '');  
+
     const hasDelay = item.Opóźnienie && item.Opóźnienie !== '0';
     const isPlanChanged = startDateChanged || endDateChanged;
 
     let html = '';
-    
     html += `<h4>INFO PODSTAWOWE</h4>`;
     html += `<div class="modal-grid">`;
     html += `<div class="modal-grid-item"><strong>Rejestracja (Tab):</strong> <b>${item.Rejestracja || 'N/A'}</b> (<b>${item['Numer tab'] || 'N/A'}</b>)</div>`;
@@ -152,7 +227,6 @@ const renderModalDetails = (item) => {
     html += `<div class="modal-grid-item"><strong>Status:</strong> <span style="${statusStyle}"><b>${item.Status || 'N/A'}</b></span></div>`;
     html += `<div class="modal-grid-item"><strong>Ilość godzin:</strong> <b>${item['Ilość godzin'] || 'N/A'}</b></div>`;
     html += `</div><hr>`;
-
     html += `<h4>DATY (${isPlanChanged ? 'PLANOWANE VS AKTUALNE' : 'PLANOWANE'})</h4>`;
     html += `<div class="modal-grid">`;
     html += `<div class="modal-grid-item"><strong>Data pocz. planowana:</strong> ${startDateStr || 'N/A'}</div>`;
@@ -161,25 +235,23 @@ const renderModalDetails = (item) => {
 
     if (isPlanChanged) {
         html += `<h4 style="grid-column: 1 / -1;">AKTUALNY HARMONOGRAM</h4>`;
-        html += `<div class="modal-delay-section" style="grid-column: 1 / -1;">`; 
-        
+        html += `<div class="modal-delay-section" style="grid-column: 1 / -1;">`;       
+
         if (hasDelay) {
             html += `<p style="margin-bottom: 5px; color: #e74c3c; font-weight: 800;"><i class="fas fa-exclamation-triangle"></i> PRZEŁOŻONY/OPÓŹNIONY O: <b>${item.Opóźnienie}</b></p>`;
         } else {
             html += `<p class="modal-highlight" style="margin-bottom: 5px;">Daty zostały zmienione.</p>`;
-        }
-        
+        }       
+
         html += `<div class="modal-grid" style="grid-template-columns: 1fr 1fr; gap: 10px 30px; margin-top: 10px;">`;
         html += `<p class="modal-grid-item"><strong>Nowa Data początkowa:</strong> <span class="modal-highlight"><b>${startDateChanged || 'N/A'}</b></span></p>`;
         html += `<p class="modal-grid-item"><strong>Nowa Data końcowa:</strong> <span class="modal-highlight"><b>${endDateChanged || 'N/A'}</b></span></p>`;
         html += `</div>`;
-        
         html += `<p style="margin-top: 5px; margin-bottom: 0;"><strong>Powód opóźnienia:</strong> ${item['Powód opóźnienia'] || 'Brak'}</p>`;
         html += `</div>`;
-    }
-    
-    html += `<hr>`;
+    }   
 
+    html += `<hr>`;
     html += `<h4>LOGISTYKA I GOTOWOŚĆ</h4>`;
     html += `<div class="modal-grid">`;
     html += `<div class="modal-grid-item"><strong>Samolot zastępczy (SZ):</strong> <b>${item['Samolot zastępczy'] || 'Brak'}</b></div>`;
@@ -188,17 +260,14 @@ const renderModalDetails = (item) => {
     html += `<div class="modal-grid-item"><strong>Samolot gotowy:</strong> <b>${item['Samolot gotowy'] || 'NIE'}</b></div>`;
     html += `<div class="modal-grid-item"><strong>SZ gotowy:</strong> <b>${item['SZ gotowy'] || 'NIE'}</b></div>`;
     html += `</div><hr>`;
-
     html += `<h4>DODATKOWE INFORMACJE</h4>`;
     html += `<p style="margin: 0;">${item['Dodatkowe informacje'] || 'Brak'}</p>`;
-
     return html;
 };
 
 window.showInspectionDetails = (element) => {
     const id = parseInt(element.getAttribute('data-id'));
     const item = allInspectionsData.find(d => d.uniqueId === id);
-
     if (item) {
         modalTitle.textContent = `Szczegóły: ${item.Rejestracja} (${item['Numer tab']})`;
         modalDetailsContent.innerHTML = renderModalDetails(item);
@@ -212,49 +281,99 @@ const closeModal = () => {
     modal.style.display = "none";
 };
 
+
+
 closeModalBtn.onclick = closeModal;
+
 window.onclick = function(event) {
     if (event.target == modal) closeModal();
 }
 
+
+
+// --- AKTUALIZACJA UI (CORE) ---
+
 const updateUIInspections = (allData) => {
-    allInspectionsData = allData.map((item, index) => ({
-        ...item,
-        uniqueId: index 
-    }));
+    // Jeśli nie ma list, jesteśmy prawdopodobnie na stronie logowania - nic nie renderujemy
+    if (!upcomingList) return;
+
+    allInspectionsData = allData.map((item, index) => ({ ...item, uniqueId: index }));
     
+    const overdue = allInspectionsData.filter(isOverdue);
     const upcoming = allInspectionsData.filter(isUpcoming);
-    const ending = allInspectionsData.filter(item => isEnding(item) && !isUpcoming(item));
+    const ending = allInspectionsData.filter(isEnding);
 
-    upcomingList.innerHTML = upcoming.length > 0 ? upcoming.map(item => renderInspectionItem(item, true)).join('') : '';
-    endingList.innerHTML = ending.length > 0 ? ending.map(item => renderInspectionItem(item, false)).join('') : '';
+    const toggleSection = (listElement, dataArray, contextType) => {
+        if (!listElement) return;
+        const parentSection = listElement.closest('.subsection');
+        if (dataArray.length > 0) {
+            if (parentSection) parentSection.style.display = 'block';
+            listElement.innerHTML = dataArray.map(item => renderInspectionItem(item, contextType)).join('');
+        } else {
+            if (parentSection) parentSection.style.display = 'none';
+            listElement.innerHTML = '';
+        }
+    };
 
-    upcomingNoData.style.display = upcoming.length === 0 ? 'block' : 'none';
-    endingNoData.style.display = ending.length === 0 ? 'block' : 'none';
+    toggleSection(overdueList, overdue, 'overdue');
+    toggleSection(upcomingList, upcoming, 'upcoming');
+    toggleSection(endingList, ending, 'ending');
 
-    statusContainer.classList.add('hidden');
+    let globalNoDataMsg = document.getElementById('global-inspections-no-data');
+    const totalCount = overdue.length + upcoming.length + ending.length;
+
+    if (totalCount === 0) {
+        if (!globalNoDataMsg) {
+            globalNoDataMsg = document.createElement('p');
+            globalNoDataMsg.id = 'global-inspections-no-data';
+            globalNoDataMsg.className = 'no-data';
+            globalNoDataMsg.style.textAlign = 'center';
+            globalNoDataMsg.style.padding = '20px';
+            globalNoDataMsg.textContent = 'Brak zaplanowanych przeglądów na najbliższy czas.';
+            if (statusContainer && statusContainer.parentNode) statusContainer.parentNode.insertBefore(globalNoDataMsg, statusContainer.nextSibling);
+        }
+        globalNoDataMsg.style.display = 'block';
+    } else {
+        if (globalNoDataMsg) globalNoDataMsg.style.display = 'none';
+    }
+
+    if(statusContainer) statusContainer.classList.add('hidden');
+    if (overdueNoData) overdueNoData.style.display = 'none';
+    if (upcomingNoData) upcomingNoData.style.display = 'none';
+    if (endingNoData) endingNoData.style.display = 'none';
 };
 
 const checkAndUpdateInspectionsData = async () => {
-    if (lastKnownTimestampInspections === 0) {
+    // 1. Load from cache first
+    const cached = loadFromCache();
+    if (cached && lastKnownTimestampInspections === 0) {
+        // console.log("[Inspections] 📂 Załadowano z cache.");
+        lastKnownTimestampInspections = cached.timestamp;
+        updateUIInspections(cached.data);
+    } else if (lastKnownTimestampInspections === 0 && statusContainer) {
         statusContainer.textContent = 'Ładowanie przeglądów...';
         statusContainer.classList.remove('hidden');
     }
     
+    // 2. Fetch new
     const result = await fetchInspectionsData();
     
     if (result.error) {
-        statusContainer.textContent = `Błąd: Nie udało się pobrać danych przeglądów: ${result.error}`;
-        statusContainer.classList.remove('hidden');
+        if(statusContainer) {
+             statusContainer.textContent = `Błąd: ${result.error}`;
+             statusContainer.classList.remove('hidden');
+        }
         return;
     }
     
     if (result.timestamp > lastKnownTimestampInspections || lastKnownTimestampInspections === 0) {
-        console.log(`[Inspections Fetch] ${lastKnownTimestampInspections === 0 ? 'Pierwsze ładowanie' : 'Nowe dane'}! Timestamp: ${result.timestamp}`);
+        console.log(`[Inspections] Nowe dane! Timestamp: ${result.timestamp}`);
         lastKnownTimestampInspections = result.timestamp;
+        
+        saveToCache(result.data, result.timestamp); // Save
         updateUIInspections(result.data);
     } else {
-        statusContainer.classList.add('hidden');
+        if(statusContainer) statusContainer.classList.add('hidden');
     }
 };
 

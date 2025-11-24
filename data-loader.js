@@ -1,9 +1,18 @@
 import { fetchCommunicationsData } from './dataFetcher.js'; 
 
+const CACHE_KEY_COMM = 'communications_data_v1';
 const listContainer = document.getElementById('communications-list');
 const statusContainer = document.getElementById('communications-status');
 let lastKnownTimestamp = 0; 
-const REFRESH_INTERVAL_MS = 15000; // 30 sekund na sprawdzanie
+const REFRESH_INTERVAL_MS = 15000;
+
+// --- CACHE UTILS ---
+function saveToCache(data, timestamp) {
+    try { sessionStorage.setItem(CACHE_KEY_COMM, JSON.stringify({data, timestamp})); } catch(e){}
+}
+function loadFromCache() {
+    try { return JSON.parse(sessionStorage.getItem(CACHE_KEY_COMM)); } catch(e){ return null; }
+}
 
 /**
  * Zwraca aktualną datę bez składowej czasu (do porównania).
@@ -132,44 +141,53 @@ function renderCommunicationItem(item) {
  * Główna funkcja aktualizująca UI.
  * @param {Array} allData - Tablica wszystkich komunikatów.
  */
+// --- UI UPDATE ---
 function updateUI(allData) {
-    // 1. FILTROWANIE DANYCH
+    if (!listContainer) return; // Zabezpieczenie dla strony logowania
+
     const activeData = allData.filter(isCommunicationActive);
     
     if (activeData.length > 0) {
         listContainer.innerHTML = activeData.map(renderCommunicationItem).join('');
-        statusContainer.textContent = `Pomyślnie załadowano ${activeData.length} aktywnych komunikatów.`;
-        statusContainer.classList.add('hidden');
+        if(statusContainer) {
+            statusContainer.textContent = `Pomyślnie załadowano ${activeData.length} aktywnych komunikatów.`;
+            statusContainer.classList.add('hidden');
+        }
     } else {
         listContainer.innerHTML = '';
-        statusContainer.textContent = 'Brak aktywnych komunikatów do wyświetlenia.';
-        statusContainer.classList.remove('hidden');
+        if(statusContainer) {
+            statusContainer.textContent = 'Brak aktywnych komunikatów do wyświetlenia.';
+            statusContainer.classList.remove('hidden');
+        }
     }
 }
 
-/**
- * Główna funkcja Pollingu. Sprawdza znacznik czasowy i pobiera dane, jeśli są nowe.
- */
 async function checkAndUpdateData() {
+    // 1. Cache
+    const cached = loadFromCache();
+    if (cached && lastKnownTimestamp === 0) {
+        // console.log("[Data Fetch] 📂 Cache loaded");
+        lastKnownTimestamp = cached.timestamp;
+        updateUI(cached.data);
+    }
+
+    // 2. Network
     const result = await fetchCommunicationsData();
     
     if (result.error) {
-        statusContainer.textContent = `Błąd: Nie udało się pobrać danych: ${result.error}`;
-        statusContainer.classList.remove('hidden');
+        if(statusContainer) {
+            statusContainer.textContent = `Błąd: ${result.error}`;
+            statusContainer.classList.remove('hidden');
+        }
         return;
     }
 
-    if (result.timestamp > lastKnownTimestamp) {
-        console.log(`[Data Fetch] Znaleziono nowe dane! Aktualizacja UI. Timestamp: ${result.timestamp}`);
+    if (result.timestamp > lastKnownTimestamp || lastKnownTimestamp === 0) {
+        console.log(`[Data Fetch] New Data: ${result.timestamp}`);
         lastKnownTimestamp = result.timestamp;
-        updateUI(result.data);
-        
-    } else if (lastKnownTimestamp === 0) {
-        console.log("[Data Fetch] Pierwsze ładowanie UI z bieżących danych.");
-        lastKnownTimestamp = result.timestamp;
+        saveToCache(result.data, result.timestamp);
         updateUI(result.data);
     } 
-    // W przeciwnym razie dane są takie same, nic nie robimy.
 }
 
 document.addEventListener('DOMContentLoaded', () => {

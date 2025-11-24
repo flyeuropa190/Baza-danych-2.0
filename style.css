@@ -700,6 +700,12 @@ html.dark-mode .theme-toggle .toggle-knob {
     box-shadow: 0 0 5px rgba(192, 57, 43, 0.7);
 }
 
+.date-overdue {
+    color: #c0392b; /* Czerwony */
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 /* Poprawka dla domyślnych/nieznanych statusów */
 .status-default {
     border-left-color: var(--border-color);
@@ -942,7 +948,7 @@ html.dark-mode .theme-toggle .toggle-knob {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 245px; /* Opcjonalnie: scroll jeśli dużo danych */
+    max-height: 230px; /* Opcjonalnie: scroll jeśli dużo danych */
     overflow-y: auto;
 }
 
