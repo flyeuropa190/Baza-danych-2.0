@@ -7,7 +7,9 @@
 
   <!-- Czcionki i styl -->
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/login-page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <!-- PWA: manifest i kolory -->
   <link rel="manifest" href="./manifest.json">
@@ -36,7 +38,7 @@
       <input type="password" id="passwordInput" placeholder="Wprowadź hasło">
       <button id="loginButton">Zaloguj</button>      
       <p id="errorMsg"></p>
-      <h3>Wersja 2711.0012</h3>
+      <h3>Wersja 1612.0123</h3>
     </div>
   </div>
 
@@ -49,7 +51,7 @@
 
   <!-- Rejestracja Service Workera dla PWA -->
   <script>
-    console.log('Wersja 2711.0012')
+    console.log('Wersja 1612.0123')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')

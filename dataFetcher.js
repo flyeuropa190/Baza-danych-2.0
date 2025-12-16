@@ -1,16 +1,19 @@
 /**
  * Moduł do pobierania danych i znacznika czasowego z Google Apps Script API.
- * * Zastąp AKfycb... swoim aktualnym URL wdrożenia.
+ * UWAGA: Ten sam API_URL będzie używany dla wszystkich typów danych, ale z różnymi parametrami.
  */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxLtv6MvaLRvB_C69KC5TtYpcsgJoWMldH7xQ92A_h57YWHdt4mG2q6ptDBT3ZPNqfo1g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
 
 /**
- * Pobiera dane komunikacyjne i znacznik czasowy z Google Sheet.
+ * Pobiera dane komunikacyjne i znacznik czasowy z Google Sheet używając routera.
  * @returns {Promise<Object>} Obiekt zawierający {data: Array, timestamp: Number}.
  */
 export async function fetchCommunicationsData() {
+    // Dodanie parametru 'type=communications' do URL, aby router GAS wiedział, którą funkcję wywołać
+    const ROUTED_URL = `${API_URL}?type=communications`; 
+
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(ROUTED_URL); // Użycie ROUTED_URL
 
         if (!response.ok) {
             throw new Error(`Błąd HTTP! Status: ${response.status}. Sprawdź, czy URL wdrożenia jest poprawny.`);
@@ -26,7 +29,6 @@ export async function fetchCommunicationsData() {
         
     } catch (error) {
         console.error('Błąd w dataFetcher:', error.message);
-        // Zwróć pusty obiekt, aby aplikacja się nie zawiesiła
         return { data: [], timestamp: 0 }; 
     }
 }

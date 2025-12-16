@@ -1,10 +1,12 @@
 /**
  * dashboard-loader.js
  * Obsługuje sekcje: Stany, Kontrolka Przeglądów, Grafik
- * ZMODYFIKOWANY: Obsługa cache (sessionStorage) i pre-loading
+ * ZMODYFIKOWANY: Używa Routera GAS poprzez dodanie parametru URL.
  */
 
-const API_URL_DASHBOARD = 'https://script.google.com/macros/s/AKfycbzdpZHph0XE3oX4VZakiL5222CDE1as9akIYjVCo6RJXoBqZDnUb0RuWnpl1iFYj6I/exec';
+// Zmieniamy tylko API_URL_DASHBOARD (usuwamy parametr, bo dodamy go w fetchDashboardData)
+// Uwaga: Upewnij się, że ten URL to ten sam, który został wdrożony dla routera GAS.
+const API_URL_BASE = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
 const CACHE_KEY_DASHBOARD = 'dashboard_data_v1';
 
 // DOM Elements - pobieramy dynamicznie lub sprawdzamy istnienie
@@ -40,11 +42,21 @@ function loadFromCache() {
 }
 
 async function fetchDashboardData() {
-    console.log("[dashboard] 🌐 Rozpoczynam pobieranie danych z API...");
+    // --- KLUCZOWA ZMIANA: Dodajemy parametr 'type=dashboard' ---
+    const ROUTED_URL = `${API_URL_BASE}?type=dashboard`; 
+    console.log("[dashboard] 🌐 Rozpoczynam pobieranie danych z API:", ROUTED_URL);
+    
     try {
-        const response = await fetch(API_URL_DASHBOARD);
+        const response = await fetch(ROUTED_URL); // Użycie URL z parametrem
         const json = await response.json();
         if (json.error) throw new Error(json.error);
+        
+        // Zabezpieczenie przed brakiem tablicy danych
+        if (!json.stany || !Array.isArray(json.stany)) {
+             console.warn("[dashboard] API zwróciło nieprawidłową strukturę danych.");
+             return null;
+        }
+
         return json;
     } catch (e) {
         console.error("[dashboard] ❌ Błąd pobierania danych (fetch):", e);
@@ -55,7 +67,7 @@ async function fetchDashboardData() {
 // --- 2. RENDEROWANIE (Bezpieczne - sprawdza czy elementy istnieją) ---
 
 function renderStany(stany) {
-    if (!containerStany) return; // Zabezpieczenie dla strony logowania
+    if (!containerStany) return; 
 
     if (!stany || stany.length === 0) {
         containerStany.innerHTML = '<p class="no-data">Brak danych o stanach.</p>';
@@ -82,7 +94,13 @@ function getCheckColorClass(days) {
 }
 
 function renderKontrolka(planes) {
-    if (!containerKontrolka || !sectionKontrolka) return; // Zabezpieczenie
+    if (!containerKontrolka || !sectionKontrolka) return; 
+    
+    // Zabezpieczenie: Sprawdzenie, czy planes jest tablicą
+    if (!planes || !Array.isArray(planes)) {
+        sectionKontrolka.style.display = 'none';
+        return;
+    }
 
     let alerts = [];
     planes.forEach(plane => {
@@ -169,7 +187,7 @@ function formatDateToSheet(dateObj) {
 }
 
 function renderGrafik() {
-    if (!containerGrafik || !displayDate) return; // Zabezpieczenie
+    if (!containerGrafik || !displayDate) return; 
 
     if (!dashboardData || !dashboardData.grafik) {
         // console.warn("⚠️ Brak danych grafiku do wyświetlenia.");
@@ -217,11 +235,9 @@ async function initDashboard() {
     // 1. Najpierw załaduj z Cache (jeśli istnieje)
     const cachedData = loadFromCache();
     if (cachedData) {
-        // console.log("[dashboard] 📂 Załadowano dane z cache.");
         dashboardData = cachedData;
         lastTimestamp = cachedData.timestamp || 0;
         
-        // Renderuj natychmiast
         renderStany(cachedData.stany);
         renderKontrolka(cachedData.kontrolka);
         renderGrafik();
@@ -232,7 +248,6 @@ async function initDashboard() {
     
     if (data) {
         const isNewData = data.timestamp > lastTimestamp;
-        // console.log(`[dashboard] ⏱ Timestamp: Serwer(${data.timestamp}) > Cache(${lastTimestamp}) ? ${isNewData}`);
 
         if (isNewData || !cachedData) {
             console.log("[dashboard] ✅ Nowe dane. Aktualizuję UI i Cache.");
@@ -241,8 +256,9 @@ async function initDashboard() {
             
             saveToCache(data); // Zapis do sessionStorage
 
-            renderStany(data.stany);
-            renderKontrolka(data.kontrolka);
+            // Zabezpieczenia: upewnienie się, że pola istnieją
+            renderStany(data.stany || []);
+            renderKontrolka(data.kontrolka || []);
             renderGrafik();
         } else {
             console.log("[dashboard] 💤 Dane aktualne.");
@@ -252,5 +268,6 @@ async function initDashboard() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
-    setInterval(initDashboard, 15000);
+    // Odświeżanie co 15 sekund
+    setInterval(initDashboard, 15000); 
 });

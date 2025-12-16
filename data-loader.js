@@ -1,6 +1,6 @@
 import { fetchCommunicationsData } from './dataFetcher.js'; 
 
-const CACHE_KEY_COMM = 'communications_data_v1';
+const CACHE_KEY_COMM = 'communications_data_v2'; // Zmieniłem klucz cache, aby wymusić odświeżenie struktury danych
 const listContainer = document.getElementById('communications-list');
 const statusContainer = document.getElementById('communications-status');
 let lastKnownTimestamp = 0; 
@@ -14,9 +14,36 @@ function loadFromCache() {
     try { return JSON.parse(sessionStorage.getItem(CACHE_KEY_COMM)); } catch(e){ return null; }
 }
 
+
+function parseDate(dateString) {
+    if (!dateString) return null;
+    let date;
+    const parts = dateString.split(/[\/\.]/);
+
+    if (parts.length === 3) {
+        // Format DD.MM.YYYY
+        // Używamy Date.UTC, aby tworzyć daty niezależne od strefy czasowej przeglądarki.
+        // Tworzymy datę w formacie YYYY, MM-1, DD (Miesiące w JS są od 0)
+        date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+    } else {
+        // Domyślny format YYYY-MM-DD lub inne
+        date = new Date(dateString);
+    }
+    
+    // Zabezpieczenie na wypadek błędnego parsowania
+    if (isNaN(date)) {
+        console.error(`Błąd parsowania daty: ${dateString}`);
+        return null;
+    }
+    
+    // Zwracamy datę o północy lokalnie, tak samo jak today
+    date.setHours(0, 0, 0, 0); 
+    return date;
+}
+
 /**
  * Zwraca aktualną datę bez składowej czasu (do porównania).
- * @returns {Date} Data ustawiona na północ.
+ * (Bez zmian, ale ważne, by była spójna z parseDate)
  */
 function getTodayDateOnly() {
     const today = new Date();
@@ -25,102 +52,68 @@ function getTodayDateOnly() {
 }
 
 /**
- * Sprawdza, czy komunikat jest aktywny na podstawie dat Poczatek i Koniec.
- * @param {Object} item - Obiekt komunikatu.
- * @returns {boolean} True, jeśli komunikat jest aktywny.
+ * Sprawdza, czy komunikat powinien być WYŚWIETLONY (widoczny)
+ * na podstawie kolumn "Okres Wyświetlania" (DisplayStart, DisplayEnd).
  */
 function isCommunicationActive(item) {
     const today = getTodayDateOnly();
     
-    // Używamy Date.parse, aby upewnić się, że daty są w formacie YYYY-MM-DD
-    // Jeśli daty są w formacie DD/MM/YYYY, należy zamienić je na MM/DD/YYYY lub użyć biblioteki.
-    // Zakładamy, że format z GAS jest parsowalny (np. YYYY-MM-DD lub DD.MM.YYYY).
-    // Jeśli daty mają postać DD/MM/YYYY, musimy je najpierw przetworzyć:
-    const parseDate = (dateString) => {
-        if (!dateString) return null;
-        // Założenie, że daty z GAS są w formacie polskim DD/MM/YYYY lub DD.MM.YYYY
-        const parts = dateString.split(/[\/\.]/);
-        if (parts.length === 3) {
-            // Zamiana na format YYYY-MM-DD dla poprawnego parsowania w JS
-            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-        }
-        return new Date(dateString); // W przypadku innych formatów
-    };
-
-    const startDate = parseDate(item.Poczatek);
-    const endDate = parseDate(item.Koniec);
+    // Używamy nowych pól logicznych (Kolumny B i C z arkusza)
+    const displayStart = parseDate(item.DisplayStart);
+    const displayEnd = parseDate(item.DisplayEnd);
     
-    // 1. Sprawdzenie daty POczątku
-    if (startDate && startDate > today) {
-        // Jeśli aktualna data jest WCZEŚNIEJSZA niż POCZĄTEK, komunikat jest wyświetlany.
-        // Zgodnie z żądaniem: "jeżeli aktualna data jest wcześniejsza niż Poczatek to wyśweitlaj komunikat"
-        // Zazwyczaj oznacza to, że chcemy go wyświetlić PRZED startem. Zostawiam tę logikę zgodnie z poleceniem.
-        return true; 
+    // 1. Jeśli zdefiniowano Początek Wyświetlania i dzisiaj jest przed tą datą -> UKRYJ
+    if (displayStart && today < displayStart) {
+        return false; 
     }
     
-    // 2. Sprawdzenie daty KOŃCA
-    if (endDate && endDate < today) {
-        // Jeżeli aktualna data jest PÓŹNIEJSZA niż KONIEC, nie wyświetlaj komunikatu
+    // 2. Jeśli zdefiniowano Koniec Wyświetlania i dzisiaj jest po tej dacie -> UKRYJ
+    if (displayEnd && today > displayEnd) {
         return false;
     }
 
-    // Domyślna logika: wyświetlaj, jeśli data Koniec nie minęła LUB nie jest zdefiniowana.
-    // Jeśli nie ma daty Poczatek, i data Koniec nie minęła - wyświetlaj.
+    // W przeciwnym razie wyświetl (mieści się w okresie lub brak dat granicznych)
     return true; 
 }
 
 
 /**
- * Mapuje kategorię komunikatu na klasę CSS dla kolorowania.
- * @param {string} category 
- * @returns {string} Klasa CSS
+ * Mapuje kategorię komunikatu na klasę CSS.
  */
 function getCategoryClass(category) {
-    // Wyczyść i zamień spacje na podkreślniki dla bezpiecznej nazwy klasy CSS
-    const cleanCategory = category.toLowerCase().trim().replace(/\s+/g, '_'); 
+    const cleanCategory = category ? category.toLowerCase().trim().replace(/\s+/g, '_') : 'default'; 
 
     switch (cleanCategory) {
-        case 'test':
-            return 'comm-test'; 
-        case 'aktualizacja':
-            return 'comm-aktualizacja'; 
-        case 'techniczne':
-            return 'comm-techniczne'; 
-        case 'flota':
-            return 'comm-flota'; 
-        case 'ruch_lotniczy':
-            return 'comm-ruch_lotniczy';            
-        case 'pilne':
-            return 'comm-pilne';  
-        default:
-            return 'comm-default'; 
+        case 'test': return 'comm-test'; 
+        case 'aktualizacja': return 'comm-aktualizacja'; 
+        case 'techniczne': return 'comm-techniczne'; 
+        case 'flota': return 'comm-flota'; 
+        case 'ruch_lotniczy': return 'comm-ruch_lotniczy';            
+        case 'pilne': return 'comm-pilne';  
+        default: return 'comm-default'; 
     }
 }
 
 /**
  * Formatuje pojedynczy komunikat do postaci HTML.
- * @param {Object} item - Obiekt komunikatu z serwera.
+ * Używa pól "Okres Obowiązywania" (ValidStart, ValidEnd) do wyświetlania tekstu użytkownikowi.
  */
 function renderCommunicationItem(item) {
     const categoryClass = getCategoryClass(item.Kategoria);
     
-    // 1. Formatowanie daty Poczatek i Koniec
+    // Formatowanie daty widocznej dla użytkownika (Kolumny D i E)
     let okres = '';
-    if (item.Poczatek) {
-        if (item.Koniec) {
-            // Poczatek - Koniec
-            okres = `Okres obowiązywania: ${item.Poczatek} – ${item.Koniec}`;
+    if (item.ValidStart) {
+        if (item.ValidEnd) {
+            okres = `Okres obowiązywania: ${item.ValidStart} – ${item.ValidEnd}`;
         } else {
-            // Tylko Poczatek (bez myślnika)
-            okres = `Obowiązuje od: ${item.Poczatek}`;
+            okres = `Obowiązuje od: ${item.ValidStart}`;
         }
     }
 
-    // 2. Formatowanie DataKomunikatu jako mały tekst
     const dataKomunikatuHTML = item.DataKomunikatu 
         ? `<span class="comm-data-komunikatu">(${item.DataKomunikatu})</span>` 
         : '';
-
 
     return `
         <div class="communication-item ${categoryClass}">
@@ -137,26 +130,23 @@ function renderCommunicationItem(item) {
     `;
 }
 
-/**
- * Główna funkcja aktualizująca UI.
- * @param {Array} allData - Tablica wszystkich komunikatów.
- */
 // --- UI UPDATE ---
 function updateUI(allData) {
-    if (!listContainer) return; // Zabezpieczenie dla strony logowania
+    if (!listContainer) return; 
 
+    // Filtrujemy dane
     const activeData = allData.filter(isCommunicationActive);
     
     if (activeData.length > 0) {
         listContainer.innerHTML = activeData.map(renderCommunicationItem).join('');
         if(statusContainer) {
-            statusContainer.textContent = `Pomyślnie załadowano ${activeData.length} aktywnych komunikatów.`;
+            statusContainer.textContent = `Pomyślnie załadowano ${activeData.length} wiadomości.`;
             statusContainer.classList.add('hidden');
         }
     } else {
         listContainer.innerHTML = '';
         if(statusContainer) {
-            statusContainer.textContent = 'Brak aktywnych komunikatów do wyświetlenia.';
+            statusContainer.textContent = 'Brak aktywnych komunikatów.';
             statusContainer.classList.remove('hidden');
         }
     }
@@ -166,7 +156,6 @@ async function checkAndUpdateData() {
     // 1. Cache
     const cached = loadFromCache();
     if (cached && lastKnownTimestamp === 0) {
-        // console.log("[Data Fetch] 📂 Cache loaded");
         lastKnownTimestamp = cached.timestamp;
         updateUI(cached.data);
     }
@@ -191,9 +180,6 @@ async function checkAndUpdateData() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Uruchomienie pętli Pollingu
     setInterval(checkAndUpdateData, REFRESH_INTERVAL_MS);
-    
-    // Pierwsze pobranie danych przy ładowaniu strony
     checkAndUpdateData(); 
 });
