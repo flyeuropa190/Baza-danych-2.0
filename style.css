@@ -1,20 +1,801 @@
-:root {
-    --bg-gradient: radial-gradient(circle at top right, #f8f9fa, #e9ecef);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.8);
-    --input-bg: rgba(0, 0, 0, 0.03);
-    --text-primary: #1d1d1f; /* Typowy kolor Apple */
-    --text-secondary: #86868b;
-    --accent: #0071e3; /* iOS Blue */
+/* Plik: style.css (Ostateczna, skompresowana wersja) */
+
+/* OGÓLNE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lexend', sans-serif;
 }
 
-body {
-    font-family: 'Lexend', sans-serif;
-    background: var(--bg-gradient);
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    -webkit-font-smoothing: antialiased;
+/* --- GLOBALNY PASEK PRZEWIJANIA (CAŁA STRONA) --- */
+
+/* Styl dla Chrome, Edge, Safari, Opera */
+::-webkit-scrollbar {
+    width: 8px;  /* Zwiększyłem lekko z 6px na 8px, bo na głównej stronie wygodniej się łapie */
+    height: 8px; /* Wysokość paska poziomego */
 }
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+}
+
+/* Opcjonalnie: efekt po najechaniu myszką na pasek */
+::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.8); /* Lekkie przyciemnienie */
+}
+
+/* --- WSPARCIE DLA FIREFOXA --- */
+/* Firefox używa innej składni standardowej */
+html {
+    scrollbar-width: thin; /* Cienki pasek */
+    scrollbar-color: var(--accent-color) transparent; /* Kolor suwaka | Kolor tła */
+}
+
+/* --- 1. ZMIENNE MOTYWU DLA TREŚCI --- */
+
+:root {
+  /* Domyślny motyw: Jasny */
+  --bg-color: #d6d4d4;
+  --text-color: #000000;
+  --accent-color: #9900ff;
+  
+  /* Login Box (Glass) */
+  --login-glass-bg: rgba(255, 255, 255, 0.25);
+  --login-glass-border: rgba(255, 255, 255, 0.3);
+  --login-input-bg: rgba(255, 255, 255, 0.85);
+  --login-input-bg-focus: rgba(255, 255, 255, 1);
+  --login-input-border: rgba(0, 0, 0, 0.2);
+  --login-input-placeholder: rgba(0, 0, 0, 0.5);
+}
+
+html.dark-mode {
+  /* Motyw Ciemny */
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  
+  /* Login Box (Glass) */
+  --login-glass-bg: rgba(30, 30, 30, 0.5);
+  --login-glass-border: rgba(60, 60, 60, 0.8);
+  --login-input-bg: rgba(50, 50, 50, 0.7);
+  --login-input-bg-focus: rgba(60, 60, 60, 1);
+  --login-input-border: rgba(255, 255, 255, 0.2);
+  --login-input-placeholder: rgba(255, 255, 255, 0.5);
+}
+
+/* --- 2. GŁÓWNA STRUKTURA I TŁO --- */
+
+body, html {
+  height: auto;
+  width: 100%;
+  background: var(--bg-color);
+  color: var(--text-color);
+  overflow: visible;  
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Tło strony (zmieniono, aby używać zmiennej z glass-menu.css, ale dodano padding-top) */
+body.main-bg {
+  background-image: var(--body-bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  padding-top: 80px; /* Dodatkowe miejsce na pasek nawigacji */
+  transition: background-image 0.3s ease;
+}
+
+.main-content-wrapper {
+  background: var(--content-bg); /* Oczekuje zmiennej --content-bg, która powinna być w glass-menu.css */
+  color: var(--body-text); /* Oczekuje zmiennej --body-text z glass-menu.css */
+  padding: 2rem; 
+  border-radius: 10px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* --- 3. EKRAN LOGOWANIA --- (PRZEKLEJONE BEZ ZMIAN STRUKTURALNYCH) */
+.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(117, 139, 208, 0.25),
+    rgba(131, 36, 188, 0.25)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: center;
+  z-index: 2;
+}
+
+/* Animacje */
+@keyframes fadeSlideIn { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+/* EKRAN LOGOWANIA */
+.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(117, 139, 208, 0.25),
+    rgba(131, 36, 188, 0.25)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+/* Kontener centralny */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: center;
+  z-index: 2;
+}
+
+/* Animacja wejścia login-box */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efekt potrząsania przy błędzie */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* Logo */
+.logo2 {
+  width: 30%;
+  height: auto;
+  z-index: 10;
+  margin-bottom: 100px;
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Pudełko logowania – przezroczyste i czytelne */
+.login-box {
+  background: rgba(255, 255, 255, 0.25); /* półprzezroczyste białe tło */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 12px 40px rgba(131, 36, 188, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 350px;
+  margin-bottom: 10%;
+  animation: fadeSlideIn 0.8s ease forwards;
+  transition: box-shadow 0.3s ease;
+}
+
+.login-box.shake {
+  animation: shake 0.5s ease;
+}
+
+/* Nagłówki */
+.login-box h1 {
+  color: #000; /* lepszy kontrast */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #007f2f; /* ciemniejszy zielony dla kontrastu */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 18px;
+}
+
+.login-box h3 {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Pola tekstowe */
+.login-box input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.85); /* bardziej czytelne tło */
+  color: #000; /* kontrastowy tekst */
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, border 0.3s ease;
+}
+
+.login-box input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.login-box input:focus {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(131, 36, 188, 0.25);
+}
+
+/* Pole hasła z błędem */
+.login-box input.error {
+  border: 2px solid #ff4d4f; /* czerwony obrys */
+  background: rgba(255, 77, 79, 0.15); /* lekko czerwone tło */
+  color: #000; /* tekst pozostaje czytelny */
+  box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Przycisk */
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #8324bc, #758bd0, #8324bc);
+  background-size: 300% 300%;
+  box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
+    animation: gradientShift 5s ease infinite;
+}
+
+.login-box button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(131, 36, 188, 0.45);
+}
+
+/* Komunikat błędu */
+#errorMsg {
+  color: #ff4d4f;
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-weight: 600;
+  text-align: center;
+}
+/* EKRAN LOGOWANIA - KONIEC */
+
+
+/* Blokada scrolla */
+.no-scroll, .no-scroll body {
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------
+   4. Przełącznik Motywu na Stronie Logowania
+   ------------------------------------------------------- */
+
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* Stylistyka nowoczesnego suwaka (Wymaga Font Awesome dla ikon!) */
+.theme-toggle {
+  /* Podstawowe ustawienia kontenera (kapsuły) */
+  position: relative;
+  width: 65px; /* Szerokość przełącznika */
+  height: 35px; /* Wysokość przełącznika */
+  border-radius: 17.5px; /* Kształt kapsuły */
+  cursor: pointer;
+  padding: 0;
+  
+  /* Układ elementów wewnątrz (ikony) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px; 
+
+  /* Użycie zmiennych dla tła i obramowania (Jasny tryb) */
+  background: var(--login-input-bg); /* Jasne tło z motywu login-glass */
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+  transition: all 0.3s ease;
+}
+
+/* Tryb Ciemny */
+html.dark-mode .theme-toggle {
+  background: var(--login-input-bg); 
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Stylowanie ikon (słońce i księżyc) */
+.theme-toggle .toggle-icon {
+  font-size: 1.1rem; 
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.theme-toggle .sun-icon {
+  color: #ffaa00; 
+}
+.theme-toggle .moon-icon {
+  color: #f0f0f0; 
+}
+
+html.dark-mode .theme-toggle .sun-icon {
+  color: #eeeeee; 
+}
+html.dark-mode .theme-toggle .moon-icon {
+  color: #ffd700; 
+}
+
+/* Stylowanie ruchomego pokrętła (knob) */
+.theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 29px; 
+  height: 29px;
+  border-radius: 50%;
+  
+  background: #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 5; 
+}
+
+/* Przesunięcie pokrętła w trybie Dark Mode */
+html.dark-mode .theme-toggle .toggle-knob {
+  transform: translateX(30px); 
+}
+
+/* --- A. Sekcja Komunikatów (Glassmorphism) --- */
+.section-communications {
+    padding: 20px 0;
+}
+
+.communications-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.communication-item {
+    /* Glassmorphism */
+    background: var(--login-glass-bg); /* Półprzezroczyste tło (zmienna z motywu) */
+    border: 1px solid var(--login-glass-border); /* Półprzezroczysta ramka */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+.communication-item:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.comm-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--login-input-border); /* Cienka linia pod nagłówkiem */
+    padding-bottom: 8px;
+}
+
+.comm-data-komunikatu {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 5px;
+}
+
+.comm-icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.comm-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.comm-meta {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.comm-category {
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    color: white; /* Tekst kategorii zawsze biały dla kontrastu */
+}
+
+.comm-content {
+    line-height: 1.5;
+    white-space: pre-wrap; /* Zachowanie formatowania z arkusza (np. nowych linii) */
+}
+
+/* --- B. Kolorowanie KategoriI --- */
+
+/* Test */
+.comm-test .comm-category {
+    background-color: #9b59b6; /* Fioletowy */
+}
+.comm-test .comm-icon {
+    color: #9b59b6;
+}
+
+/* Aktualizacja */
+.comm-aktualizacja .comm-category {
+    background-color: #34495e; /* Granat/ciemny szary */
+}
+.comm-aktualizacja .comm-icon {
+    color: #34495e;
+}
+
+/* Techniczne */
+.comm-techniczne .comm-category {
+    background-color: #e67e22; /* Pomarańczowy/ceglasty */
+}
+.comm-techniczne .comm-icon {
+    color: #e67e22;
+}
+
+/* Flota */
+.comm-flota .comm-category {
+    background-color: #1abc9c; /* Turkusowy */
+}
+.comm-flota .comm-icon {
+    color: #1abc9c;
+}
+
+/* Ruch Lotniczy */
+.comm-ruch_lotniczy .comm-category {
+    background-color: #3498db; /* Niebieski (podobnie jak info) */
+}
+.comm-ruch_lotniczy .comm-icon {
+    color: #3498db;
+}
+
+/* Pilne (ponowne zdefiniowanie, dla pewności, że jest Czerwony) */
+.comm-pilne .comm-category {
+    background-color: #c0392b; /* Intensywny Czerwony */
+}
+.comm-pilne .comm-icon {
+    color: #c0392b;
+}
+
+/* Domyślny (DEFAULT) */
+.comm-default .comm-category {
+    background-color: #95a5a6; /* Szary */
+}
+.comm-default .comm-icon {
+    color: var(--accent-color); /* Akcentowy kolor motywu */
+}
+
+/* Status ładowania */
+.status-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+}
+.hidden {
+    display: none;
+}
+
+/* --- A. Sekcja Przeglądów (Glassmorphism) --- */
+
+.subsection {
+    margin-top: 25px;
+}
+
+.inspections-grid {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding-top: 10px;
+}
+
+.inspection-item {
+    /* Glassmorphism */
+    background: var(--login-glass-bg); 
+    border: 1px solid var(--login-glass-border); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    border-left-width: 8px; /* Gruba linia po lewej dla statusu */
+    border-left-style: solid;
+}
+
+.inspection-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.registration-info {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.inspection-dates {
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+.type-tag {
+    font-size: 0.8rem;
+    font-weight: 700; /* Pogrubienie */
+    padding: 4px 8px; /* Większy padding */
+    border-radius: 5px;
+    color: white; 
+    text-transform: uppercase; /* Dla lepszej widoczności */
+}
+
+/* KONTENER DLA NAGŁÓWKA I STATUSU */
+.inspection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.inspection-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px dashed var(--login-glass-border); /* Separator */
+}
+
+/* WIDŻET STATUSU */
+.status-tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: var(--text-color); /* Domyślny kolor tekstu */
+    background-color: var(--login-input-bg); /* Lekkie tło */
+}
+
+.no-data {
+    font-style: italic;
+    opacity: 0.7;
+    grid-column: 1 / -1; /* Rozciągnij na całą siatkę */
+}
+
+/* --- KOLOROWANIE STATUSU (Lewa Linia i Tag Statusu) --- */
+
+/* 1. Zaplanowany (Lekki Róż) */
+.status-planned {
+    border-left-color: #f7a0b3; 
+}
+.status-planned .status-tag {
+    background-color: #f7a0b3;
+    color: black;
+}
+
+/* 2. W Trakcie (Niebieski) */
+.status-in-progress {
+    border-left-color: #3498db; 
+}
+.status-in-progress .status-tag {
+    background-color: #3498db;
+    color: white;
+}
+
+/* 3. Wykonany (Zielony) */
+.status-completed {
+    border-left-color: #2ecc71; 
+}
+.status-completed .status-tag {
+    background-color: #2ecc71;
+    color: white;
+}
+
+/* 4. Przygotowany (Fioletowy) */
+.status-prepared {
+    border-left-color: #9b59b6; 
+}
+.status-prepared .status-tag {
+    background-color: #9b59b6;
+    color: white;
+}
+
+/* 5. Anulowany (Szary) */
+.status-cancelled {
+    border-left-color: #95a5a6; 
+}
+.status-cancelled .status-tag {
+    background-color: #95a5a6;
+    color: white;
+}
+
+/* 6. Przełożony (Żółty) */
+.status-postponed {
+    border-left-color: #f1c40f; 
+}
+.status-postponed .status-tag {
+    background-color: #f1c40f;
+    color: black;
+}
+
+/* 7. Niewykonany (Lekko Czerwony) */
+.status-unperformed {
+    border-left-color: #e67e22; 
+}
+.status-unperformed .status-tag {
+    background-color: #e67e22;
+    color: white;
+}
+
+/* 8. Problem (Czerwony z pogrubieniem) */
+.status-problem {
+    border-left-color: #c0392b; 
+}
+.status-problem .status-tag {
+    background-color: #c0392b;
+    color: white;
+    font-weight: 900; /* Pogrubienie tekstu dla problemu */
+    /* Dodatkowy efekt wizualny */
+    box-shadow: 0 0 5px rgba(192, 57, 43, 0.7);
+}
+
+.date-overdue {
+    color: #c0392b; /* Czerwony */
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Poprawka dla domyślnych/nieznanych statusów */
+.status-default {
+    border-left-color: var(--border-color);
+}
+
+/* --- SPECJALNA OBSŁUGA PRZEGLĄDÓW PRZEŁOŻONYCH (PODZIAŁ KOLORU) --- */
+
+/* Jeśli przegląd jest przełożony, usuwamy standardowy border i tworzymy nowy przez ::before */
+.inspection-item.is-rescheduled {
+    border-left: 0; /* Usuwamy standardowy border */
+    position: relative;
+    padding-left: 23px; /* 15px (standard) + 8px (szerokość paska) */
+    overflow: hidden; /* Ważne, aby pasek nie wychodził poza zaokrąglone rogi */
+}
+
+/* Pasek koloru tworzony przez pseudoelement */
+.inspection-item.is-rescheduled::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px; /* Szerokość paska */
+    /* Domyślny gradient (zostanie nadpisany przez konkretne statusy poniżej) */
+    background: linear-gradient(to bottom, #95a5a6 50%, #f1c40f 50%); 
+}
+
+/* --- DEKLARACJE GRADIENTÓW DLA KONKRETNYCH STATUSÓW --- */
+/* Górna połowa = Kolor Statusu, Dolna połowa = Żółty (#f1c40f) */
+
+.inspection-item.status-planned.is-rescheduled::before {
+    background: linear-gradient(to bottom, #f7a0b3 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-in-progress.is-rescheduled::before {
+    background: linear-gradient(to bottom, #3498db 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-completed.is-rescheduled::before {
+    background: linear-gradient(to bottom, #2ecc71 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-prepared.is-rescheduled::before {
+    background: linear-gradient(to bottom, #9b59b6 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-cancelled.is-rescheduled::before {
+    background: linear-gradient(to bottom, #95a5a6 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-postponed.is-rescheduled::before {
+    background: #f1c40f; /* Cały żółty, bo to status przełożony */
+}
+
+.inspection-item.status-unperformed.is-rescheduled::before {
+    background: linear-gradient(to bottom, #e67e22 50%, #f1c40f 50%);
+}
+
+.inspection-item.status-problem.is-rescheduled::before {
+    background: linear-gradient(to bottom, #c0392b 50%, #f1c40f 50%);
+}
+
+/* Default fallback */
+.inspection-item.status-default.is-rescheduled::before {
+    background: linear-gradient(to bottom, #999 50%, #f1c40f 50%);
+}
+
+
+/* --- C. Kolorowanie TYPU Przeglądu --- */
+/* Te kolory powinny być różne, ale pasujące do twoich typów (A-CHECK, C-CHECK, itp.) */
+/* Typ B - Czarny */
+.type-b {
+    background-color: #2c3e50; /* Ciemny, prawie czarny (dark slate) */
+    color: white; 
+}
+/* Typ C - Zielony */
+.type-c {
+    background-color: #27ae60; /* Wibrująca zieleń (Emerald) */
+    color: white;
+}
+/* Typ D - Czerwony */
+.type-d {
+    background-color: #e74c3c; /* Intensywna czerwień (Alizarin) */
+    color: white;
+}
+
+/* --- Status ładowania --- */
+/* Status boxy (już istniejące) muszą mieć klasę .hidden w CSS */
+.status-box.hidden {
+    display: none;
+}
+
+/* --
