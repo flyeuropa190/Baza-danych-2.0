@@ -1,6 +1,6 @@
 /* --- PLIK: login-page.css --- */
 
-/* 1. Układ i Tło strony logowania */
+/* 1. Stabilizacja układu i tło */
 .login-page {
     margin: 0;
     padding: 0;
@@ -9,145 +9,138 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Profesjonalny, delikatny gradient w tle */
-    background: radial-gradient(circle at top left, rgba(131, 36, 188, 0.1), transparent),
-                radial-gradient(circle at bottom right, rgba(117, 139, 208, 0.1), transparent),
-                var(--bg-color);
-    transition: background 0.5s ease;
+    background: var(--bg-color);
+    transition: background 0.4s ease-in-out;
     overflow: hidden;
+    position: relative;
 }
 
-/* 2. Kontener Logo */
-.logo2 {
-    width: auto;
-    max-width: 180px;
-    height: auto;
-    margin-bottom: 40px;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
-    animation: fadeIn 1s ease-out forwards;
+/* 2. Neonowe poświaty w tle (tylko dla klimatu) */
+.login-page::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: var(--accent-color);
+    filter: blur(150px);
+    opacity: 0.15;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
 }
 
-/* 3. Profesjonalny Login Box (Liquid Glass) */
+html.dark-mode .login-page::before {
+    opacity: 0.3; /* Mocniejszy neon w nocy */
+}
+
+/* 3. Profesjonalny Login Box */
 .login-box {
     background: var(--login-glass-bg);
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
+    /* Używamy inset shadow dla efektu neonowej krawędzi */
     border: 1px solid var(--login-glass-border);
     padding: 50px 40px;
-    border-radius: 32px; /* iOS Squircle */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    border-radius: 32px;
     width: 100%;
     max-width: 380px;
-    animation: fadeSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    text-align: center;
+    z-index: 5;
+    transition: all 0.4s ease-in-out;
+    /* Neonowy blask pudełka w trybie ciemnym */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. Typografia */
+html.dark-mode .login-box {
+    box-shadow: 0 0 30px rgba(153, 0, 255, 0.15), 0 10px 40px rgba(0,0,0,0.4);
+    border-color: rgba(153, 0, 255, 0.3);
+}
+
+/* 4. Logo - stała wysokość zapobiega przeskakiwaniu */
+.logo2 {
+    height: 80px;
+    width: auto;
+    margin-bottom: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 5. Typografia */
 .login-box h1 {
     color: var(--text-color);
     font-size: 24px;
     font-weight: 600;
-    letter-spacing: -0.5px;
     margin-bottom: 8px;
+    transition: color 0.3s ease;
 }
 
 .login-box h2 {
-    color: #007f2f; /* Zachowano Twój zielony dla fazy alpha */
+    color: #007f2f;
     font-size: 13px;
-    font-weight: 400;
     margin-bottom: 35px;
-    opacity: 0.8;
+    height: 18px; /* Stała wysokość */
 }
 
-.login-box h3 {
-    color: var(--text-color);
-    font-size: 11px;
-    margin-top: 25px;
-    opacity: 0.4;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-}
-
-/* 5. Pola wejściowe (Input) */
+/* 6. Inputy - eliminacja "skakania" */
 .login-box input {
     width: 100%;
-    padding: 16px 20px;
+    height: 54px; /* Stała wysokość zapobiega skakaniu */
+    padding: 0 20px;
     margin-bottom: 16px;
     border: 1px solid var(--login-input-border);
     border-radius: 14px;
-    outline: none;
-    font-size: 16px;
     background: var(--login-input-bg);
     color: var(--text-color);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.login-box input::placeholder {
-    color: var(--login-input-placeholder);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* Kluczowe dla wymiarów */
 }
 
 .login-box input:focus {
     background: var(--login-input-bg-focus);
-    transform: translateY(-2px);
     border-color: var(--accent-color);
-    box-shadow: 0 8px 20px rgba(153, 0, 255, 0.15);
+    /* Neonowy focus */
+    box-shadow: 0 0 12px rgba(153, 0, 255, 0.2);
 }
 
-/* 6. Przycisk (Profesjonalny Gradient) */
+/* 7. Przycisk Neonowy */
 .login-box button {
     width: 100%;
-    padding: 16px;
-    margin-top: 10px;
+    height: 54px;
     border: none;
     border-radius: 14px;
     font-size: 16px;
     font-weight: 600;
+    color: #fff;
     cursor: pointer;
-    color: #ffffff;
     background: linear-gradient(135deg, #9900ff, #7a00cc);
-    box-shadow: 0 10px 25px rgba(153, 0, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(153, 0, 255, 0.2);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .login-box button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(153, 0, 255, 0.4);
-    filter: brightness(1.1);
+    box-shadow: 0 0 20px rgba(153, 0, 255, 0.6);
+    transform: translateY(-1px);
 }
 
-.login-box button:active {
-    transform: translateY(0);
-}
-
-/* 7. Komunikaty błędów */
+/* 8. Error Msg - rezerwacja miejsca */
 #errorMsg {
     color: #ff4d4f;
     font-size: 13px;
-    margin-top: 15px;
-    font-weight: 500;
-    min-height: 20px;
+    margin-top: 10px;
+    height: 20px; /* Stała wysokość zapobiega przesuwaniu stopki */
 }
 
-/* 8. Dodatkowe animacje */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fadeSlideIn {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsywność */
-@media (max-width: 480px) {
-    .login-box {
-        max-width: 90%;
-        padding: 40px 25px;
-    }
-    .logo2 {
-        max-width: 140px;
-    }
+/* 9. Wersja aplikacji */
+.login-box h3 {
+    margin-top: 20px;
+    font-size: 11px;
+    opacity: 0.4;
+    color: var(--text-color);
 }
