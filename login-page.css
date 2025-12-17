@@ -1,0 +1,120 @@
+/* Kontener główny */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    z-index: 1;
+}
+
+.logo2 {
+    display: block;
+    margin: 0 auto 20px;
+    width: 80px;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+/* Szklane pudełko */
+.login-box {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px; /* iOS Squircle look */
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
+
+/* Inputy w stylu Liquid */
+input[type="password"] {
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input[type="password"]:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 4px rgba(131, 36, 188, 0.2);
+}
+
+/* Przycisk Liquid */
+button#loginButton {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #ffffff;
+    color: #000;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+button#loginButton:hover {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+button#loginButton:active {
+    transform: scale(0.95);
+}
+
+/* Stopka */
+h3 {
+    margin-top: 25px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.4;
+}
+
+#errorMsg {
+    color: #ff6b6b;
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 15px;
+}
+
+/* Przełącznik motywu (iOS Style) */
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.theme-toggle {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
