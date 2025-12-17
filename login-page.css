@@ -1,86 +1,153 @@
+/* --- PLIK: login-page.css --- */
+
+/* 1. Układ i Tło strony logowania */
+.login-page {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Profesjonalny, delikatny gradient w tle */
+    background: radial-gradient(circle at top left, rgba(131, 36, 188, 0.1), transparent),
+                radial-gradient(circle at bottom right, rgba(117, 139, 208, 0.1), transparent),
+                var(--bg-color);
+    transition: background 0.5s ease;
+    overflow: hidden;
+}
+
+/* 2. Kontener Logo */
+.logo2 {
+    width: auto;
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 40px;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+    animation: fadeIn 1s ease-out forwards;
+}
+
+/* 3. Profesjonalny Login Box (Liquid Glass) */
 .login-box {
-    background: var(--glass-bg);
-    backdrop-filter: blur(30px) saturate(200%);
-    -webkit-backdrop-filter: blur(30px) saturate(200%);
-    border: 1px solid var(--glass-border);
-    border-radius: 32px;
+    background: var(--login-glass-bg);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--login-glass-border);
     padding: 50px 40px;
+    border-radius: 32px; /* iOS Squircle */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 380px;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05), 
-        0 20px 40px -10px rgba(0, 0, 0, 0.08);
-    text-align: center;
+    animation: fadeSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.logo2 {
-    width: 64px;
-    height: auto;
-    margin-bottom: 24px;
-    filter: grayscale(100%); /* Pełny minimalizm */
-    opacity: 0.8;
-}
-
-h1 {
-    color: var(--text-primary);
-    font-size: 26px;
+/* 4. Typografia */
+.login-box h1 {
+    color: var(--text-color);
+    font-size: 24px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.5px;
     margin-bottom: 8px;
 }
 
-h2 {
-    color: var(--text-secondary);
-    font-size: 14px;
+.login-box h2 {
+    color: #007f2f; /* Zachowano Twój zielony dla fazy alpha */
+    font-size: 13px;
     font-weight: 400;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
+    opacity: 0.8;
 }
 
-/* Pola wejściowe */
-#passwordInput {
+.login-box h3 {
+    color: var(--text-color);
+    font-size: 11px;
+    margin-top: 25px;
+    opacity: 0.4;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* 5. Pola wejściowe (Input) */
+.login-box input {
     width: 100%;
-    background: var(--input-bg);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 16px;
+    padding: 16px 20px;
     margin-bottom: 16px;
-    transition: all 0.2s ease;
+    border: 1px solid var(--login-input-border);
+    border-radius: 14px;
     outline: none;
-    color: var(--text-primary);
-}
-
-#passwordInput:focus {
-    background: #fff;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
-}
-
-/* Przycisk akcji */
-#loginButton {
-    width: 100%;
-    background: var(--text-primary);
-    color: #fff;
-    border: none;
-    padding: 16px;
-    border-radius: 12px;
     font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
+    background: var(--login-input-bg);
+    color: var(--text-color);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#loginButton:hover {
-    background: #000;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+.login-box input::placeholder {
+    color: var(--login-input-placeholder);
 }
 
-/* Wersja aplikacji na dole */
-h3 {
-    margin-top: 30px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-transform: none;
-    font-weight: 400;
+.login-box input:focus {
+    background: var(--login-input-bg-focus);
+    transform: translateY(-2px);
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 20px rgba(153, 0, 255, 0.15);
+}
+
+/* 6. Przycisk (Profesjonalny Gradient) */
+.login-box button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #9900ff, #7a00cc);
+    box-shadow: 0 10px 25px rgba(153, 0, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.login-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(153, 0, 255, 0.4);
+    filter: brightness(1.1);
+}
+
+.login-box button:active {
+    transform: translateY(0);
+}
+
+/* 7. Komunikaty błędów */
+#errorMsg {
+    color: #ff4d4f;
+    font-size: 13px;
+    margin-top: 15px;
+    font-weight: 500;
+    min-height: 20px;
+}
+
+/* 8. Dodatkowe animacje */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsywność */
+@media (max-width: 480px) {
+    .login-box {
+        max-width: 90%;
+        padding: 40px 25px;
+    }
+    .logo2 {
+        max-width: 140px;
+    }
 }
