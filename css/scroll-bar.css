@@ -1,0 +1,28 @@
+/* --- GLOBALNY PASEK PRZEWIJANIA (CAŁA STRONA) --- */
+
+/* Styl dla Chrome, Edge, Safari, Opera */
+::-webkit-scrollbar {
+    width: 8px;  /* Zwiększyłem lekko z 6px na 8px, bo na głównej stronie wygodniej się łapie */
+    height: 8px; /* Wysokość paska poziomego */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+}
+
+/* Opcjonalnie: efekt po najechaniu myszką na pasek */
+::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.8); /* Lekkie przyciemnienie */
+}
+
+/* --- WSPARCIE DLA FIREFOXA --- */
+/* Firefox używa innej składni standardowej */
+html {
+    scrollbar-width: thin; /* Cienki pasek */
+    scrollbar-color: var(--accent-color) transparent; /* Kolor suwaka | Kolor tła */
+}

@@ -1,0 +1,293 @@
+.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(117, 139, 208, 0.25),
+    rgba(131, 36, 188, 0.25)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: center;
+  z-index: 2;
+}
+
+/* Animacje */
+@keyframes fadeSlideIn { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+/* EKRAN LOGOWANIA */
+.login-page {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(117, 139, 208, 0.25),
+    rgba(131, 36, 188, 0.25)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+/* Kontener centralny */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: center;
+  z-index: 2;
+}
+
+/* Animacja wejścia login-box */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efekt potrząsania przy błędzie */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* Logo */
+.logo2 {
+  width: 30%;
+  height: auto;
+  z-index: 10;
+  margin-bottom: 100px;
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Pudełko logowania – przezroczyste i czytelne */
+.login-box {
+  background: rgba(255, 255, 255, 0.25); /* półprzezroczyste białe tło */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 12px 40px rgba(131, 36, 188, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 350px;
+  margin-bottom: 10%;
+  animation: fadeSlideIn 0.8s ease forwards;
+  transition: box-shadow 0.3s ease;
+}
+
+.login-box.shake {
+  animation: shake 0.5s ease;
+}
+
+/* Nagłówki */
+.login-box h1 {
+  color: #000; /* lepszy kontrast */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #007f2f; /* ciemniejszy zielony dla kontrastu */
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 18px;
+}
+
+.login-box h3 {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Pola tekstowe */
+.login-box input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.85); /* bardziej czytelne tło */
+  color: #000; /* kontrastowy tekst */
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, border 0.3s ease;
+}
+
+.login-box input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.login-box input:focus {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(131, 36, 188, 0.25);
+}
+
+/* Pole hasła z błędem */
+.login-box input.error {
+  border: 2px solid #ff4d4f; /* czerwony obrys */
+  background: rgba(255, 77, 79, 0.15); /* lekko czerwone tło */
+  color: #000; /* tekst pozostaje czytelny */
+  box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Przycisk */
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #8324bc, #758bd0, #8324bc);
+  background-size: 300% 300%;
+  box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
+    animation: gradientShift 5s ease infinite;
+}
+
+.login-box button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(131, 36, 188, 0.45);
+}
+
+/* Komunikat błędu */
+#errorMsg {
+  color: #ff4d4f;
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-weight: 600;
+  text-align: center;
+}
+/* EKRAN LOGOWANIA - KONIEC */
+
+
+/* Blokada scrolla */
+.no-scroll, .no-scroll body {
+  overflow: hidden;
+}
+
+
+
+/* -------------------------------------------------------
+   4. Przełącznik Motywu na Stronie Logowania
+   ------------------------------------------------------- */
+
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* Stylistyka nowoczesnego suwaka (Wymaga Font Awesome dla ikon!) */
+.theme-toggle {
+  /* Podstawowe ustawienia kontenera (kapsuły) */
+  position: relative;
+  width: 65px; /* Szerokość przełącznika */
+  height: 35px; /* Wysokość przełącznika */
+  border-radius: 17.5px; /* Kształt kapsuły */
+  cursor: pointer;
+  padding: 0;
+  
+  /* Układ elementów wewnątrz (ikony) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px; 
+
+  /* Użycie zmiennych dla tła i obramowania (Jasny tryb) */
+  background: var(--login-input-bg); /* Jasne tło z motywu login-glass */
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+  transition: all 0.3s ease;
+}
+
+/* Tryb Ciemny */
+html.dark-mode .theme-toggle {
+  background: var(--login-input-bg); 
+  border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Stylowanie ikon (słońce i księżyc) */
+.theme-toggle .toggle-icon {
+  font-size: 1.1rem; 
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.theme-toggle .sun-icon {
+  color: #ffaa00; 
+}
+.theme-toggle .moon-icon {
+  color: #f0f0f0; 
+}
+
+html.dark-mode .theme-toggle .sun-icon {
+  color: #eeeeee; 
+}
+html.dark-mode .theme-toggle .moon-icon {
+  color: #ffd700; 
+}
+
+/* Stylowanie ruchomego pokrętła (knob) */
+.theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 29px; 
+  height: 29px;
+  border-radius: 50%;
+  
+  background: #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 5; 
+}
+
+/* Przesunięcie pokrętła w trybie Dark Mode */
+html.dark-mode .theme-toggle .toggle-knob {
+  transform: translateX(30px); 
+}

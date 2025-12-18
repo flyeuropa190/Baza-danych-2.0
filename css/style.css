@@ -1,0 +1,242 @@
+
+/* OGÓLNE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lexend', sans-serif;
+}
+
+/* --- 1. ZMIENNE MOTYWU DLA TREŚCI --- */
+
+:root {
+  /* Domyślny motyw: Jasny */
+  --bg-color: #d6d4d4;
+  --text-color: #000000;
+  --accent-color: #9900ff;
+  
+  /* Login Box (Glass) */
+  --login-glass-bg: rgba(255, 255, 255, 0.25);
+  --login-glass-border: rgba(255, 255, 255, 0.3);
+  --login-input-bg: rgba(255, 255, 255, 0.85);
+  --login-input-bg-focus: rgba(255, 255, 255, 1);
+  --login-input-border: rgba(0, 0, 0, 0.2);
+  --login-input-placeholder: rgba(0, 0, 0, 0.5);
+}
+
+html.dark-mode {
+  /* Motyw Ciemny */
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  
+  /* Login Box (Glass) */
+  --login-glass-bg: rgba(30, 30, 30, 0.5);
+  --login-glass-border: rgba(60, 60, 60, 0.8);
+  --login-input-bg: rgba(50, 50, 50, 0.7);
+  --login-input-bg-focus: rgba(60, 60, 60, 1);
+  --login-input-border: rgba(255, 255, 255, 0.2);
+  --login-input-placeholder: rgba(255, 255, 255, 0.5);
+}
+
+/* --- 2. GŁÓWNA STRUKTURA I TŁO --- */
+
+body, html {
+  height: auto;
+  width: 100%;
+  background: var(--bg-color);
+  color: var(--text-color);
+  overflow: visible;  
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Tło strony (zmieniono, aby używać zmiennej z glass-menu.css, ale dodano padding-top) */
+body.main-bg {
+  background-image: var(--body-bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  padding-top: 80px; /* Dodatkowe miejsce na pasek nawigacji */
+  transition: background-image 0.3s ease;
+}
+
+.main-content-wrapper {
+  background: var(--content-bg); /* Oczekuje zmiennej --content-bg, która powinna być w glass-menu.css */
+  color: var(--body-text); /* Oczekuje zmiennej --body-text z glass-menu.css */
+  padding: 2rem; 
+  border-radius: 10px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.close-btn {
+    color: var(--text-main); /* Kolor tekstu X (jasny w ciemnym, ciemny w jasnym) */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    opacity: 0.7; /* Lekkie przyciemnienie domyślne */
+    transition: color 0.2s, opacity 0.2s;
+    line-height: 1; /* Upewnij się, że jest dobrze wyśrodkowany */
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    /* Podświetlenie na Ciemny Czerwony po najechaniu */
+    color: #c0392b; /* Ciemny czerwony */
+    opacity: 1;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+@media (max-width: 650px) {
+    .modal-content {
+        margin: 20px auto; /* Mniejszy margines na górze */
+        padding: 15px; /* Mniejszy padding wewnętrzny */
+    }
+    
+    /* Wymuszamy układ jednokolumnowy dla wszystkich gridów w modalu */
+    .modal-grid {
+        grid-template-columns: 1fr; 
+        gap: 0; /* Zmniejszamy odstępy */
+    }
+
+    /* Zmniejszamy szerokość etykiet, ale nadal je wyświetlamy */
+    #modal-details-content strong {
+        width: 150px; 
+    }
+    
+    /* Wyrównanie pól */
+    .modal-grid-item {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed rgba(51, 51, 51, 0.1);
+    }
+    
+    /* Usuwamy podwójną linię pod nagłówkiem w trybie jednokolumnowym */
+    .modal-delay-section {
+        padding: 5px; /* Zmniejszamy padding, aby zyskać miejsce */
+        margin-left: -5px; /* Lekka korekta marginesów, by dopasować się do krawędzi kontenera */
+        margin-right: -5px; 
+    }
+    
+    /* Poprawiamy styl dla samego tekstu opóźnienia, by się zawijał */
+    .delay-indicator {
+        display: block; /* Upewniamy się, że to jest blok i może się zawinąć */
+        word-wrap: break-word; /* Wymuszamy łamanie długich słów, jeśli zajdzie taka potrzeba */
+        white-space: normal;
+        margin-bottom: 5px;
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .modal-filter-grid {
+    grid-template-columns: 1fr;
+    }
+
+  .logo2 {
+    width: 80%;
+    margin-bottom: 50px;
+  }
+
+  .login-box {
+    width: 80%;
+    margin-bottom: 0;
+  }
+
+  .login-box h1 {
+    font-size: 23px;    
+  }
+
+  .login-box h2 {
+    font-size: 15px;    
+  }
+}
+
+@media (max-device-width: 1000px) and (orientation: landscape) {
+  .logo2 {
+    margin-bottom: 20px;
+  }
+
+  .login-box {    
+    max-width: 80%;
+    margin-bottom: 0px;
+    max-height: 60%;
+    padding-top: 10px;
+    padding-bottom: 10px;        
+  }
+
+  .login-box h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .login-box h2 {
+    font-size: 12px;    
+    margin-bottom: 10px;
+  }
+
+  .login-box h3 {
+    font-size: 10px;
+    margin-top: 0px;
+  }
+
+  .login-box input {
+   max-height: 35px; 
+  }
+
+  .login-box button {
+   max-height: 35px; 
+   padding-bottom: 7px;
+   padding-top: 7px;
+  }
+
+  #errorMsg {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+}
+
+
+/* ANIMACJE */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Animacja potrząsania przy błędzie */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-10px); }
+  80% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
+.login-box.shake {
+  animation: shake 0.5s;
+}
+
+/* Powiadomienie „toast” */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #8324bc;
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(131,36,188,0.3);
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
