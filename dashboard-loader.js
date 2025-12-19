@@ -67,7 +67,7 @@ function renderStany(stany) {
     }
     
     const html = stany.map(item => `
-        <div class="dash-item status-row">
+        <div class="dash-item status-row" data-status="${item.status}" style="cursor: pointer;"> 
             <span class="dash-label">${item.status}</span>
             <span class="dash-value">${item.ilosc}</span>
         </div>
@@ -127,7 +127,7 @@ function renderKontrolka(planes) {
     const html = alerts.map(item => {
         const colorClass = getCheckColorClass(item.days);
         return `
-            <div class="dash-item check-row ${colorClass}">
+            <div class="dash-item check-row ${colorClass}" data-reg="${item.reg}" style="cursor: pointer;">
                 <div class="check-info">
                     <strong>${item.reg} (${item.num}) [${item.type}]</strong>
                 </div>

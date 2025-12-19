@@ -15,6 +15,7 @@ function loadFromCache() {
 }
 
 
+
 function parseDate(dateString) {
     if (!dateString) return null;
     let date;

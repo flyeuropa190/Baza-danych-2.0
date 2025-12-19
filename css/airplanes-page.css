@@ -309,7 +309,7 @@ html.dark-mode .zastepczy-row { color: #e67e22; }
     padding: 30px;
     border-radius: 15px;
     width: 90%;
-    max-width: 800px;
+    max-width: 1400px;
     position: relative;
     border: 1px solid var(--card-border);
     max-height: 90vh;
@@ -865,4 +865,154 @@ body.dark-mode .checkbox-container::before {
 .checkbox-container input:checked {
     color: #3498db;
     font-weight: 600;
+}
+
+/* --- ISTNIEJĄCE STYLE POZOSTAJĄ BEZ ZMIAN, DODAJ PONIŻSZE NA KOŃCU PLIKU --- */
+
+/* --- 1. Widok Kafelka - Lot Zastępczy --- */
+.zastepczy-info {
+    width: 100%;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    font-size: 0.8rem;
+    color: #c0392b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+html.dark-mode .zastepczy-info {
+    color: #e74c3c;
+    border-top-color: rgba(255,255,255,0.1);
+}
+
+/* --- 2. Modal - Pasek Narzędzi --- */
+.modal-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border);
+    margin-right: 30px;
+}
+
+.modal-tool-btn {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.modal-tool-btn:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.modal-tool-btn.btn-delete {
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+}
+.modal-tool-btn.btn-delete:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* --- 3. Modal - Zakładki (Tabs) --- */
+.modal-tabs {
+    display: flex;
+    gap: 5px;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow-x: auto; /* Zabezpieczenie na małe ekrany */
+    padding-bottom: 2px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--label-color);
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--accent-color);
+    background: rgba(0,0,0,0.02);
+}
+
+.tab-btn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Placeholder dla pustych zakładek */
+.tab-placeholder {
+    padding: 20px;
+    text-align: center;
+    color: var(--label-color);
+    font-style: italic;
+    border: 1px dashed var(--card-border);
+    border-radius: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- ANIMACJE W MODALU --- */
+
+/* Definicja animacji wejścia od dołu */
+@keyframes slideInUpFade {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Klasy pomocnicze do opóźnień animacji (staggering effect) */
+.animate-delay-1 { animation: slideInUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards; opacity: 0; }
+.animate-delay-2 { animation: slideInUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards; opacity: 0; }
+.animate-delay-3 { animation: slideInUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards; opacity: 0; }
+.animate-delay-4 { animation: slideInUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards; opacity: 0; }
+
+/* --- RESPASYWNOŚĆ MODALA (Mobile Order) --- */
+@media (max-width: 900px) {
+    .modal-body-grid {
+        display: flex;       /* Przełączamy na Flexbox dla łatwiejszego sortowania */
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Ustawianie kolejności (order) */
+    .section-seats { order: 1; } /* 1. Układ miejsc */
+    .section-ops   { order: 2; } /* 2. Operacje */
+    .section-tech  { order: 3; } /* 3. Dane techniczne */
+    
+    /* Footer przeglądów jest poza gridem, więc naturalnie będzie 4 na samym dole */
 }
