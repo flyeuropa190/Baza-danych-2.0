@@ -1,11 +1,3 @@
-/**
- * dashboard-loader.js
- * Obsługuje sekcje: Stany, Kontrolka Przeglądów, Grafik
- * ZMODYFIKOWANY: Używa Routera GAS poprzez dodanie parametru URL.
- */
-
-// Zmieniamy tylko API_URL_DASHBOARD (usuwamy parametr, bo dodamy go w fetchDashboardData)
-// Uwaga: Upewnij się, że ten URL to ten sam, który został wdrożony dla routera GAS.
 const API_URL_BASE = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
 const CACHE_KEY_DASHBOARD = 'dashboard_data_v1';
 

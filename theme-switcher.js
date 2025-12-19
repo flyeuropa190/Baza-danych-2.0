@@ -1,39 +1,32 @@
-// Plik: theme-switcher.js
-
 document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('themeToggle');
-  const htmlEl = document.documentElement; // <html> tag
 
-  // Funkcja do zastosowania motywu
+  // Funkcja nakładająca motyw
   const applyTheme = (theme) => {
-    // Teraz 'dark' oznacza dodanie klasy, 'light' (domyślny) oznacza jej brak
     if (theme === 'dark') {
-      htmlEl.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode');
     } else {
-      htmlEl.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode');
     }
   };
 
-  // 1. Sprawdź zapisany motyw przy ładowaniu strony
+  // 1. Sprawdź zapisany motyw przy starcie
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme) {
     applyTheme(savedTheme);
-  } else {
-    // Jeśli nie ma zapisanego motywu, DOMYŚLNIE jest to 'light' (bez klasy)
   }
 
-  // 2. Obsługa kliknięcia przełącznika
+  // 2. Obsługa kliknięcia (WZMOCNIONA)
   if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      // Przełącz klasę, która aktywuje motyw ciemny
-      htmlEl.classList.toggle('dark-mode');
+    themeToggle.addEventListener('click', (e) => {
+      e.preventDefault(); // Zapobiega ewentualnemu odświeżeniu
       
-      // Zapisz wybór w localStorage
-      if (htmlEl.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-      } else {
-        localStorage.setItem('theme', 'light');
-      }
+      // Bezpośrednie przełączenie na dokumencie
+      const isDark = document.documentElement.classList.toggle('dark-mode');
+      
+      // Zapis do pamięci
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');     
+    
     });
   }
 });

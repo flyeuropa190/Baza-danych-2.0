@@ -8,8 +8,10 @@ export async function fetchInspectionsData() {
 
     try {
         const response = await fetch(ROUTED_URL);
-        // ... (reszta logiki jest taka sama jak w dataFetcher.js)
-        // ...
+
+            if (!response.ok) {
+        throw new Error(`Błąd HTTP! Status: ${response.status}. Sprawdź, czy URL wdrożenia jest poprawny.`);
+        }
         
         const result = await response.json();
         

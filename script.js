@@ -30,16 +30,6 @@ function clearLoginStatus() {
     localStorage.removeItem('loginTimestamp');
 }
 
-// --- 3. PRZEŁĄCZNIK MOTYWU (Dark/Light Mode) ---
-function loadTheme() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    document.documentElement.classList.toggle('dark-mode', isDarkMode);
-}
-
-function toggleTheme() {
-    const isDarkMode = document.documentElement.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-}
 
 // --- INICJALIZACJA I LISTENERY ---
 document.addEventListener('DOMContentLoaded', () => {

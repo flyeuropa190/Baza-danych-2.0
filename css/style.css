@@ -129,95 +129,9 @@ body.main-bg {
 }
 
 
-@media (max-width: 760px) {
-
-    .modal-filter-grid {
-    grid-template-columns: 1fr;
-    }
-
-  .logo2 {
-    width: 80%;
-    margin-bottom: 50px;
-  }
-
-  .login-box {
-    width: 80%;
-    margin-bottom: 0;
-  }
-
-  .login-box h1 {
-    font-size: 23px;    
-  }
-
-  .login-box h2 {
-    font-size: 15px;    
-  }
-}
-
-@media (max-device-width: 1000px) and (orientation: landscape) {
-  .logo2 {
-    margin-bottom: 20px;
-  }
-
-  .login-box {    
-    max-width: 80%;
-    margin-bottom: 0px;
-    max-height: 60%;
-    padding-top: 10px;
-    padding-bottom: 10px;        
-  }
-
-  .login-box h1 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .login-box h2 {
-    font-size: 12px;    
-    margin-bottom: 10px;
-  }
-
-  .login-box h3 {
-    font-size: 10px;
-    margin-top: 0px;
-  }
-
-  .login-box input {
-   max-height: 35px; 
-  }
-
-  .login-box button {
-   max-height: 35px; 
-   padding-bottom: 7px;
-   padding-top: 7px;
-  }
-
-  #errorMsg {
-    font-size: 13px;
-    margin-bottom: 5px;
-  }
-}
 
 
-/* ANIMACJE */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
-  to { opacity: 1; transform: translateY(0);}
-}
 
-/* Animacja potrząsania przy błędzie */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-10px); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(-10px); }
-  80% { transform: translateX(10px); }
-  100% { transform: translateX(0); }
-}
-
-.login-box.shake {
-  animation: shake 0.5s;
-}
 
 /* Powiadomienie „toast” */
 .toast {

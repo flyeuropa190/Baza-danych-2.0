@@ -563,3 +563,14 @@ body.light-mode .filter-group select {
     /* Strzałka dla trybu jasnego (ciemna) */
     background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" fill="%231f2328" opacity="0.8"><path d="M287 69.4a17.6 17.6 0 0 0-13.2-5.4H18.6A17.6 17.6 0 0 0 5.4 69.4a17.6 17.6 0 0 0 5.4 13.2l128 128a17.6 17.6 0 0 0 24.8 0l128-128a17.6 17.6 0 0 0 5.4-13.2z"/></svg>');
 }
+
+
+
+/* MEDIA */
+
+@media (max-width: 760px) {
+
+    .modal-filter-grid {
+    grid-template-columns: 1fr;
+    }
+}
