@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rawStatus = target.getAttribute('data-status');
                 
                 // 1. Sprawdzamy, czy status jest na liście ignorowanych
-                if (rawStatus === "Posiadane" || rawStatus === "Łącznie") {
+                if (rawStatus === "POSIADANE" || rawStatus === "ŁĄCZNIE") {
                     console.log(`[dashboard] Status "${rawStatus}" jest wyłączony z wyszukiwania.`);
                     return;
                 }

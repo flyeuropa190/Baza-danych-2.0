@@ -1,0 +1,325 @@
+/* airplane-details-modal.css */
+/* Stylizacja wnętrza modala szczegółów samolotu - Layout ogólny */
+
+/* =========================================
+   1. ZMIENNE GLOBALNE MODALA
+   ========================================= */
+:root {
+    /* Zmienne lokalne bazujące na style.css (Jasny/Ciemny) */
+    --modal-bg: var(--bg-color);
+    --modal-text: var(--text-color);
+    --card-bg-local: rgba(255, 255, 255, 0.05); /* Lekki overlay */
+    --card-border-local: rgba(128, 128, 128, 0.2);
+}
+
+/* Dostosowanie dla trybu jasnego/ciemnego */
+html.dark-mode {
+    --card-bg-local: rgba(255, 255, 255, 0.05);
+    --card-border-local: rgba(255, 255, 255, 0.1);
+}
+
+html:not(.dark-mode) {
+    --card-bg-local: rgba(0, 0, 0, 0.03);
+    --card-border-local: rgba(0, 0, 0, 0.1);
+}
+
+/* --- NAGŁÓWEK MODALA --- */
+.modal-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-reg {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent-color);
+  line-height: 1;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 10px rgba(153, 0, 255, 0.15); /* Delikatna poświata akcentu */
+}
+
+.modal-tab {
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--text-color);
+  opacity: 0.6;
+  margin-left: 10px;
+}
+
+.modal-model {
+  font-size: 1.2rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* --- PASEK NARZĘDZI (W MODALU) --- */
+.modal-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--card-border);
+  margin-right: 30px;
+}
+
+.modal-tool-btn {
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.modal-tool-btn:hover {
+  background: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(153, 0, 255, 0.3);
+}
+
+.modal-tool-btn.btn-delete {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+.modal-tool-btn.btn-delete:hover {
+  background: var(--danger-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+/* --- ZAKŁADKI (TABS) --- */
+.modal-tabs {
+  display: flex;
+  gap: 5px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--label-color);
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.tab-btn:hover {
+  color: var(--accent-color);
+  background: rgba(153, 0, 255, 0.05);
+  opacity: 1;
+}
+
+.tab-btn.active {
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+  opacity: 1;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-placeholder {
+  padding: 30px;
+  text-align: center;
+  color: var(--label-color);
+  background: rgba(0,0,0,0.02);
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
+}
+
+/* --- GŁÓWNA SIATKA TREŚCI (DANE/OPERACJE - np. Zakładka Ogólne) --- */
+.modal-body-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.modal-section h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+  opacity: 0.8;
+  color: var(--text-color);
+}
+
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  align-items: center;
+}
+.modal-label { font-weight: 600; opacity: 0.7; font-size: 0.9rem; }
+.modal-value { font-weight: 500; text-align: right; color: var(--text-color); }
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* --- SEKCJE OPERACYJNE (Boxy) --- */
+.sub-section {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.replacement-flight-box {
+  border-left: 4px solid var(--danger-color);
+  background: rgba(231, 76, 60, 0.08);
+}
+
+.section-title-small {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  color: var(--label-color);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.highlight-red .modal-value {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+/* --- KONFIGURACJA MIEJSC --- */
+.seats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.seat-badge {
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+.seat-badge:hover { transform: translateY(-2px); }
+
+.seat-label { font-size: 0.7rem; color: var(--label-color); display: block; margin-bottom: 4px; }
+.seat-count { font-size: 1.3rem; font-weight: bold; color: var(--text-color); }
+
+.seat-business { border-top: 3px solid #f1c40f; }
+.seat-premium { border-top: 3px solid #3498db; }
+.seat-eco { border-top: 3px solid #2ecc71; }
+
+/* --- STOPKA PRZEGLĄDÓW (Maintenance Summary - Ogólne Podsumowanie) --- */
+.maintenance-footer {
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.maint-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  color: var(--label-color);
+}
+
+.maint-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.maint-card {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--card-bg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.maint-type { font-weight: 800; font-size: 1.2rem; margin-bottom: 4px; color: var(--text-color); }
+.maint-status { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.maint-date { font-size: 0.8rem; margin-top: 6px; opacity: 0.9; font-family: monospace; }
+
+/* Kolory stanów przeglądów w stopce */
+.maint-valid {
+  border-bottom: 3px solid var(--success-color);
+}
+.maint-valid .maint-status { color: var(--success-color); }
+
+.maint-expired {
+  border-bottom: 3px solid var(--danger-color);
+  background: rgba(231, 76, 60, 0.05);
+}
+.maint-expired .maint-status { color: var(--danger-color); }
+
+.maint-missing {
+  border-bottom: 3px solid #f1c40f;
+  background: rgba(241, 196, 15, 0.05);
+}
+.maint-missing .maint-status { color: #d35400; }
+
+/* --- Animacje Ogólne --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsywność Ogólna Modala */
+@media (max-width: 900px) {
+  .modal-body-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

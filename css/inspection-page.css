@@ -257,6 +257,7 @@ body.przeglady-planowane {
     border-radius: 8px;
     padding: 15px;
     transition: background 0.2s, transform 0.1s;
+    min-width: auto;
 }
 
 .inspection-item:hover,
@@ -279,7 +280,7 @@ body.przeglady-planowane {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     /* Usuń dolną krawędź tylko dla jasnego motywu, żeby nie zlało się z tłem */
-    /* border-bottom: 1px solid var(--bg-card-hover); */
+    border-bottom: 1px solid var(--bg-card-hover);
 }
 
 

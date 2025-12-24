@@ -283,12 +283,16 @@ const closeModal = () => {
 
 
 
-closeModalBtn.onclick = closeModal;
-
-window.onclick = function(event) {
-    if (event.target == modal) closeModal();
+if (closeModalBtn) {
+    closeModalBtn.onclick = closeModal;
 }
 
+window.onclick = function(event) {
+    // Sprawdzamy, czy modal w ogóle istnieje na tej podstronie
+    if (modal && event.target == modal) {
+        closeModal();
+    }
+}
 
 
 // --- AKTUALIZACJA UI (CORE) ---
@@ -381,3 +385,28 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(checkAndUpdateInspectionsData, REFRESH_INTERVAL_MS);
     checkAndUpdateInspectionsData();
 });
+
+// EXPORT DANYCH DLA INNYCH MODUŁÓW
+// export const getAllInspections = () => allInspectionsData;
+// export const forceRefreshInspections = () => checkAndUpdateInspectionsData();
+
+// EKSPORT DANYCH DLA INNYCH MODUŁÓW (Z poprawką na Cache)
+export const getAllInspections = () => {
+    // 1. Jeśli mamy dane w pamięci (allInspectionsData), zwróć je
+    if (allInspectionsData && allInspectionsData.length > 0) {
+        return allInspectionsData;
+    }
+
+    // 2. Jeśli pamięć jest pusta, spróbuj pobrać z Cache (sessionStorage)
+    const cached = loadFromCache();
+    if (cached && cached.data) {
+        console.log("[Inspections Loader] RAM pusta, zwracam dane z Cache dla Modala.");
+        // Opcjonalnie: wypełnij allInspectionsData, żeby następnym razem było szybciej
+        allInspectionsData = cached.data.map((item, index) => ({ ...item, uniqueId: index }));
+        return allInspectionsData;
+    }
+
+    return [];
+};
+
+export const forceRefreshInspections = () => checkAndUpdateInspectionsData();

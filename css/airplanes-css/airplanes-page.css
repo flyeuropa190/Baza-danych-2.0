@@ -1,0 +1,486 @@
+/* airplanes-page.css */
+/* Główne style dla strony Flota */
+
+/* --- PODSTAWY & ZMIENNE --- */
+:root {
+  --bg-color: #d6d4d4;
+  --text-color: #000000;
+  --accent-color: #9900ff;
+  --card-bg: rgba(255, 255, 255, 0.6);
+  --card-border: rgba(255, 255, 255, 0.4);
+  --input-bg: rgba(255, 255, 255, 0.85);
+  --success-color: #2ecc71;
+  --danger-color: #e74c3c;
+  --label-color: #555;
+}
+
+html.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --card-bg: rgba(40, 40, 40, 0.6);
+  --card-border: rgba(80, 80, 80, 0.5);
+  --input-bg: rgba(50, 50, 50, 0.7);
+  --label-color: #aaa;
+}
+
+body.main-bg {
+  padding-top: 80px;
+  background-color: var(--bg-color);
+}
+
+/* --- UKŁAD STRONY --- */
+.main-content-wrapper {
+  width: 98%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* --- ALERT BANNER --- */
+#maintenance-alerts-container {
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.global-alert-box {
+  background-color: #c0392b;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(192, 57, 43, 0.3);
+  font-size: 1rem;
+  animation: slideDown 0.5s ease-out;
+  border: 1px solid #e74c3c;
+}
+
+.global-alert-box strong { font-size: 1.1em; display: block; margin-bottom: 10px; }
+.global-alert-box ul { margin: 0; padding-left: 20px; list-style-type: disc; }
+.global-alert-box li { margin-bottom: 4px; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- PASEK NARZĘDZI --- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+  border: 1px solid var(--card-border);
+}
+
+.toolbar-group { display: flex; align-items: center; gap: 10px; }
+.grow-group { flex-grow: 1; }
+
+.search-box { position: relative; width: 300px; }
+.search-box input {
+  width: 100%;
+  padding: 8px 35px 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+.search-box i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+
+.btn-tool {
+  padding: 8px 12px;
+  border: 1px solid var(--accent-color);
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+.btn-tool.active, .btn-tool:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.select-tool, .input-tool {
+  padding: 8px;
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--card-border);
+}
+.select-tool option { background-color: var(--bg-color); color: var(--text-color); }
+.full-width { width: 100%; }
+
+.group-select-container { display: flex; align-items: center; gap: 8px; }
+#sort-order-btn { font-size: 1.1rem; width: 40px; text-align: center; display: flex; justify-content: center; align-items: center; }
+
+/* --- GRUPOWANIE --- */
+.group-wrapper {
+  width: 100%;
+  grid-column: 1 / -1; 
+  margin-bottom: 10px;
+}
+
+.group-header {
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--card-bg);
+  border-left: 5px solid var(--accent-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.group-header:hover { background: rgba(153, 0, 255, 0.1); }
+.group-header::after { 
+  content: '\f078'; 
+  font-family: 'Font Awesome 5 Free'; 
+  font-weight: 900; 
+  transition: 0.3s; 
+}
+.group-header.collapsed::after { transform: rotate(-90deg); }
+
+.group-content {
+  display: none; 
+  margin-top: 10px;
+  overflow: visible;
+  transition: max-height 0.5s ease-in-out, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;    
+}
+.group-content.show { max-height: 5000px; opacity: 1; }
+.group-content.show.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+.group-content.show.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- GRID SAMOLOTÓW (KAFELKI) --- */
+.airplanes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.airplane-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  position: relative; /* Dla ikonek statusu */
+}
+
+.airplane-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  border-color: var(--accent-color);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding-bottom: 8px;
+}
+
+.card-header-left { display: flex; flex-direction: column; }
+.airplane-reg { 
+  font-size: 1.2rem; 
+  font-weight: 800; 
+  color: var(--accent-color); 
+  line-height: 1.1;
+}
+.airplane-model { 
+  font-size: 0.9rem; 
+  opacity: 0.8; 
+  font-weight: 600; 
+  margin-top: 2px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.info-line { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.info-label { font-weight: 600; color: var(--label-color); white-space: nowrap; }
+.info-value { color: var(--text-color); }
+
+.zastepczy-row { color: #d35400; }
+html.dark-mode .zastepczy-row { color: #e67e22; }
+
+.zastepczy-info {
+  width: 100%;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(0,0,0,0.1);
+  font-size: 0.8rem;
+  color: #c0392b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+html.dark-mode .zastepczy-info { color: #e74c3c; border-top-color: rgba(255,255,255,0.1); }
+
+/* --- SEKCJA PRZEGLĄDÓW NA KAFELKU --- */
+.check-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  gap: 8px; 
+  margin-top: 12px; 
+  text-align: center; 
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 8px;
+}
+.check-item { 
+  font-size: 0.75rem; 
+  padding: 4px; 
+  background: rgba(0,0,0,0.05); 
+  border-radius: 4px; 
+  font-weight: 600;
+}
+/* Kolory statusów checków */
+.check-ok { color: var(--success-color); border-bottom: 2px solid var(--success-color); background-color: #27ae60 !important; color: #fff !important; }
+.check-alert { color: var(--danger-color); border-bottom: 2px solid var(--danger-color); background: #e74c3c !important; color: #fff !important; }
+.check-warning { background-color: #f39c12 !important; color: #fff !important; }
+.check-missing { background-color: #f1c40f !important; color: #000 !important; }
+
+/* --- IKONY STANU NA KARCIE --- */
+.replacement-pulse-icon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #e74c3c;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  z-index: 10;
+  box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+  animation: pulse-red 2s infinite;
+}
+
+.missing-data-pulse {
+  position: absolute;
+  top: -10px; 
+  right: -10px; 
+  width: 30px;
+  height: 30px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 10; 
+  animation: pulse-red-glow 2s infinite; 
+  cursor: help;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+@keyframes pulse-red-glow {
+  0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+/* --- CHECKBOXY --- */
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+}
+.checkbox-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkbox-container::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  height: 20px; width: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.dark-mode .checkbox-container::before { border-color: rgba(255, 255, 255, 0.3); background-color: rgba(255, 255, 255, 0.05); }
+.checkbox-container:hover::before { border-color: #3498db; background-color: rgba(52, 152, 219, 0.1); }
+.checkbox-container input:checked ~ ::before { background-color: #3498db; border-color: #3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); }
+.checkbox-container .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 7px; top: 3px;
+  width: 5px; height: 10px;
+  border: solid #9900ff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.checkbox-container input:checked ~ .checkmark:after { display: block; }
+.checkbox-container input:checked ~ span, .checkbox-container input:checked { color: #3498db; font-weight: 600; }
+
+/* --- STATUSY (Globalne) --- */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.status-dostepny { background: #2ecc71; color: #fff; }
+.status-uziemiony { background: #ff7675; color: #fff; }
+.status-zaparkowany { background: #74b9ff; color: #fff; }
+.status-zamowiony { background: #b2bec3; color: #fff; }
+.status-awaria { background: #d63031; color: #fff; text-decoration: underline; }
+.status-nieczynny { background: #2d3436; color: #fff; }
+.status-zastepczy { background: #fdcb6e; color: #000; }
+.status-przeglad { background: #a29bfe; color: #fff; }
+.status-naprawa { background: #a29bfe; color: #fff; opacity: 0.8; }
+.status-odstawienie { background: #ffeaa7; color: #000; }
+.status-delegacja { background: #ffffff; color: #d63031; border: 1px solid #d63031; }
+.status-unknown { background: #636e72; color: #fff; }
+
+/* --- WIDOK LISTY --- */
+.view-list-mode .airplane-card {
+  display: grid;
+  grid-template-columns: 150px 120px 1fr 1fr 150px;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 20px;
+  flex-direction: row;
+}
+.view-list-mode .check-grid { 
+  display: grid; 
+  margin-top: 0; 
+  border-top: none;
+  padding-top: 0;
+}
+.view-list-mode .card-header {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  display: block;
+}
+.view-list-mode .card-header .status-badge { display: none; }
+
+.registration-series-divider {
+  grid-column: 1 / -1;
+  margin: 25px 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 2px dashed var(--accent-color);
+  opacity: 0.6;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- KONTENER MODALA (Ogólny) --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  backdrop-filter: blur(5px);
+}
+.modal-content {
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 5vh auto;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 1400px;
+  position: relative;
+  border: 1px solid var(--card-border);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalScale 0.3s ease-out;
+}
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Modal Filtrowania */
+.filter-modal-content { max-width: 500px; }
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 20px 0;
+}
+.filter-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.close-modal, .close-filter-modal {
+  position: absolute; right: 20px; top: 15px; 
+  font-size: 24px; cursor: pointer;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSYWNOŚĆ STRONY --- */
+@media (max-width: 900px) {
+  .view-list-mode .airplane-card { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar-group { flex-wrap: wrap; width: 100%; justify-content: space-between; }
+  .search-box { width: 100%; margin-bottom: 10px; }
+  .airplanes-grid { grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); }
+  .filter-grid { grid-template-columns: 1fr; }
+  .modal-content { width: 95%; margin: 2vh auto; padding: 20px; }
+}

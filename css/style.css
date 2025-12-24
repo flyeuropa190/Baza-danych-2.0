@@ -38,6 +38,7 @@ html.dark-mode {
   --login-input-placeholder: rgba(255, 255, 255, 0.5);
 }
 
+
 /* --- 2. GŁÓWNA STRUKTURA I TŁO --- */
 
 body, html {
@@ -134,7 +135,7 @@ body.main-bg {
 
 
 /* Powiadomienie „toast” */
-.toast {
+/* .toast {
   position: fixed;
   bottom: 30px;
   left: 50%;
@@ -153,4 +154,4 @@ body.main-bg {
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
-}
+} */
