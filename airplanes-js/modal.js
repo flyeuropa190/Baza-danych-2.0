@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { getStatusClass } from './utils.js';
 import { renderPlaneInspections } from './airplane-inspections-tab.js';
+import { enterEditMode } from './edit-mode.js';
 
 // --- OBSŁUGA ZAKŁADEK (Eksport do window wymagany dla inline onclick w HTML) ---
 
@@ -63,7 +64,7 @@ export function showPlaneModal(plane) {
 
     details.innerHTML = `
         <div class="modal-toolbar animate-delay-1">
-            <button class="modal-tool-btn" onclick="alert('Edycja: ${plane.rejestracja}')"><i class="fas fa-edit"></i> Edytuj</button>
+            <button id="btn-edit-start" class="modal-tool-btn"><i class="fas fa-edit"></i> Edytuj</button>
             <button class="modal-tool-btn" onclick="window.print()"><i class="fas fa-print"></i> Drukuj</button>
             <button class="modal-tool-btn btn-delete" onclick="alert('Usuwanie: ${plane.rejestracja}')"><i class="fas fa-trash"></i> Usuń</button>
         </div>
@@ -142,6 +143,16 @@ export function showPlaneModal(plane) {
         <div id="tab-events" class="tab-content"><div class="tab-placeholder">Brak zarejestrowanych wydarzeń.</div></div>
         <div id="tab-assign" class="tab-content"><div class="tab-placeholder">Brak aktywnych przypisań załogi.</div></div>
     `;
+
+    // ... (koniec przypisywania details.innerHTML)
+
+    // Podpięcie handlera edycji
+    const editBtn = document.getElementById("btn-edit-start");
+    if (editBtn) {
+        editBtn.addEventListener("click", () => {
+            enterEditMode(plane);
+        });
+    }
 
     modal.style.display = "block";
 }
