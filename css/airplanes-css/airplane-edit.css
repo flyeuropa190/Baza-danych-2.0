@@ -159,3 +159,60 @@
     margin-bottom: 10px;
     box-shadow: 0 4px 10px rgba(153, 0, 255, 0.2);
 }
+
+
+/* OKIENKO USUWANIA */
+.confirmation-overlay {
+    position: fixed;       /* KLUCZOWE: Ustawia element względem okna przeglądarki */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px); /* Opcjonalnie: rozmywa tło pod spodem */
+    
+    /* Upewnij się, że ten z-index jest wyższy niż z-index twojego #plane-modal */
+    /* Jeśli #plane-modal ma np. 2000, to tu musi być więcej */
+    z-index: 10000 !important; 
+}
+
+.confirm-box {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    position: relative; /* Dla pewności */
+    animation: zoomIn 0.3s ease; /* Ładna animacja wejścia */
+}
+
+/* Dodatkowa animacja wejścia */
+@keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-icon {
+    font-size: 3rem;
+    color: #e74c3c;
+    margin-bottom: 16px;
+}
+
+.confirm-subtext {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+}

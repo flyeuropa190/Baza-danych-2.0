@@ -17,15 +17,44 @@ export function enterEditMode(plane) {
     const tabsContainer = document.querySelector('.modal-tabs');
     if(tabsContainer) tabsContainer.style.display = 'none';
 
+    // --- PRZYGOTOWANIE DANYCH DO LIST (DATALISTS) ---
+    
+    // Funkcja pobierająca unikalne wartości z aktualnych danych floty
+    const getUniqueValues = (key) => {
+        if (!state.currentData || !Array.isArray(state.currentData)) return [];
+        const values = state.currentData
+            .map(item => item[key])
+            .filter(val => val !== null && val !== undefined && val !== "") // Usuwamy puste
+            .map(val => String(val).trim()); // Konwersja na string i trim
+        return [...new Set(values)].sort(); // Unikalne i posortowane
+    };
+
+    const modelOptions = getUniqueValues('samolot');
+    const engineOptions = getUniqueValues('silniki');
+    const typeOptions = ['pax', 'cargo'];
+
     // --- POMOCNIKI RENDEROWANIA ---
 
-    // Standardowe pole: Label na górze, Input na dole
-    const renderField = (label, key, value, type = "text", widthClass = "") => {
+    // Standardowe pole: Label na górze, Input na dole (z obsługą datalist)
+    const renderField = (label, key, value, type = "text", widthClass = "", listOptions = null) => {
         const val = value === null || value === undefined ? "" : value;
+        let listAttribute = "";
+        let listHtml = "";
+
+        // Jeśli przekazano opcje, tworzymy datalist
+        if (listOptions && Array.isArray(listOptions) && listOptions.length > 0) {
+            const listId = `list-${key}`; // Unikalne ID dla listy
+            listAttribute = `list="${listId}"`;
+            
+            const optionsHtml = listOptions.map(opt => `<option value="${opt}">`).join('');
+            listHtml = `<datalist id="${listId}">${optionsHtml}</datalist>`;
+        }
+
         return `
             <div class="input-group ${widthClass}">
                 <label class="input-label">${label}</label>
-                <input type="${type}" name="${key}" value="${val}" class="form-control" autocomplete="off">
+                <input type="${type}" name="${key}" value="${val}" class="form-control" autocomplete="off" ${listAttribute}>
+                ${listHtml}
             </div>
         `;
     };
@@ -77,7 +106,7 @@ export function enterEditMode(plane) {
                 <div class="form-grid">
                     ${renderStatusSelect(plane.status)}
                     ${renderField("Numer Tab.", "nrTab", plane.nrTab)}
-                    ${renderField("Model samolotu", "samolot", plane.samolot)}
+                    ${renderField("Model samolotu", "samolot", plane.samolot, "text", "", modelOptions)}
                 </div>
             </div>
 
@@ -112,9 +141,9 @@ export function enterEditMode(plane) {
                 </div>
 
                 <div class="form-grid">
-                    ${renderField("Typ", "typ", plane.typ)}
+                    ${renderField("Typ", "typ", plane.typ, "text", "", typeOptions)}
                     ${renderField("Rok produkcji", "rokProdukcji", plane.rokProdukcji, "number")}
-                    ${renderField("Silniki", "silniki", plane.silniki)}
+                    ${renderField("Silniki", "silniki", plane.silniki, "text", "", engineOptions)}
                     ${renderField("Ilość silników", "iloscSilnikow", plane.iloscSilnikow, "number")}
                 </div>
             </div>

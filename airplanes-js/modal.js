@@ -2,12 +2,117 @@ import { state } from './state.js';
 import { getStatusClass } from './utils.js';
 import { renderPlaneInspections } from './airplane-inspections-tab.js';
 import { enterEditMode } from './edit-mode.js';
+// Nowe importy potrzebne do pełnego odświeżenia danych po usunięciu
+import { loadAllData } from './api.js';
+import { renderAirplanes, populateFilterOptions, renderMaintenanceAlerts } from './ui.js';
 
-// --- OBSŁUGA ZAKŁADEK (Eksport do window wymagany dla inline onclick w HTML) ---
+const API_URL = 'https://script.google.com/macros/s/AKfycby-sgeubn4PmLVYpwaAF1BrtGKUfTvaS5SUOHa3Z63rLLksC6PlYRHNTYgszJqwB-MNVA/exec'; 
+
+// --- POMOCNICZE: STYLOWY MODAL POTWIERDZENIA ---
+
+/**
+ * Wyświetla customowe okienko potwierdzenia usunięcia danych
+ */
+function showConfirmationModal(plane, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay confirmation-overlay';
+    overlay.style.zIndex = '3000'; // Wyżej niż główny modal
+
+    overlay.innerHTML = `
+        <div class="confirm-box animate-fade-in">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Potwierdź usunięcie</h3>
+            <p>Czy na pewno chcesz wyczyścić wszystkie dane dla samolotu <strong>${plane.rejestracja}</strong>?</p>
+            <p class="confirm-subtext">Samolot pozostanie na liście floty, ale jego parametry techniczne i operacyjne zostaną zresetowane.</p>
+            
+            <div class="confirm-actions">
+                <button id="btn-confirm-cancel" class="modal-tool-btn">Anuluj</button>
+                <button id="btn-confirm-delete" class="modal-tool-btn btn-delete">
+                    <i class="fas fa-trash"></i> Usuń dane
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const close = () => {
+        overlay.classList.add('animate-fade-out');
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    document.getElementById('btn-confirm-cancel').onclick = close;
+    
+    document.getElementById('btn-confirm-delete').onclick = async () => {
+        const deleteBtn = document.getElementById('btn-confirm-delete');
+        const cancelBtn = document.getElementById('btn-confirm-cancel');
+        
+        // Stan ładowania wewnątrz potwierdzenia
+        deleteBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Usuwanie...';
+        deleteBtn.disabled = true;
+        cancelBtn.disabled = true;
+        
+        await onConfirm();
+        close();
+    };
+}
+
+// --- LOGIKA USUWANIA DANYCH ---
+
+async function handleDeletePlane(plane) {
+    // Wywołanie stylowego okna zamiast window.confirm
+    showConfirmationModal(plane, async () => {
+        
+        // Przygotowanie obiektu czyszczącego
+        const emptyData = {
+            rejestracja: plane.rejestracja,
+            nrTab: "", samolot: "", miejscaBiznes: "", miejscaPremium: "", miejscaEkonomiczna: "",
+            nrLotu: "", odlot: "", przylot: "", nrLotuZast: "", odlotZast: "", przylotZast: "",
+            status: "", zastepczyZa: "", bCheck: "", cCheck: "", dCheck: "",
+            rokProdukcji: "", typ: "", silniki: "", iloscSilnikow: "", godzinyZakup: ""
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'update', data: emptyData })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // 1. Zamknij główny modal szczegółów
+                document.getElementById("plane-modal").style.display = "none";
+                state.openPlaneReg = null;
+
+                // 2. Pobierz świeże dane z serwera (odświeżenie cache)
+                console.log("[Modal] Pobieranie świeżych danych po usunięciu...");
+                const freshData = await loadAllData();
+                
+                // 3. Aktualizacja globalnego stanu
+                state.currentData = freshData;
+                state.filteredData = freshData; 
+
+                // 4. Pełne przerysowanie UI
+                renderAirplanes(true);
+                populateFilterOptions();
+                renderMaintenanceAlerts();
+
+                console.log("[Modal] Dane usunięte i zsynchronizowane.");
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error) {
+            alert("Błąd podczas komunikacji z serwerem: " + error.message);
+        }
+    });
+}
+
+// --- OBSŁUGA ZAKŁADEK ---
 
 window.switchTab = function(tabName) {
-    console.log(`[Modal] Przełączanie zakładki na: ${tabName}`);
-
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     
@@ -17,21 +122,13 @@ window.switchTab = function(tabName) {
     const btn = document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`);
     if (btn) btn.classList.add('active');
 
-    // LOGIKA ŁADOWANIA DANYCH
     if (tabName === 'planned-maint') {
         const wrapper = document.getElementById('tab-inspections-wrapper');
         if (state.openPlaneReg) {
-            // Dodanie loadera przed renderowaniem (dla lepszego UX)
             if(wrapper) wrapper.innerHTML = '<div style="text-align:center; padding:20px; opacity:0.6;"><i class="fas fa-circle-notch fa-spin"></i> Ładowanie harmonogramu...</div>';
-            
-            console.log(`[Modal] Wywołanie renderPlaneInspections dla: ${state.openPlaneReg}`);
-            // Krótkie opóźnienie symulujące lub pozwalające na repaint (opcjonalne)
             setTimeout(() => {
                 renderPlaneInspections(state.openPlaneReg);
             }, 50);
-        } else {
-            console.error("[Modal] Błąd: Brak state.openPlaneReg!");
-            if(wrapper) wrapper.innerHTML = '<div class="tab-placeholder error">Błąd: Brak wybranego samolotu.</div>';
         }
     }
 };
@@ -66,7 +163,7 @@ export function showPlaneModal(plane) {
         <div class="modal-toolbar animate-delay-1">
             <button id="btn-edit-start" class="modal-tool-btn"><i class="fas fa-edit"></i> Edytuj</button>
             <button class="modal-tool-btn" onclick="window.print()"><i class="fas fa-print"></i> Drukuj</button>
-            <button class="modal-tool-btn btn-delete" onclick="alert('Usuwanie: ${plane.rejestracja}')"><i class="fas fa-trash"></i> Usuń</button>
+            <button id="btn-delete-plane" class="modal-tool-btn btn-delete"><i class="fas fa-trash"></i> Usuń</button>
         </div>
 
         <div class="modal-header-wrapper animate-delay-1">
@@ -88,14 +185,12 @@ export function showPlaneModal(plane) {
         </div>
 
         <div id="tab-general" class="tab-content active">
-            
             <div class="modal-body-grid">
-                
                 <div class="modal-section section-tech animate-delay-3">
                     <h3><i class="fas fa-cogs"></i> Dane Techniczne</h3>
                     ${renderModalRow("Rok produkcji", plane.rokProdukcji)}
                     ${renderModalRow("Typ", plane.typ)}
-                    ${renderModalRow("Silniki", plane.silniki + " (" + plane.iloscSilnikow + "x)")}
+                    ${renderModalRow("Silniki", plane.silniki + (plane.iloscSilnikow ? " (" + plane.iloscSilnikow + "x)" : ""))}
                     ${renderModalRow("Ilość godz. przy zakupie", plane.godzinyZakup ? plane.godzinyZakup + " godz." : null)}
                 </div>
 
@@ -123,7 +218,6 @@ export function showPlaneModal(plane) {
                         ${renderModalRow("Zastępczy za", plane.zastepczyZa, "highlight-red")}
                     </div>` : ''}
                 </div>
-
             </div>
 
             <div class="maintenance-footer animate-delay-4">
@@ -144,15 +238,11 @@ export function showPlaneModal(plane) {
         <div id="tab-assign" class="tab-content"><div class="tab-placeholder">Brak aktywnych przypisań załogi.</div></div>
     `;
 
-    // ... (koniec przypisywania details.innerHTML)
-
-    // Podpięcie handlera edycji
     const editBtn = document.getElementById("btn-edit-start");
-    if (editBtn) {
-        editBtn.addEventListener("click", () => {
-            enterEditMode(plane);
-        });
-    }
+    if (editBtn) editBtn.onclick = () => enterEditMode(plane);
+
+    const deleteBtn = document.getElementById("btn-delete-plane");
+    if (deleteBtn) deleteBtn.onclick = () => handleDeletePlane(plane);
 
     modal.style.display = "block";
 }
@@ -161,8 +251,6 @@ export function refreshOpenModalIfNeeds() {
     const modal = document.getElementById("plane-modal");
     if (modal.style.display === "block" && state.openPlaneReg) {
         const currentPlaneData = state.currentData.find(p => p.rejestracja === state.openPlaneReg);
-        if (currentPlaneData) {
-            showPlaneModal(currentPlaneData);
-        }
+        if (currentPlaneData) showPlaneModal(currentPlaneData);
     }
 }
