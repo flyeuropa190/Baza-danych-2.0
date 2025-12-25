@@ -12,6 +12,8 @@
   display: flex;
   justify-content: center;
   align-items: center;  
+  overflow: hidden; /* Ważne dla śniegu */
+  position: relative;
 }
 
 /* Kontener centralny */
@@ -23,19 +25,42 @@
   width: 100%;
   height: 100%;
   position: center;
-  z-index: 2;
+  z-index: 5; /* Wyżej niż tło/śnieg */
+}
+
+/* --- 3. CZAPECZKA MIKOŁAJA --- */
+.logo-wrapper {
+    position: relative;
+    width: 30%; /* Tak jak oryginał .logo2 */
+    margin-bottom: 100px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    animation: fadeIn 1s ease forwards;
+}
+
+.logo2 {
+  width: 100%; /* Wypełnia wrapper */
+  height: auto;
+  display: block;
+}
+
+.santa-hat {
+    position: absolute;
+    top: -30%;
+    right: -5%;
+    width: 18%;
+    height: auto;
+    transform: rotate(15deg);
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+    z-index: 11;
+    pointer-events: none;
 }
 
 /* Animacja wejścia login-box */
 @keyframes fadeSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Efekt potrząsania przy błędzie */
@@ -45,20 +70,14 @@
   40%, 80% { transform: translateX(10px); }
 }
 
-
-
-/* Logo */
-.logo2 {
-  width: 30%;
-  height: auto;
-  z-index: 10;
-  margin-bottom: 100px;
-  animation: fadeIn 1s ease forwards;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* Pudełko logowania – przezroczyste i czytelne */
+/* Pudełko logowania */
 .login-box {
-  background: rgba(255, 255, 255, 0.25); /* półprzezroczyste białe tło */
+  background: rgba(255, 255, 255, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
@@ -72,6 +91,24 @@
   margin-bottom: 10%;
   animation: fadeSlideIn 0.8s ease forwards;
   transition: box-shadow 0.3s ease;
+  position: relative; /* Dla efektu szronu */
+  overflow: hidden; /* Żeby szron nie wystawał */
+}
+
+/* --- 2. EFEKT SZRONU (FROST) --- */
+.frost-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    box-shadow: inset 0 0 30px 10px rgba(255, 255, 255, 0.5);
+    background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255, 255, 255, 0.4) 100%);
+    opacity: 0.8;
+}
+
+.login-box > * {
+    position: relative; /* Treść nad szronem */
+    z-index: 2;
 }
 
 .login-box.shake {
@@ -80,14 +117,14 @@
 
 /* Nagłówki */
 .login-box h1 {
-  color: #000; /* lepszy kontrast */
+  color: #000;
   margin-bottom: 30px;
   font-weight: 600;
   text-align: center;
 }
 
 .login-box h2 {
-  color: #007f2f; /* ciemniejszy zielony dla kontrastu */
+  color: #007f2f;
   margin-bottom: 30px;
   font-weight: 600;
   text-align: center;
@@ -108,9 +145,9 @@
   border-radius: 12px;
   outline: none;
   font-size: 16px;
-  background: rgba(255, 255, 255, 0.85); /* bardziej czytelne tło */
-  color: #000; /* kontrastowy tekst */
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, border 0.3s ease;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+  transition: all 0.3s ease;
 }
 
 .login-box input::placeholder {
@@ -123,12 +160,13 @@
   box-shadow: 0 4px 12px rgba(131, 36, 188, 0.25);
 }
 
-/* Pole hasła z błędem */
+/* --- 4. ZAMARZAJĄCY INPUT (Zamiast czerwonego) --- */
 .login-box input.error {
-  border: 2px solid #ff4d4f; /* czerwony obrys */
-  background: rgba(255, 77, 79, 0.15); /* lekko czerwone tło */
-  color: #000; /* tekst pozostaje czytelny */
-  box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
+  border: 2px solid #a5f2f3; /* Lodowy błękit */
+  background: rgba(200, 240, 255, 0.4); /* Półprzezroczysty lód */
+  color: #0d4666; 
+  box-shadow: 0 0 15px rgba(165, 242, 243, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.8);
+  /* Symulacja pęknięć lodu lub szronu */
 }
 
 @keyframes gradientShift {
@@ -151,8 +189,8 @@
   background-size: 300% 300%;
   box-shadow: 0 6px 20px rgba(131, 36, 188, 0.3);
   backdrop-filter: blur(8px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
-    animation: gradientShift 5s ease infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: gradientShift 5s ease infinite;
 }
 
 .login-box button:hover {
@@ -162,428 +200,299 @@
 
 /* Komunikat błędu */
 #errorMsg {
-  color: #ff4d4f;
+  color: #a5f2f3; /* Lodowy kolor błędu */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5); /* Cień dla czytelności na szkle */
   margin-top: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
   font-weight: 600;
   text-align: center;
 }
-/* EKRAN LOGOWANIA - KONIEC */
 
-
-/* Blokada scrolla */
-.no-scroll, .no-scroll body {
-  overflow: hidden;
-}
-
-
-
-/* -------------------------------------------------------
-   4. Przełącznik Motywu na Stronie Logowania
-   ------------------------------------------------------- */
-
-.theme-toggle-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-/* Stylistyka nowoczesnego suwaka (Wymaga Font Awesome dla ikon!) */
-.theme-toggle {
-  /* Podstawowe ustawienia kontenera (kapsuły) */
-  position: relative;
-  width: 65px; /* Szerokość przełącznika */
-  height: 35px; /* Wysokość przełącznika */
-  border-radius: 17.5px; /* Kształt kapsuły */
-  cursor: pointer;
-  padding: 0;
-  
-  /* Układ elementów wewnątrz (ikony) */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5px; 
-
-  /* Użycie zmiennych dla tła i obramowania (Jasny tryb) */
-  background: var(--login-input-bg); /* Jasne tło z motywu login-glass */
-  border: 1px solid var(--login-input-border);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-
-  transition: all 0.3s ease;
-}
-
-/* Tryb Ciemny */
-html.dark-mode .theme-toggle {
-  background: var(--login-input-bg); 
-  border: 1px solid var(--login-input-border);
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-}
-
-/* Stylowanie ikon (słońce i księżyc) */
-.theme-toggle .toggle-icon {
-  font-size: 1.1rem; 
-  transition: color 0.3s ease;
-  z-index: 10;
-}
-
-.theme-toggle .sun-icon {
-  color: #ffaa00; 
-}
-.theme-toggle .moon-icon {
-  color: #f0f0f0; 
-}
-
-html.dark-mode .theme-toggle .sun-icon {
-  color: #eeeeee; 
-}
-html.dark-mode .theme-toggle .moon-icon {
-  color: #ffd700; 
-}
-
-/* Stylowanie ruchomego pokrętła (knob) */
-.theme-toggle .toggle-knob {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 29px; 
-  height: 29px;
-  border-radius: 50%;
-  
-  background: #ffffff; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 5; 
-}
-
-/* Przesunięcie pokrętła w trybie Dark Mode */
-html.dark-mode .theme-toggle .toggle-knob {
-  transform: translateX(30px); 
-}
-
-
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%; /* Upewnij się, że input wypełnia wrapper */
-    padding-right: 40px; /* Miejsce na ikonę */
-    box-sizing: border-box; /* Ważne, żeby padding nie rozpychał */
-}
-
-#togglePassword {
-    position: absolute;
-    right: 15px;
-    top: 38%; /* Wycentrowanie w pionie względem inputa */
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: rgba(0,0,0,0.5);
-    z-index: 10;
-}
-
-#togglePassword:hover {
-    color: #8324bc;
-}
-
-
-/* --- KOMUNIKATY (Fixed / Floating) --- */
-.communications-floating {
-    position: fixed; /* To jest kluczowe - wyjmuje element z układu strony */
-    bottom: 20px;
-    left: 20px;
-    width: 280px;
-    max-height: 300px;
-    z-index: 50;
-    
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 15px;
-    
-    font-size: 12px;
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    animation: fadeSlideIn 1s ease forwards;
-    
-    /* Ukrywamy, jeśli puste (JS steruje display, ale to dla bezpieczeństwa) */
-    display: none; 
-}
-
-/* Pokazujemy element, gdy JS zmieni display na block */
-.communications-floating[style*="display: block"] {
-    display: block !important;
-}
-
-.communications-floating:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.comm-title, .comm-header { /* Ujednolicenie nagłówka */
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    color: #ca74fc;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.comm-card {
-    background: transparent;
-    border-left: 2px solid rgba(255, 255, 255, 0.5);
-    padding: 4px 0 4px 10px;
-    margin-bottom: 8px;
-    border-radius: 0;
-    box-shadow: none;
-    transition: border-color 0.2s;
-}
-
-.comm-card:hover {
-    border-left-color: #fff;
-    background: transparent;
-}
-
-.comm-card-text {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 12px;
-    line-height: 1.4;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-/* Customowy scrollbar dla tego kontenera */
-.communications-floating::-webkit-scrollbar {
-    width: 4px;
-}
-.communications-floating::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-}
-
-/* Mobilne ustawienia */
-@media (max-width: 760px) {
-    .communications-floating {
-        left: 5%;
-        width: 90%;
-        bottom: 10px;
-        backdrop-filter: blur(15px);
-    }
-}
-
-/* Customowy scrollbar */
-.communications-container::-webkit-scrollbar {
-    width: 4px;
-}
-.communications-container::-webkit-scrollbar-thumb {
-    background: rgba(131, 36, 188, 0.3);
-    border-radius: 10px;
-}
-
-/* --- 3. EFEKT ŚNIEGU --- */
+/* --- 1. & 7. ŚNIEG (PARALLAX + WIATR) --- */
 #snow-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Śnieg nie blokuje kliknięć */
-  z-index: 1; /* Pod login-boxem (index 2) */
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
   overflow: hidden;
 }
 
 .snowflake {
   position: absolute;
-  top: -10px;
+  top: -20px;
   color: #fff;
-  font-size: 1em;
-  opacity: 0.8;
-  animation-name: fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes fall {
-  to { transform: translateY(105vh); }
-}
-
-/* --- 4. CAPS LOCK WARNING --- */
-.caps-warning {
-  position: absolute;
-  right: 45px; /* Obok oka */
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ff9800; /* Pomarańczowy ostrzegawczy */
-  font-size: 12px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 2px 6px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: none; /* Domyślnie ukryte */
-  pointer-events: none;
-  z-index: 15;
-  white-space: nowrap;
-}
-
-/* --- 5. STATUS SYSTEMU (Kropka) --- */
-.system-status {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 8px 12px;
-  border-radius: 20px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-  cursor: help;
-}
-
-.system-status:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.status-dot {
-  display: block;
-  width: 10px;
-  height: 10px;
   border-radius: 50%;
-  background-color: #bdc3c7; /* Szary - nieznany */
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0; /* Domyślnie ukryte, animacja je pokaże */
+  pointer-events: none;
+  /* Dodajemy cień dla głębi na bliskich płatkach */
+  text-shadow: 0 0 5px rgba(255,255,255,0.3);
 }
 
-.status-text {
-    font-size: 11px;
-    font-weight: 600;
-    color: #fff;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
+/* Nowa, bardziej złożona animacja opadania z wiatrem i obrotem */
+@keyframes snowfall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate3d(var(--wind-x, 50px), 110vh, 0) rotate(360deg);
+  }
 }
 
-/* Status: ONLINE */
-.status-dot.online {
-  background-color: #2ecc71;
-  box-shadow: 0 0 10px #2ecc71;
-  animation: pulse-green 2s infinite;
+/* Aktualizacja klas JS (nadal używamy JS do generowania, ale CSS robi ruch) */
+.snowflake.layer1 {
+  z-index: 3;
+  /* Płatki blisko - duże, szybkie, lekki blur */
+  filter: blur(0.5px);
+  --wind-x: 100px; /* Mocniejszy wpływ wiatru */
+  animation: snowfall linear infinite;
 }
 
-/* Status: OFFLINE */
-.status-dot.offline {
-  background-color: #e74c3c;
-  box-shadow: 0 0 10px #e74c3c;
-  animation: pulse-red 2s infinite;
+.snowflake.layer2 {
+  z-index: 2;
+  filter: blur(1.5px);
+  --wind-x: 50px;
+  animation: snowfall linear infinite;
 }
 
-@keyframes pulse-green {
-  0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+.snowflake.layer3 {
+  z-index: 0;
+  filter: blur(3px);
+  opacity: 0.5;
+  --wind-x: 20px; /* Tło rusza się wolniej w poziomie */
+  animation: snowfall linear infinite;
 }
 
-@keyframes pulse-red {
-  0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+/* --- 5. EFEKT PARY (BREATH) --- */
+.breath-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(to top, rgba(255,255,255,0.4), transparent);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.4;
+    animation: breathe 8s ease-in-out infinite;
 }
 
-/* Dostosowania mobilne */
+@keyframes breathe {
+    0%, 100% { transform: scaleY(1); opacity: 0.3; }
+    50% { transform: scaleY(1.2); opacity: 0.5; }
+}
+
+
+/* W pliku login-page.css podmień sekcję LAMPKI */
+
+.christmas-lights {
+    position: absolute;
+    top: -15px; /* Wyżej, żeby kabel zwisał naturalnie */
+    left: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    z-index: 20;
+    pointer-events: none;
+    overflow: visible; /* Ważne dla poświaty */
+}
+
+.christmas-lights li {
+    position: relative;
+    margin: 0 20px;
+    width: 16px;
+    height: 24px; /* Wydłużony kształt żarówki */
+    border-radius: 50% 50% 40% 40%; /* Kształt gruszki/żarówki */
+    background: #ccc;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    /* Odblask na szkle żarówki */
+    background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%);
+}
+
+/* Oprawka żarówki (czarny plastik) */
+.christmas-lights li:after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 2px;
+    width: 12px;
+    height: 6px;
+    background: #222;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+/* Kabel - używamy border-radius do symulacji zwisania */
+.christmas-lights li:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: -28px; /* Dłuższy kabel */
+    width: 50px;
+    height: 15px;
+    border-bottom: 2px solid #2e3d36; /* Ciemnozielony kabel */
+    border-radius: 50%; /* Łuk */
+    z-index: 0;
+}
+
+/* Kolory i animacje - dodajemy 'glow' (poświatę) */
+.christmas-lights li:nth-child(4n+1) { 
+    background-color: #ff3b3b; 
+    animation-name: glow-red; 
+    animation-delay: 0s; 
+}
+.christmas-lights li:nth-child(4n+2) { 
+    background-color: #3bff3b; 
+    animation-name: glow-green; 
+    animation-delay: 0.5s; 
+}
+.christmas-lights li:nth-child(4n+3) { 
+    background-color: #3b8aff; 
+    animation-name: glow-blue; 
+    animation-delay: 1s; 
+}
+.christmas-lights li:nth-child(4n+4) { 
+    background-color: #ffd900; 
+    animation-name: glow-gold; 
+    animation-delay: 1.5s; 
+}
+
+/* Animacje pulsowania (opacity + box-shadow) */
+@keyframes glow-red { 
+    0%, 100% { box-shadow: 0 5px 25px 3px rgba(255, 59, 59, 1); opacity: 1; transform: rotate(5deg); } 
+    50% { box-shadow: 0 2px 10px 0px rgba(255, 59, 59, 0.4); opacity: 0.5; transform: rotate(-5deg); } 
+}
+@keyframes glow-green { 
+    0%, 100% { box-shadow: 0 5px 25px 3px rgba(59, 255, 59, 1); opacity: 1; transform: rotate(-3deg); } 
+    50% { box-shadow: 0 2px 10px 0px rgba(59, 255, 59, 0.4); opacity: 0.5; transform: rotate(3deg); } 
+}
+@keyframes glow-blue { 
+    0%, 100% { box-shadow: 0 5px 25px 3px rgba(59, 138, 255, 1); opacity: 1; transform: rotate(4deg); } 
+    50% { box-shadow: 0 2px 10px 0px rgba(59, 138, 255, 0.4); opacity: 0.5; transform: rotate(-4deg); } 
+}
+@keyframes glow-gold { 
+    0%, 100% { box-shadow: 0 5px 25px 3px rgba(255, 217, 0, 1); opacity: 1; transform: rotate(-6deg); } 
+    50% { box-shadow: 0 2px 10px 0px rgba(255, 217, 0, 0.4); opacity: 0.5; transform: rotate(6deg); } 
+}
+
+
+/* --- POZOSTAŁE STYLE (Przełącznik motywu, CapsLock, Komunikaty) --- */
+.theme-toggle-container {
+    position: absolute; top: 20px; right: 20px; z-index: 1000;
+}
+.theme-toggle {
+  position: relative; width: 65px; height: 35px; border-radius: 17.5px;
+  cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5px; background: var(--login-input-bg); border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;
+}
+html.dark-mode .theme-toggle {
+  background: var(--login-input-bg); border: 1px solid var(--login-input-border);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+.theme-toggle .toggle-icon { font-size: 1.1rem; transition: color 0.3s ease; z-index: 10; }
+.theme-toggle .sun-icon { color: #ffaa00; }
+.theme-toggle .moon-icon { color: #f0f0f0; }
+html.dark-mode .theme-toggle .sun-icon { color: #eeeeee; }
+html.dark-mode .theme-toggle .moon-icon { color: #ffd700; }
+.theme-toggle .toggle-knob {
+  position: absolute; top: 3px; left: 3px; width: 29px; height: 29px;
+  border-radius: 50%; background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 5;
+}
+html.dark-mode .theme-toggle .toggle-knob { transform: translateX(30px); }
+
+.password-wrapper { position: relative; width: 100%; }
+.password-wrapper input { width: 100%; padding-right: 40px; box-sizing: border-box; }
+#togglePassword {
+    position: absolute; right: 15px; top: 38%; transform: translateY(-50%);
+    cursor: pointer; color: rgba(0,0,0,0.5); z-index: 10;
+}
+#togglePassword:hover { color: #8324bc; }
+
+
+
+
+
+
+/* Caps Lock */
+.caps-warning {
+  position: absolute; right: 45px; top: 50%; transform: translateY(-50%);
+  color: #ff9800; font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: none; pointer-events: none; z-index: 15; white-space: nowrap;
+}
+
+/* Responsywność */
 @media (max-width: 760px) {
-  .system-status {
-    top: 10px;
-    left: 10px;
-    padding: 6px;
-  }
-  .caps-warning {
-    font-size: 10px;
-    right: 40px;
-  }
+    .modal-filter-grid { grid-template-columns: 1fr; }
+    .logo-wrapper { width: 80%; margin-bottom: 50px; }
+    .login-box { width: 80%; margin-bottom: 0; }
+    .login-box h1 { font-size: 23px; }
+    .login-box h2 { font-size: 15px; }
+    .communications-floating { left: 5%; width: 90%; bottom: 10px; backdrop-filter: blur(15px); }
+    .caps-warning { font-size: 10px; right: 40px; }
 }
-
-/* MEDIA */
-
-@media (max-width: 760px) {
-
-    .modal-filter-grid {
-    grid-template-columns: 1fr;
-    }
-
-  .logo2 {
-    width: 80%;
-    margin-bottom: 50px;
-  }
-
-  .login-box {
-    width: 80%;
-    margin-bottom: 0;
-  }
-
-  .login-box h1 {
-    font-size: 23px;    
-  }
-
-  .login-box h2 {
-    font-size: 15px;    
-  }
-}
-
-
 
 @media (max-device-width: 1000px) and (orientation: landscape) {
-  .logo2 {
-    margin-bottom: 20px;
-  }
+  .logo-wrapper { margin-bottom: 20px; width: 40%; }
+  .santa-hat { top: -25%; right: -5%; width: 40%; }
+  .login-box { max-width: 80%; margin-bottom: 0px; max-height: 60%; padding-top: 10px; padding-bottom: 10px; }
+  .login-box h1 { font-size: 18px; margin-bottom: 10px; }
+  .login-box h2 { font-size: 12px; margin-bottom: 10px; }
+  .login-box h3 { font-size: 10px; margin-top: 0px; }
+  .login-box input { max-height: 35px; }
+  .login-box button { max-height: 35px; padding-bottom: 7px; padding-top: 7px; }
+  #errorMsg { font-size: 13px; margin-bottom: 5px; }
+}
 
-  .login-box {    
-    max-width: 80%;
-    margin-bottom: 0px;
-    max-height: 60%;
-    padding-top: 10px;
-    padding-bottom: 10px;        
-  }
+/* --- RESPANSYWNOŚĆ I MOBILE (Dodaj na końcu login-page.css) --- */
 
-  .login-box h1 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+@media (max-width: 768px) {
+    /* 1. Mniejsze lampki, gęściej upakowane */
+    .christmas-lights {
+        top: -15px;
+        width: 100%; /* Szersze niż ekran, żeby ukryć krawędzie */
+        left: -5%;
+    }
+    .christmas-lights li {
+        margin: 0 10px; /* Mniejsze odstępy */
+        width: 12px;
+        height: 18px; /* Mniejsze żarówki */
+    }
+    .christmas-lights li:before {
+        width: 30px; /* Krótszy kabel */
+        left: -18px;
+        top: -4px;
+    }
 
-  .login-box h2 {
-    font-size: 12px;    
-    margin-bottom: 10px;
-  }
+    /* 2. Ukryj "ciężkie" elementy tła */
+    .snowflake.layer1 {
+        display: none; /* Ukrywamy duże, rozmyte płatki, które zasłaniają formularz */
+    }
+    .breath-overlay {
+        display: none; /* Wyłączamy efekt pary dla wydajności */
+    }
 
-  .login-box h3 {
-    font-size: 10px;
-    margin-top: 0px;
-  }
+    
+    .login-box h1 { font-size: 24px; margin-bottom: 20px; }
+    .login-box h2 { font-size: 14px; margin-bottom: 20px; }
+}
 
-  .login-box input {
-   max-height: 35px; 
-  }
-
-  .login-box button {
-   max-height: 35px; 
-   padding-bottom: 7px;
-   padding-top: 7px;
-  }
-
-  #errorMsg {
-    font-size: 13px;
-    margin-bottom: 5px;
-  }
+/* Bardzo małe ekrany (np. iPhone SE) */
+@media (max-width: 380px) {
+    .christmas-lights li:nth-child(odd) { display: none; } /* Pokaż co drugą lampkę */
+    .christmas-lights li:before { display: none; } /* Ukryj kable, bo przerwaliśmy ciągłość */
 }

@@ -7,9 +7,7 @@ const errorMsg = document.getElementById("errorMsg");
 const loginBox = document.querySelector(".login-box");
 const themeToggle = document.getElementById("themeToggle");
 const capsLockWarning = document.getElementById("capsLockWarning");
-const systemStatusDot = document.querySelector(".status-dot");
 const commArea = document.getElementById("communications-area");
-const commText = document.getElementById("comm-text");
 
 // --- 1. FUNKCJA HASHUJĄCA (Client-side) ---
 async function hashSHA256(message) {
@@ -30,7 +28,7 @@ async function handleLogin() {
     const input = passwordInput.value;
     
     try {
-        // Hashujemy hasło przed wysłaniem (dla podstawowego bezpieczeństwa w URL)
+        // Hashujemy hasło przed wysłaniem
         const hashedInput = await hashSHA256(input);
 
         // Zapytanie do Apps Script
@@ -59,9 +57,9 @@ async function handleLogin() {
     } catch (e) {
         // BŁĄD LOGOWANIA
         console.error(e);
-        errorMsg.textContent = "❌ Niepoprawne hasło lub brak połączenia";
+        errorMsg.textContent = "❄️ Niepoprawne hasło ❄️";
         errorMsg.style.opacity = '1';
-        passwordInput.classList.add("error");
+        passwordInput.classList.add("error"); // Dodaje "lodowy" styl
         passwordInput.value = "";
         
         loginBox.classList.remove("shake");
@@ -77,71 +75,39 @@ async function handleLogin() {
 }
 
 
-// --- 3. KOMUNIKATY (Wersja Multi-Card) ---
-async function fetchCommunications() {
-    try {
-        const response = await fetch(`${API_URL}?type=communications`);
-        const messages = await response.json();
-        const listContainer = document.getElementById("comm-list");
-        
-        if (!Array.isArray(messages) || messages.length === 0) {
-            commArea.style.display = "none";
-            return;
-        }
 
-        const now = new Date();
-        now.setHours(0,0,0,0);
-
-        const parseDate = (dateStr) => {
-             if (dateStr.includes('.')) {
-                 const parts = dateStr.split('.');
-                 return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-             }
-             return new Date(dateStr);
-        };
-
-        // Filtrowanie aktywnych
-        const activeMessages = messages.filter(msg => {
-            const start = parseDate(msg.dateStart);
-            const end = parseDate(msg.dateEnd);
-            return now >= start && now <= end;
-        });
-
-        if (activeMessages.length > 0) {
-            listContainer.innerHTML = activeMessages.map(msg => `
-                <div class="comm-card">
-                    <div class="comm-card-text">${msg.content}</div>
-                </div>
-            `).join('');
-            commArea.style.display = "block";
-        } else {
-            commArea.style.display = "none";
-        }
-    } catch (e) {
-        console.error("Błąd komunikatów:", e);
-    }
-}
-
-
-
-// --- 5. ZIMOWY AKCENT (ŚNIEG) ---
+// --- 5. INTELIGENTNY ŚNIEG (Parallax + Wind) ---
 function createSnow() {
     const snowContainer = document.getElementById('snow-container');
-    const snowflakeCount = 30; // Ilość płatków
+    const snowflakeCount = 50; // Zwiększona liczba dla efektu warstw
 
     for (let i = 0; i < snowflakeCount; i++) {
         const flake = document.createElement('div');
         flake.classList.add('snowflake');
-        flake.innerHTML = '❄'; // Można użyć kropki '.' dla subtelniejszego efektu
+        
+        // Losowanie warstwy (1=blisko/szybko, 2=średnio, 3=daleko/wolno)
+        const layer = Math.random();
+        if (layer < 0.2) {
+            flake.classList.add('layer1'); // 20% szans na duży płatek z przodu
+            flake.innerHTML = '❄';
+            flake.style.fontSize = Math.random() * 10 + 20 + 'px';
+            flake.style.animationDuration = Math.random() * 3 + 3 + 's'; // Szybko (3-6s)
+        } else if (layer < 0.6) {
+            flake.classList.add('layer2'); // 40% szans na średni
+            flake.innerHTML = '●'; // Kropka wygląda lepiej w oddali
+            flake.style.fontSize = Math.random() * 5 + 8 + 'px';
+            flake.style.animationDuration = Math.random() * 4 + 6 + 's'; // Średnio (6-10s)
+        } else {
+            flake.classList.add('layer3'); // 40% szans na tło
+            flake.innerHTML = '.';
+            flake.style.fontSize = Math.random() * 3 + 4 + 'px';
+            flake.style.animationDuration = Math.random() * 10 + 10 + 's'; // Bardzo wolno (10-20s)
+        }
         
         // Losowa pozycja startowa X
         flake.style.left = Math.random() * 100 + 'vw';
-        // Losowy czas animacji (szybkość)
-        flake.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4-7s
         // Losowe opóźnienie
-        flake.style.animationDelay = Math.random() * 5 + 's';
-        // Losowa wielkość
-        flake.style.fontSize = Math.random() * 10 + 10 + 'px';
+        flake.style.animationDelay = Math.random() * 10 + 's';
         
         snowContainer.appendChild(flake);
     }
@@ -149,17 +115,12 @@ function createSnow() {
 
 // --- 6. CAPS LOCK DETECTION ---
 function detectCapsLock(event) {
-    // Sprawdzamy, czy zdarzenie posiada metodę getModifierState
     if (typeof event.getModifierState === "function") {
         if (event.getModifierState("CapsLock")) {
             capsLockWarning.style.display = "block";
         } else {
             capsLockWarning.style.display = "none";
         }
-    } else {
-        // Jeśli zdarzenie (np. focus) nie obsługuje wykrywania CapsLock, 
-        // bezpieczniej jest ukryć ostrzeżenie lub nie robić nic.
-        // Opcjonalnie: nie ukrywamy, jeśli wcześniej wykryliśmy włączenie.
     }
 }
 
@@ -168,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof loadTheme === 'function') loadTheme();
     
     passwordInput.focus();
-    createSnow(); // Uruchomienie śniegu    
-    fetchCommunications(); // Pobranie wiadomości
+    createSnow(); 
+    // fetchCommunications();
 });
 
 // Nasłuchiwanie CapsLocka
@@ -198,3 +159,4 @@ togglePassword.addEventListener('click', function () {
     passwordInput.setAttribute('type', type);
     this.classList.toggle('fa-eye-slash');
 });
+

@@ -131,9 +131,19 @@ function renderCommunicationItem(item) {
     `;
 }
 
-// --- UI UPDATE ---
+// // --- UI UPDATE ---
 function updateUI(allData) {
     if (!listContainer) return; 
+
+    // POPRAWKA: Sprawdź, czy allData istnieje i jest tablicą
+    if (!allData || !Array.isArray(allData)) {
+        console.warn('Brak poprawnych danych do wyświetlenia:', allData);
+        if(statusContainer) {
+            statusContainer.textContent = 'Brak danych do wyświetlenia.';
+            statusContainer.classList.remove('hidden');
+        }
+        return;
+    }
 
     // Filtrujemy dane
     const activeData = allData.filter(isCommunicationActive);
@@ -156,7 +166,7 @@ function updateUI(allData) {
 async function checkAndUpdateData() {
     // 1. Cache
     const cached = loadFromCache();
-    if (cached && lastKnownTimestamp === 0) {
+    if (cached && cached.data && lastKnownTimestamp === 0) {
         lastKnownTimestamp = cached.timestamp;
         updateUI(cached.data);
     }

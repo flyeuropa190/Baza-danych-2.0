@@ -408,9 +408,6 @@
 }
 
 /* --- Style dla Modalu Szczegółów --- */
-
-
-
 .modal {
     display: none; /* Ukryte domyślnie */
     position: fixed;

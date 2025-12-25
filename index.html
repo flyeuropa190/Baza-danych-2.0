@@ -18,21 +18,38 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 </head>
 
+
 <body class="login-page">
+
+  <ul class="christmas-lights">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li>
+  </ul>
 
   <div id="snow-container"></div>
 
+  <div class="breath-overlay"></div>
+
   <div class="theme-toggle-container">
-            <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
-                <i class="fas fa-sun toggle-icon sun-icon"></i>
-                <i class="fas fa-moon toggle-icon moon-icon"></i>
-                <span class="toggle-knob"></span>
-            </button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
+        <i class="fas fa-sun toggle-icon sun-icon"></i>
+        <i class="fas fa-moon toggle-icon moon-icon"></i>
+        <span class="toggle-knob"></span>
+    </button>
   </div>
 
   <div class="container"> 
-    <img src="./logo2.png" alt="Logo2" class="logo2">
+    
+    <div class="logo-wrapper">
+        <img src="./logo2.png" alt="Logo2" class="logo2">
+        <img src="./santa-hat.png" alt="Santa Hat" class="santa-hat">
+    </div>
+
     <div class="login-box">
+      <div class="frost-overlay"></div>
+
       <h1>Baza danych 2.0</h1>
       <h2>Aplikacja w fazie alpha – trwają prace rozwojowe</h2>
           
@@ -47,19 +64,14 @@
 
       <button id="loginButton">Zaloguj</button>      
       <p id="errorMsg"></p>
-      <h3>Wersja aplikacji: ALPHA 2512.0203</h3>
+      <h3>Wersja aplikacji: ALPHA 2512.2323</h3>
     </div>
-  </div>
-
-  <div id="communications-area" class="communications-floating" style="display: none;">
-      <div class="comm-title"><i class="fas fa-bell"></i> Aktualne komunikaty</div>
-      <div id="comm-list"></div>
   </div>
 
   <script src="./script.js"></script>
 
   <script>
-    console.log('Wersja aplikacji: ALPHA 2512.0203')
+    console.log('Wersja aplikacji: ALPHA 2512.2323')
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
