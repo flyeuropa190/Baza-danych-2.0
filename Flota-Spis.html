@@ -2,6 +2,21 @@
 <html lang="pl">
 
 <head>
+<script>
+  (function checkLogin() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
+    const oneHoursInMs = 60 * 60 * 1000;
+    const isExpired = (Date.now() - loginTimestamp) > oneHoursInMs;
+
+    if (isLoggedIn !== 'true') { // || isExpired
+        window.location.href = "index.html"; // Przekierowanie do strony logowania
+        return;
+    }
+})();
+</script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flota</title>
@@ -332,4 +347,5 @@
 <a>Wersja aplikacji: ALPHA 2812.0023</a>
 
 </body>
+
 </html>
