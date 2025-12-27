@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const searchString = statusMap[rawStatus] || rawStatus;
                 
                 // 3. Przekierowanie
-                window.location.href = `Flota.html?search=${encodeURIComponent(searchString)}`;
+                window.location.href = `Flota-Spis.html?search=${encodeURIComponent(searchString)}`;
             }
         });
     }
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target) {
                 const registration = target.getAttribute('data-reg');
                 // Tutaj przekazujemy rejestrację bezpośrednio, bo ona się nie zmienia
-                window.location.href = `Flota.html?search=${encodeURIComponent(registration)}`;
+                window.location.href = `Flota-Spis.html?search=${encodeURIComponent(registration)}`;
             }
         });
     }

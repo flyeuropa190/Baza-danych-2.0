@@ -2,7 +2,7 @@ import { state } from './state.js';
 import { showPlaneModal } from './modal.js';
 
 // URL Twojego skryptu
-const API_URL = 'https://script.google.com/macros/s/AKfycby-sgeubn4PmLVYpwaAF1BrtGKUfTvaS5SUOHa3Z63rLLksC6PlYRHNTYgszJqwB-MNVA/exec'; 
+const API_URL = 'https://script.google.com/macros/s/AKfycby9T_MS-2_v4KM-zMzi-rS2uAfh_J2OnvWEdHwyFKY5JRQ_3uNleggG02BxmkswvqGiJw/exec'; 
 
 const STATUS_OPTIONS = [
     "Dostępny", "Uziemiony", "Zaparkowany", "Zamówiony", "Awaria",

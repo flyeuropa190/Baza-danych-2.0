@@ -1,6 +1,6 @@
 
 // inspectionsFetcher.js
-const API_URL = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzLBUCIOdCG27tQgunmZ3jYv4G069P9Un3-d50EyHtNHBY3MPsqN7X2yGRwyTlF7-UGHg/exec';
 
 export async function fetchInspectionsData() {
     // Dodanie parametru 'type=inspections'

@@ -187,58 +187,92 @@ html.dark-mode .staggered-menu-panel .logo-dark-mode-hidden {
 /* -------------------------------------------------------
    5. Stylistyka treści menu (Mniejsze napisy)
    ------------------------------------------------------- */
-.sm-panel-inner {
+/* Zastąp lub dodaj do sekcji .sm-panel-item w mobile-menu-staggered.css */
+
+/* Reset domyślnych stylów buttona dla akordeonu */
+button.sm-panel-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-family: inherit; /* Lexend */
 }
 
-.sm-panel-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Mniejszy odstęp */
-}
-
-.sm-panel-itemWrap {
-    overflow: hidden; 
-}
-
+/* Główny styl elementu menu (linki i triggery) */
 .sm-panel-item {
     color: var(--mobile-menu-text);
     font-weight: 600;
-    font-size: 1.8rem; /* MNIEJSZY rozmiar czcionki */
+    font-size: 1.5rem; /* ZMNIEJSZONO z 1.8rem dla lepszego zmieszczenia */
     text-decoration: none;
     line-height: 1.2;
-    display: inline-block;
-    padding: 5px 0;
     transition: color 0.3s ease;
     
-    transform: translateY(100%);
-    opacity: 0;
-    transition: transform 0.5s ease 0.2s, opacity 0.5s ease 0.2s;
+    /* Animacja wjazdu pozostaje bez zmian z oryginalnego pliku */
+    /* transform i opacity obsługiwane przez JS/CSS kaskadowy */
 }
 
-.sm-panel-item.active {
-    color: var(--mobile-menu-accent2); /* Użyj koloru akcentu */      
+/* Strzałka w menu mobilnym */
+.sm-panel-item .arrow-icon {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
 }
 
-.sm-panel-item:hover {
+/* Klasa dodawana przez JS, gdy akordeon jest otwarty */
+.sm-panel-item.open .arrow-icon {
+    transform: rotate(180deg);
     color: var(--mobile-menu-accent);
 }
 
-/* Efekt kaskadowy w CSS */
-.staggered-menu-panel[aria-hidden="false"] .sm-panel-item {
-    transform: translateY(0);
-    opacity: 1;
+.sm-panel-item.open {
+    color: var(--mobile-menu-accent);
 }
-.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(1) .sm-panel-item { transition-delay: 0.2s; }
-.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(2) .sm-panel-item { transition-delay: 0.25s; }
-.staggered-menu-panel[aria-hidden="false"] .sm-panel-itemWrap:nth-child(3) .sm-panel-item { transition-delay: 0.3s; }
-/* ... dodaj więcej, jeśli potrzeba ... */
+
+/* --- SUBMENU (Lista zagnieżdżona) --- */
+.sm-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    max-height: 0; /* Domyślnie zwinięte */
+    overflow: hidden;
+    opacity: 0;
+    
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    border-left: 2px solid var(--mobile-menu-border); /* Linia prowadząca */
+    margin-left: 10px; /* Odsunięcie od krawędzi */
+    padding-left: 15px; /* Odsunięcie treści od linii */
+}
+
+/* Stan otwarty submenu (dodawane przez JS) */
+.sm-submenu.open {
+    max-height: 500px; /* Wystarczająco dużo, by pokazać treść */
+    opacity: 1;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Linki w submenu */
+.sm-submenu li a {
+    display: block;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    color: var(--mobile-menu-text);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: all 0.2s;
+}
+
+.sm-submenu li a:hover,
+.sm-submenu li a.active {
+    color: var(--mobile-menu-accent2);
+    opacity: 1;
+    transform: translateX(5px);
+}
 
 
 /* Stopka menu (Socials) - minimalne zmiany, aby pasowały do motywu */

@@ -1,4 +1,4 @@
-const API_URL_BASE = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
+const API_URL_BASE = 'https://script.google.com/macros/s/AKfycbzoZ32PygRR_DgiZYNF5JlFP9Z9TMINxXsdjwxspmvVICWjMCEDe39N3NFGBeNNpsbpMQ/exec';
 const CACHE_KEY_DASHBOARD = 'dashboard_data_v1';
 
 // DOM Elements - pobieramy dynamicznie lub sprawdzamy istnienie
@@ -260,6 +260,6 @@ async function initDashboard() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
-    // Odświeżanie co 15 sekund
-    setInterval(initDashboard, 15000); 
+    // Odświeżanie co 10 sekund
+    setInterval(initDashboard, 10000); 
 });

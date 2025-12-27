@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
-
+  
 <head>
     <!-- <script>
   (function checkLogin() {
@@ -16,35 +16,36 @@
     }
 })();
 </script> -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strona Główna</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Przeglady Planowane</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/inspection-page.css">
     <link rel="stylesheet" href="./css/main-page.css">
     <link rel="stylesheet" href="./css/scroll-bar.css">
     <link rel="stylesheet" href="./css/glass-menu.css">
     <link rel="stylesheet" href="./css/mobile-menu-staggered.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <script defer src="./mobile-menu.js"></script>
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="./css/mobile-menu-staggered.css"> <script defer src="./mobile-menu.js"></script> 
+  <link rel="manifest" href="./manifest.json">
+  <script type="module" src="./przeglady-view.js" defer></script>
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">  
+  <script defer src="./theme-switcher.js"></script>
 
-    <script type="module" src="./data-loader.js" defer></script> 
-    <script type="module" src="./inspections-loader.js" defer></script> 
-    <script type="module" src="./dashboard-loader.js" defer></script>
-    <script type="module" src="./dashboard-interactions.js" defer></script>
-    <script type="module" src="./home-prefetch.js" defer></script>
-    
-    <script defer src="./theme-switcher.js"></script>
+    <!-- ikona strony -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+
 
 </head>
 
-<body class="main-bg">
+<body class="przeglady-planowane">
+
     <header class="navbar">
         <div class="nav-left">
-            <button class="hamburger-toggle" id="menuToggle" aria-label="Otwórz menu mobilne" aria-expanded="false" aria-controls="mobile-menu-panel">
+            <button class="hamburger-toggle" id="menuToggle" aria-label="Otwórz menu mobilne">
                 <span class="bar bar1"></span>
                 <span class="bar bar2"></span>
                 <span class="bar bar3"></span>
@@ -60,8 +61,10 @@
             <h1>Baza danych 2.0</h1>
         </div>
         <div class="nav-right-container">
+
+
             <nav class="nav-links">
-                <a href="StronaGlowna.html" class="active">Strona Główna</a>
+                <a href="StronaGlowna.html">Strona Główna</a>
 
                 <div class="dropdown">
                     <button class="dropbtn">Flota <i class="fas fa-chevron-down"></i></button>
@@ -78,7 +81,7 @@
                     <button class="dropbtn">Przeglądy <i class="fas fa-chevron-down"></i></button>
                     <div class="dropdown-content">
                         <a href="Przeglady-Biezace.html">Przeglądy bieżące</a>
-                        <a href="Przeglady-Planowane.html">Przeglądy planowane</a>
+                        <a href="Przeglady-Planowane.html" class="active">Przeglądy planowane</a>
                         <a href="Przeglady-Kontrolka.html">Kontrolka przeglądów</a>
                     </div>
                 </div>
@@ -109,6 +112,8 @@
                     </div>
                 </div>
             </nav>
+
+
             <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
                 <i class="fas fa-sun toggle-icon sun-icon"></i>
                 <i class="fas fa-moon toggle-icon moon-icon"></i>
@@ -116,7 +121,7 @@
             </button>
         </div>
     </header>
-    
+
     <aside id="mobile-menu-panel" class="staggered-menu-panel" aria-hidden="true">
         <div class="sm-panel-header">
             <img src="./img/mini-logo.png" alt="Logo" class="mini-logo-sidebar logo-light-mode">
@@ -199,91 +204,111 @@
         </div>
     </aside>
 
-    
-    <main class="main-content-wrapper">
-        <section class="section-communications">
-            <h2>📢 Komunikaty Systemowe</h2>
-            <div id="communications-status" class="status-box">Ładowanie komunikatów...</div>
-            <div id="communications-list" class="communications-grid">
-                </div>
-        </section>
+    <main class="main-content">
+    <h3>UWAGA! - Wczesna faza testów!</h3>
+    <div class="view-controls-container">      
+        <div class="view-switcher">
+            <button id="btn-view-list" class="view-btn active" onclick="switchView('list')">
+                <i class="fas fa-list"></i> Lista
+            </button>
+            <button id="btn-view-calendar" class="view-btn" onclick="switchView('calendar')">
+                <i class="fas fa-calendar-alt"></i> Kalendarz
+            </button>
+            <button id="btn-open-filters" class="filter-toggle-btn" aria-expanded="false" aria-controls="filter-panel">
+               <i class="fas fa-filter"></i> Filtruj
+            </button>
+        </div>
+    </div>
 
-        <section class="section-communications">
-            </section>
+    <div id="inspections-status" class="status-message hidden"></div>
 
-        <section class="section-dashboard">
-            
-            <div class="dash-card">
-                <h3>📊 Stany Floty</h3>
-                <div id="dashboard-stany-list" class="dash-content">
-                    Ładowanie...
-                </div>
+    <div id="view-list-container" class="view-container active">
+        </div>
+
+    <div id="view-calendar-container" class="view-container hidden">
+        <div class="calendar-header">
+            <button id="cal-prev-btn" class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <h3 id="calendar-month-year"></h3>
+            <button id="cal-next-btn" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-weekdays">
+            <div>Pon</div><div>Wt</div><div>Śr</div><div>Czw</div><div>Pt</div><div>Sob</div><div>Ndz</div>
+        </div>
+        <div id="calendar-grid" class="calendar-grid">
             </div>
+    </div>
 
-            <div class="dash-card" id="section-kontrolka" style="display:none;">
-                <h3>⚠️ Kontrolka Przeglądów</h3>
-                <div id="dashboard-kontrolka-list" class="dash-content">
-                    </div>
+    <div id="inspection-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Szczegóły</h3>
+                <span class="close-btn" id="close-modal-btn">&times;</span>
             </div>
+            <div id="modal-details-content" class="modal-body"></div>
+        </div>
+    </div>
 
-            <div class="dash-card">
-                <h3>📅 Grafik Zmian</h3>
-                <div class="grafik-controls">
-                    <button id="grafik-prev" class="grafik-btn"><i class="fas fa-chevron-left"></i></button>
-                    <span id="grafik-date-display">Dzisiaj</span>
-                    <button id="grafik-next" class="grafik-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div id="dashboard-grafik-content" class="dash-content">
-                    Ładowanie...
-                </div>
-            </div>
-
-        </section>
-
-        <section class="section-inspections">
-           </section>
-
-
-
-        <section class="section-inspections">
-            <h2>🛠️ Przeglądy Planowane</h2>
-            <div id="inspections-status" class="status-box">Ładowanie przeglądów...</div>
-
-            <div class="subsection">
-                <h3 style="color: #c0392b;">⚠️ Zaległe</h3>
-                <div id="inspections-overdue-list" class="inspections-grid">
-                    <p class="no-data" id="overdue-no-data">Brak zaległych przeglądów.</p>
-                </div>
-            </div>
-            <div class="subsection">
-                <h3>Najbliższe rozpoczęcia (Dzisiaj/Jutro)</h3>
-                <div id="inspections-upcoming-list" class="inspections-grid">
-                    <p class="no-data" id="upcoming-no-data">Brak zaplanowanych przeglądów.</p>
-                </div>
-            </div>
-
-            <div class="subsection">
-                <h3>Najbliższe zakończenia (Dzisiaj/Jutro)</h3>
-                <div id="inspections-ending-list" class="inspections-grid">
-                    <p class="no-data" id="ending-no-data">Brak przeglądów kończących się.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-<div id="inspection-modal" class="modal">
+<div id="filter-modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" id="close-modal-btn">&times;</span>
-        <h2 id="modal-title">Szczegóły Przeglądu</h2>
-        <div id="modal-details-content">
-            Ładowanie...
+        <span id="close-filter-modal-btn" class="close">&times;</span>
+        <h2 id="filter-modal-title">⚙️ Opcje Filtrowania</h2>
+        <div id="filter-modal-content">
+            <form id="inspection-filters-form">
+                <div class="modal-grid modal-filter-grid">
+                    
+                    <div class="filter-group">
+                        <label for="filter-rejestracja">Rejestracja:</label>
+                        <input type="text" id="filter-rejestracja" placeholder="np. SP-ABC">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-numer-tab">Numer Tab.:</label>
+                        <input type="text" id="filter-numer-tab" placeholder="np. 0123">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-typ">Typ przeglądu:</label>
+                        <select id="filter-typ">
+                            <option value="">Wszystkie typy</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-status">Status:</label>
+                        <select id="filter-status">
+                            <option value="">Wszystkie statusy</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-start-date">Data początkowa od:</label>
+                        <input type="date" id="filter-start-date">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-end-date">Data końcowa do:</label>
+                        <input type="date" id="filter-end-date">
+                    </div>
+
+                    <div class="filter-group" style="grid-column: 1 / -1;">
+                        <label for="filter-sz">Samolot Zastępczy (SZ):</label>
+                        <select id="filter-sz">
+                            <option value="">Wszystkie (N/A lub jest)</option>
+                            <option value="Tylko z SZ">Tylko z Samolotem Zastępczym</option>
+                            <option value="Tylko bez SZ">Tylko bez Samolotu Zastępczego</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="button" id="btn-clear-filters" class="clear-btn"><i class="fas fa-redo"></i> Wyczyść</button>
+                    <button type="submit" class="apply-btn"><i class="fas fa-search"></i> Zastosuj filtry</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<a>Wersja aplikacji: ALPHA 2812.0023</a>
-
-</a>
-
-</body>
+</main>
+  </body>
 </html>

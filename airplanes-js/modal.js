@@ -6,7 +6,7 @@ import { enterEditMode } from './edit-mode.js';
 import { loadAllData } from './api.js';
 import { renderAirplanes, populateFilterOptions, renderMaintenanceAlerts } from './ui.js';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycby-sgeubn4PmLVYpwaAF1BrtGKUfTvaS5SUOHa3Z63rLLksC6PlYRHNTYgszJqwB-MNVA/exec'; 
+const API_URL = 'https://script.google.com/macros/s/AKfycbzoZ32PygRR_DgiZYNF5JlFP9Z9TMINxXsdjwxspmvVICWjMCEDe39N3NFGBeNNpsbpMQ/exec'; 
 
 // --- POMOCNICZE: STYLOWY MODAL POTWIERDZENIA ---
 

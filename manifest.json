@@ -1,7 +1,7 @@
 {
   "name": "Baza danych 2.0",
   "short_name": "Baza2.0",
-  "description": "Profesjonalne logowanie do Baza danych 2.0",
+  "description": "Baza danych samolotów i komunikacji - wersja 2.0",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",

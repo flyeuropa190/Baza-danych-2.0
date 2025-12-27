@@ -3,7 +3,7 @@
 /**
  * Moduł do pobierania danych o samolotach i znacznika czasowego z Google Apps Script API.
  */
-const API_URL = 'https://script.google.com/macros/s/AKfycbzyCWJ-v9XVXDZ2Tp3MrNPnz1lAjUgx8-O9mns2_1mTLYkAeT7n4dq8vPcafRGe2qrvSw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzoZ32PygRR_DgiZYNF5JlFP9Z9TMINxXsdjwxspmvVICWjMCEDe39N3NFGBeNNpsbpMQ/exec';
 
 /**
  * Pobiera dane samolotów i znacznik czasowy z Google Sheet używając routera.

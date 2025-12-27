@@ -2,7 +2,7 @@
  * Moduł do pobierania danych i znacznika czasowego z Google Apps Script API.
  * UWAGA: Ten sam API_URL będzie używany dla wszystkich typów danych, ale z różnymi parametrami.
  */
-const API_URL = 'https://script.google.com/macros/s/AKfycbx0l70FIsXLJlnCMeJT5FmTNkou7piEgtJHTCf2NKErjv4WXdK66qHjxryhnuT2kt-LFg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzoZ32PygRR_DgiZYNF5JlFP9Z9TMINxXsdjwxspmvVICWjMCEDe39N3NFGBeNNpsbpMQ/exec';
 
 /**
  * Pobiera dane komunikacyjne i znacznik czasowy z Google Sheet używając routera.

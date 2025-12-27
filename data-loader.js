@@ -4,7 +4,7 @@ const CACHE_KEY_COMM = 'communications_data_v2'; // Zmieniłem klucz cache, aby 
 const listContainer = document.getElementById('communications-list');
 const statusContainer = document.getElementById('communications-status');
 let lastKnownTimestamp = 0; 
-const REFRESH_INTERVAL_MS = 15000;
+const REFRESH_INTERVAL_MS = 10000;
 
 // --- CACHE UTILS ---
 function saveToCache(data, timestamp) {
